@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:title="Notes"
+    android:icon="@drawable/ic_note"
+    />
+    <item
+        android:title="Tasks"
+        android:icon="@drawable/ic_assignment"/>
+    <item
+        android:title="Reminders"
+        android:icon="@drawable/ic_time"/>
+</menu>

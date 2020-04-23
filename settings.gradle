@@ -1,0 +1,2 @@
+include ':app', ':material-intro-screen'
+rootProject.name = "Noted"

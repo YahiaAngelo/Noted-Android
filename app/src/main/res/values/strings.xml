@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Noted</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="login_welcome">Welcome..</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add">Add</string>
+    <string name="search_your_notes">Search your notes</string>
+    <string name="options">Options</string>
+    <string name="save">Save</string>
+    <string name="category">Category</string>
+</resources>

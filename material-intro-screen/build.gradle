@@ -1,0 +1,55 @@
+apply plugin: 'com.android.library'
+
+apply from: "$rootDir/versions.gradle"
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    buildTypes {
+        debug {
+            defaultPublishConfig "debug"
+        }
+
+        android.libraryVariants.all { variant ->
+            project.task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+                title = "Documentation for Android $project.android.defaultConfig.versionName v$project.android.defaultConfig.versionCode"
+                description = "Generates Javadoc for $variant.name."
+                group = 'Documentation'
+
+                destinationDir = new File("${project.getProjectDir()}/javaDoc/", variant.baseName)
+                source = variant.javaCompile.source
+
+                ext.androidJar = "${project.android.sdkDirectory}/platforms/${project.android.compileSdkVersion}/android.jar"
+                doFirst { classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar) }
+
+                options.memberLevel = JavadocMemberLevel.PROTECTED
+                options.links("http://docs.oracle.com/javase/7/docs/api/")
+                options.links("http://developer.android.com/reference/")
+                options.tags = ['sample']
+                exclude '**/BuildConfig.java'
+                exclude '**/R.java'
+            }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    dependencies {
+        implementation fileTree(include: ['*.jar'], dir: 'libs')
+        androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+        implementation 'androidx.appcompat:appcompat:1.1.0'
+        implementation 'com.google.android.material:material:1.2.0-alpha06'
+    }
+    
+}

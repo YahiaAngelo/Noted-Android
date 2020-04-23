@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/activity_note_add_container"
+    android:orientation="vertical"
+    tools:context=".view.activity.NoteAddActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        android:background="@android:color/transparent">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            android:id="@+id/activity_note_add_toolbar"
+            style="@style/Theme.App.ActionBar"
+            app:menu="@menu/note_add_menu"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.chip.ChipGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            style="@style/Widget.MaterialComponents.Chip.Action"
+            app:closeIcon="@drawable/ic_close"
+            app:chipStrokeColor="@color/text_secondary"
+            app:chipStrokeWidth="1dp"
+            app:closeIconTint="@color/text_secondary"
+            app:closeIconEnabled="false"
+            app:chipIcon="@drawable/ic_add"
+            app:chipIconTint="@color/text_secondary"
+            android:id="@+id/note_add_category_chip"
+            android:layout_marginStart="12dp"
+            android:text="@string/category"/>
+    </com.google.android.material.chip.ChipGroup>
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:hint="Title"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:background="@android:color/transparent"
+        android:transitionName="note_title"
+        android:fontFamily="@font/roboto_bold"
+        android:id="@+id/note_title_editText"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:transitionName="note_body"
+        android:gravity="top"
+        android:hint="Note"
+        android:padding="12dp"
+        android:fontFamily="@font/roboto_regular"
+        android:id="@+id/note_body_editText"/>
+
+</LinearLayout>

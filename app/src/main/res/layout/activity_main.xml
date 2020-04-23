@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:background="@color/background"
+        android:layout_width="match_parent"
+        app:elevation="0dp"
+        android:id="@+id/main_appBar"
+        android:layout_height="wrap_content">
+       <com.google.android.material.card.MaterialCardView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           app:cardBackgroundColor="@color/icon"
+           app:layout_scrollFlags="scroll|enterAlways|snap"
+           android:id="@+id/main_search_card"
+           android:layout_margin="12dp"
+           app:cardCornerRadius="8dp"
+           android:elevation="6dp">
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_margin="12dp"
+               android:orientation="horizontal">
+               <ImageView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:src="@drawable/ic_hamburger"
+                   android:tint="@color/text_primary"/>
+
+               <com.google.android.material.textfield.TextInputEditText
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:background="@color/icon"
+                   android:hint="@string/search_your_notes"
+                   android:textColorHint="@color/text_secondary"
+                   android:layout_marginStart="16dp"
+                   android:textColor="@color/text_primary"
+                   android:fontFamily="@font/roboto_regular"/>
+           </LinearLayout>
+       </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/add"
+        app:backgroundTint="@color/primary"
+        android:id="@+id/main_fab"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="@color/background"
+        android:layout_gravity="bottom|end"/>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_marginTop="-12dp"
+            android:layout_marginBottom="56dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
+
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="@color/icon"
+        app:menu="@menu/main_bottom_nav"
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
