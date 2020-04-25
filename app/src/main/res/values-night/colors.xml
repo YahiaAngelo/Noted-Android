@@ -10,4 +10,10 @@
     <color name="text_secondary">#99FFFFFF</color>
     <color name="divider">#BDBDBD</color>
     <color name="icon">#2F3033</color>
+    <color name="card_purple">#B98EFF</color>
+    <color name="card_yellow">#FDE47F</color>
+    <color name="card_red">#E04644</color>
+    <color name="card_violet">#B576AD</color>
+    <color name="card_blue">#555E7B</color>
+    <color name="card_green">#B7D968</color>
 </resources>

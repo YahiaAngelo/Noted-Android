@@ -27,13 +27,14 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
 
 
     override fun bindView(binding: ItemNoteBinding, payloads: List<Any>) {
+        val context = binding.root.context
         noteCard = binding.noteCard
         noteTitle = binding.noteTitle
         noteBody = binding.noteBody
-        binding.noteCard.setCardBackgroundColor(Color.parseColor(note.color))
+        binding.noteCard.setCardBackgroundColor(context.resources.getColorStateList(note.color))
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
-            binding.noteCard.outlineAmbientShadowColor = Color.parseColor(note.color)
-            binding.noteCard.outlineSpotShadowColor = Color.parseColor(note.color)
+            binding.noteCard.outlineAmbientShadowColor = context.resources.getColor(note.color)
+            binding.noteCard.outlineSpotShadowColor = context.resources.getColor(note.color)
         }
         binding.noteTitle.text = note.title
         binding.noteBody.text = note.body

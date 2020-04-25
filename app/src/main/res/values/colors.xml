@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-   <color name="primary_dark">#1976D2</color>
+    <color name="primary_dark">#1976D2</color>
     <color name="primary">#2196F3</color>
     <color name="primary_light">#BBDEFB</color>
     <color name="background">#FCFCFC</color>
@@ -10,4 +10,10 @@
     <color name="text_secondary">#757575</color>
     <color name="divider">#BDBDBD</color>
     <color name="icon">#FFFFFF</color>
+    <color name="card_purple">#6100FF</color>
+    <color name="card_yellow">#F2D251</color>
+    <color name="card_red">#EC3836</color>
+    <color name="card_violet">#E34FD1</color>
+    <color name="card_blue">#6881D1</color>
+    <color name="card_green">#8DBC20</color>
 </resources>

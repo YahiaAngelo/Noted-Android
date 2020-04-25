@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+        <View
+            android:layout_width="44dp"
+            android:layout_height="8dp"
+            android:layout_margin="18dp"
+            android:background="@drawable/pill_bg"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/bottom_sheet_pill"/>
+
+        <ListView
+            android:layout_gravity="bottom"
+            android:id="@+id/bottom_sheet_listView"
+            android:layout_marginTop="18dp"
+            tools:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            android:id="@+id/bottom_sheet_chipGroup"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp">
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                app:chipCornerRadius="25dp"
+                app:chipStrokeColor="@color/text_primary"
+                app:chipStrokeWidth="1dp"
+                android:checkable="true"
+                app:checkedIcon="@drawable/ic_check_black"
+                android:id="@+id/chip_background"
+                app:chipBackgroundColor="@color/background"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                app:chipCornerRadius="25dp"
+                app:chipStrokeColor="@color/text_primary"
+                app:chipStrokeWidth="1dp"
+                android:checkable="true"
+                app:checkedIcon="@drawable/ic_check_black"
+                android:id="@+id/chip_blue"
+                app:chipBackgroundColor="@color/card_blue"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                app:chipCornerRadius="25dp"
+                app:chipStrokeColor="@color/text_primary"
+                android:checkable="true"
+                app:checkedIcon="@drawable/ic_check_black"
+                app:chipStrokeWidth="1dp"
+                android:id="@+id/chip_green"
+                app:chipBackgroundColor="@color/card_green"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                app:chipCornerRadius="25dp"
+                app:chipStrokeColor="@color/text_primary"
+                android:checkable="true"
+                app:checkedIcon="@drawable/ic_check_black"
+                android:id="@+id/chip_purple"
+                app:chipStrokeWidth="1dp"
+                app:chipBackgroundColor="@color/card_purple"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                app:chipCornerRadius="25dp"
+                app:chipStrokeColor="@color/text_primary"
+                android:checkable="true"
+                app:checkedIcon="@drawable/ic_check_black"
+                android:id="@+id/chip_red"
+                app:chipStrokeWidth="1dp"
+                app:chipBackgroundColor="@color/card_red"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                app:chipCornerRadius="25dp"
+                app:chipStrokeColor="@color/text_primary"
+                android:checkable="true"
+                app:checkedIcon="@drawable/ic_check_black"
+                android:id="@+id/chip_violet"
+                app:chipStrokeWidth="1dp"
+                app:chipBackgroundColor="@color/card_violet"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                app:chipCornerRadius="25dp"
+                app:chipStrokeColor="@color/text_primary"
+                android:checkable="true"
+                app:checkedIcon="@drawable/ic_check_black"
+                android:id="@+id/chip_yellow"
+                app:chipStrokeWidth="1dp"
+                app:chipBackgroundColor="@color/card_yellow"/>
+
+
+        </com.google.android.material.chip.ChipGroup>
+
+    </LinearLayout>
+

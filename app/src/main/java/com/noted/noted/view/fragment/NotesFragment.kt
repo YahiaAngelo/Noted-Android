@@ -24,7 +24,11 @@ import com.noted.noted.databinding.FragmentNotesBinding
 import com.noted.noted.model.Note
 import com.noted.noted.view.activity.NoteAddActivity
 import com.noted.noted.view.bindItem.NoteBinding
+import io.realm.OrderedCollectionChangeSet
 import io.realm.Realm
+import io.realm.RealmResults
+import io.realm.Sort
+import okhttp3.internal.toImmutableList
 
 class NotesFragment : BaseFragment(), ItemTouchCallback {
 
@@ -50,7 +54,9 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         val layoutManager = GridLayoutManager(this.context, 2)
         binding.notesRecyclerView.layoutManager = layoutManager
         binding.notesRecyclerView.adapter = fastAdapter
-        itemAdapter.add(generateItems())
+
+
+        //itemAdapter.add(generateItems())
 
 
 
@@ -164,6 +170,7 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
                         item.noteCard,
                         "note_shared_element_container" // The transition name to be matched in Activity B.
                     )
+                    intent.putExtra("id", item.note.id)
                     intent.putExtra("title", item.note.title)
                     intent.putExtra("body", item.note.body)
                     intent.putExtra("color", item.note.color)
@@ -177,22 +184,36 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
 
     private fun generateItems(): List<NoteBinding> {
         val noteBinding =
-            NoteBinding(Note(1234658, "Test note", "Test note", System.currentTimeMillis(), "#EA5455"))
+            NoteBinding(Note(1234658, "Test note", "Test note", System.currentTimeMillis(), R.color.card_blue))
         val noteBinding2 =
-            NoteBinding(Note(1234659, "Another test note", "Yup, that's another test note", System.currentTimeMillis(), "#0396FF"))
+            NoteBinding(Note(1234659, "Another test note", "Yup, that's another test note", System.currentTimeMillis(), R.color.card_green))
         val noteBinding3 =
-            NoteBinding(Note(12346510, "Test note", "Another test note... \nAGAIN!!", System.currentTimeMillis(), "#F8D800"))
+            NoteBinding(Note(12346510, "Test note", "Another test note... \nAGAIN!!", System.currentTimeMillis(), R.color.card_purple))
         val noteBinding4 =
-            NoteBinding(Note(12346511, "Test note", "You what's up, this is a test note :)", System.currentTimeMillis(), "#7367F0"))
+            NoteBinding(Note(12346511, "Test note", "You what's up, this is a test note :)", System.currentTimeMillis(), R.color.card_red))
         val noteBinding5 =
-            NoteBinding(Note(12346512, "Test note", "Test note", System.currentTimeMillis(), "#F6416C"))
+            NoteBinding(Note(12346512, "Test note", "Test note", System.currentTimeMillis(), R.color.card_violet))
         val noteBinding6 =
-            NoteBinding(Note(12346513, "Test note", "Test note", System.currentTimeMillis(), "#28C76F"))
-        val noteBinding7 =
-            NoteBinding(Note(12346514, "Test note", "Test note", System.currentTimeMillis(), "#9F44D3"))
-        return listOf(noteBinding, noteBinding2, noteBinding3, noteBinding4, noteBinding5, noteBinding6, noteBinding7)
+            NoteBinding(Note(12346513, "Test note", "Test note", System.currentTimeMillis(), R.color.card_yellow))
+
+        return listOf(noteBinding, noteBinding2, noteBinding3, noteBinding4, noteBinding5, noteBinding6)
     }
 
+    private fun update(){
+        val notesList = mRealm.where(Note::class.java).sort("date", Sort.DESCENDING).findAll()
+            itemAdapter.setNewList(notesList.toBinding())
+
+        Log.e("Noted", "list size is ${notesList.size}")
+    }
+
+
+    private fun RealmResults<Note>.toBinding():List<NoteBinding>{
+        val noteBindingList : MutableList<NoteBinding> = mutableListOf()
+        for (note in this){
+            noteBindingList.add(NoteBinding(note))
+        }
+        return noteBindingList
+    }
     override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
         itemAdapter.getAdapterItem(newPosition).noteCard.isDragged = false
 
@@ -204,4 +225,8 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         return true
     }
 
+    override fun onResume() {
+        super.onResume()
+        update()
+    }
 }
