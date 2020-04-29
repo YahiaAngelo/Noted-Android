@@ -10,10 +10,10 @@
     <color name="text_secondary">#757575</color>
     <color name="divider">#BDBDBD</color>
     <color name="icon">#FFFFFF</color>
-    <color name="card_purple">#6100FF</color>
-    <color name="card_yellow">#F2D251</color>
-    <color name="card_red">#EC3836</color>
-    <color name="card_violet">#E34FD1</color>
-    <color name="card_blue">#6881D1</color>
-    <color name="card_green">#8DBC20</color>
+    <color name="card_purple">#8690B1</color>
+    <color name="card_yellow">#53C5DE</color>
+    <color name="card_red">#EB6F6D</color>
+    <color name="card_violet">#CC9FC7</color>
+    <color name="card_blue">#6495C9</color>
+    <color name="card_green">#AEC96E</color>
 </resources>

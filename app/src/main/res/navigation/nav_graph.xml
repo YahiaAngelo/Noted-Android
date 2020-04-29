@@ -10,20 +10,6 @@
         android:name="com.noted.noted.view.fragment.NotesFragment"
         android:label="fragment_notes"
         tools:layout="@layout/fragment_notes" >
-        <action
-            android:id="@+id/action_notesFragment_to_noteAddFragment"
-            app:destination="@id/noteAddFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/noteAddFragment"
-        android:name="com.noted.noted.view.fragment.NoteAddFragment"
-        android:label="fragment_note_add"
-        tools:layout="@layout/fragment_note_add">
-        <argument
-            android:name="note"
-            app:argType="com.noted.noted.model.Note"
-            android:defaultValue="@null"
-            app:nullable="true"
-            />
-    </fragment>
+
 </navigation>

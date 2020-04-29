@@ -5,12 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.appcompat.view.ActionMode
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
@@ -24,11 +22,10 @@ import com.noted.noted.databinding.FragmentNotesBinding
 import com.noted.noted.model.Note
 import com.noted.noted.view.activity.NoteAddActivity
 import com.noted.noted.view.bindItem.NoteBinding
-import io.realm.OrderedCollectionChangeSet
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
-import okhttp3.internal.toImmutableList
+import org.parceler.Parcels
 
 class NotesFragment : BaseFragment(), ItemTouchCallback {
 
@@ -50,8 +47,7 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         val dragCallback = SimpleDragCallback()
         val touchHelper = ItemTouchHelper(dragCallback)
         touchHelper.attachToRecyclerView(binding.notesRecyclerView)
-
-        val layoutManager = GridLayoutManager(this.context, 2)
+        val layoutManager = StaggeredGridLayoutManager(2, 1)
         binding.notesRecyclerView.layoutManager = layoutManager
         binding.notesRecyclerView.adapter = fastAdapter
 
@@ -170,10 +166,8 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
                         item.noteCard,
                         "note_shared_element_container" // The transition name to be matched in Activity B.
                     )
-                    intent.putExtra("id", item.note.id)
-                    intent.putExtra("title", item.note.title)
-                    intent.putExtra("body", item.note.body)
-                    intent.putExtra("color", item.note.color)
+
+                    intent.putExtra("note", Parcels.wrap(item.note))
                     startActivity(intent, options.toBundle())
                 }
                 return true
@@ -182,7 +176,7 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         }
     }
 
-    private fun generateItems(): List<NoteBinding> {
+  /*  private fun generateItems(): List<NoteBinding> {
         val noteBinding =
             NoteBinding(Note(1234658, "Test note", "Test note", System.currentTimeMillis(), R.color.card_blue))
         val noteBinding2 =
@@ -199,6 +193,7 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         return listOf(noteBinding, noteBinding2, noteBinding3, noteBinding4, noteBinding5, noteBinding6)
     }
 
+   */
     private fun update(){
         val notesList = mRealm.where(Note::class.java).sort("date", Sort.DESCENDING).findAll()
             itemAdapter.setNewList(notesList.toBinding())

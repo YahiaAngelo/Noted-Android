@@ -59,6 +59,8 @@ dependencies {
     implementation "org.koin:koin-androidx-scope:$koin_version"
     // or Koin for Android Architecture ViewModel
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    implementation 'org.parceler:parceler-api:1.1.13'
+    kapt 'org.parceler:parceler:1.1.13'
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation("com.apollographql.apollo:apollo-runtime:1.4.4")

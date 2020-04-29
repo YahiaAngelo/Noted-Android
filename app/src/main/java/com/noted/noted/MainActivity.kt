@@ -55,21 +55,7 @@ class MainActivity : BaseActivity() {
         else binding.mainSearchCard.visibility = View.VISIBLE
 
     }
-    private fun configureTransitions(fragment: Fragment) {
-        val enterContainerTransform = buildContainerTransform(true)
-        fragment.sharedElementEnterTransition = enterContainerTransform
-        holdTransition.setDuration(enterContainerTransform.duration)
-        val returnContainerTransform = buildContainerTransform(false)
-        fragment.sharedElementReturnTransition = returnContainerTransform
-    }
 
-    private fun buildContainerTransform(entering: Boolean): MaterialContainerTransform {
-        val configurationHelper = ContainerTransformConfigurationHelper()
-        val transform = MaterialContainerTransform()
-        transform.setDrawingViewId(if (entering) R.id.main_fab else R.id.fragment_note_add_container)
-        configurationHelper.configure(transform, entering)
-        return transform
-    }
 
     override fun onBackPressed() {
         super.onBackPressed()

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <View
+        android:layout_width="44dp"
+        android:layout_height="8dp"
+        android:layout_margin="18dp"
+        android:background="@drawable/pill_bg"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/bottom_sheet_pill"/>
+    <ListView
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="18dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/simple_listView"/>
+</LinearLayout>

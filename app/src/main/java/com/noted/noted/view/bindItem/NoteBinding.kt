@@ -3,10 +3,10 @@ package com.noted.noted.view.bindItem
 import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.Chip
 import com.mikepenz.fastadapter.binding.AbstractBindingItem
 import com.noted.noted.R
 import com.noted.noted.databinding.ItemNoteBinding
@@ -38,6 +38,19 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
         }
         binding.noteTitle.text = note.title
         binding.noteBody.text = note.body
+        binding.noteChipGroup.removeAllViews()
+        for (category in note.categories!!){
+            val chip = Chip(context)
+            chip.chipBackgroundColor = context.resources.getColorStateList(note.color)
+            chip.chipStrokeWidth = 2F
+            chip.chipStrokeColor = context.resources.getColorStateList(R.color.text_primary)
+            chip.text = category.title
+            chip.id = category.id.toInt()
+            chip.setOnClickListener{
+                noteCard.performClick()
+            }
+            binding.noteChipGroup.addView(chip)
+        }
     }
 
     override fun createBinding(inflater: LayoutInflater, parent: ViewGroup?): ItemNoteBinding {

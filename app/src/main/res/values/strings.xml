@@ -18,4 +18,5 @@
     <string name="options">Options</string>
     <string name="save">Save</string>
     <string name="category">Category</string>
+    <string name="title">Title</string>
 </resources>

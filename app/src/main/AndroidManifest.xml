@@ -16,7 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.NoteAddActivity"></activity>
+        <activity android:name=".view.activity.NoteAddActivity"
+            android:windowSoftInputMode="adjustResize">
+
+        </activity>
         <activity
             android:name=".view.activity.IntroActivity"
             android:theme="@style/Theme.App.Intro">

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/activity_note_add_container"
-    android:orientation="vertical"
     tools:context=".view.activity.NoteAddActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/add_note_appbar"
         android:background="@android:color/transparent">
         <com.google.android.material.appbar.MaterialToolbar
             android:layout_width="match_parent"
@@ -24,44 +25,81 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
+        app:layout_constraintTop_toBottomOf="@id/add_note_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <com.google.android.material.chip.Chip
+            android:id="@+id/note_add_category_chip"
+            style="@style/Widget.MaterialComponents.Chip.Action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="@string/category"
             android:textColor="@color/text_primary"
-            style="@style/Widget.MaterialComponents.Chip.Action"
-            app:closeIcon="@drawable/ic_close"
-            app:chipStrokeColor="@color/text_secondary"
-            app:chipStrokeWidth="1dp"
-            app:closeIconTint="@color/text_secondary"
-            app:closeIconEnabled="false"
             app:chipIcon="@drawable/ic_add"
             app:chipIconTint="@color/text_secondary"
-            android:id="@+id/note_add_category_chip"
-            android:layout_marginStart="12dp"
-            android:text="@string/category"/>
+            app:chipStrokeColor="@color/text_secondary"
+            app:chipStrokeWidth="1dp"
+            app:closeIconEnabled="false" />
     </com.google.android.material.chip.ChipGroup>
-    <com.google.android.material.textfield.TextInputEditText
+    <androidx.core.widget.NestedScrollView
+        app:layout_constraintTop_toBottomOf="@id/chipGroup"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="34dp"
+        android:fillViewport="true"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
-        android:hint="Title"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:background="@android:color/transparent"
-        android:transitionName="note_title"
-        android:fontFamily="@font/roboto_bold"
-        android:id="@+id/note_title_editText"/>
+        android:layout_height="0dp">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:transitionName="note_body"
-        android:gravity="top"
-        android:hint="Note"
-        android:padding="12dp"
-        android:fontFamily="@font/roboto_regular"
-        android:id="@+id/note_body_editText"/>
+        <LinearLayout
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-</LinearLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:hint="Title"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:background="@android:color/transparent"
+                android:transitionName="note_title"
+                android:fontFamily="@font/roboto_bold"
+                android:id="@+id/note_title_editText"/>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/note_body_editText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="18dp"
+                android:padding="12dp"
+                android:gravity="top"
+                android:transitionName="note_body"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:fontFamily="@font/roboto_bold"
+                android:hint="Note"
+                android:background="@android:color/transparent"
+                app:layout_constraintTop_toBottomOf="@+id/note_title_editText" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/text_secondary"
+        android:textSize="14sp"
+        android:id="@+id/note_date"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Edited Today 20:25" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

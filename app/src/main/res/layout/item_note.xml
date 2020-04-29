@@ -7,7 +7,7 @@
     android:id="@+id/note_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="150dp"
+
     android:layout_margin="8dp"
     android:checkable="true"
     android:clickable="true"
@@ -49,6 +49,13 @@
             android:textColor="@color/text_primary"
             android:textSize="14sp"
             tools:text="Test note" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/note_chip_group"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="16dp"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
 
