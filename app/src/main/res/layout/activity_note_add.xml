@@ -69,7 +69,7 @@
                 android:fontFamily="@font/roboto_bold"
                 android:id="@+id/note_title_editText"/>
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.noted.noted.view.customView.MarkdownEditText
                 android:id="@+id/note_body_editText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -101,5 +101,20 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Edited Today 20:25" />
 
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/bold_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bold"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/italic_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/bold_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>

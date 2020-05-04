@@ -11,6 +11,7 @@ import com.mikepenz.fastadapter.binding.AbstractBindingItem
 import com.noted.noted.R
 import com.noted.noted.databinding.ItemNoteBinding
 import com.noted.noted.model.Note
+import io.noties.markwon.Markwon
 
 class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
 
@@ -31,19 +32,20 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
         noteCard = binding.noteCard
         noteTitle = binding.noteTitle
         noteBody = binding.noteBody
-        binding.noteCard.setCardBackgroundColor(context.resources.getColorStateList(note.color))
+        val markwon = Markwon.create(context)
+        binding.noteCard.setCardBackgroundColor(context.resources.getColorStateList(note.color, context.theme))
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
-            binding.noteCard.outlineAmbientShadowColor = context.resources.getColor(note.color)
-            binding.noteCard.outlineSpotShadowColor = context.resources.getColor(note.color)
+            binding.noteCard.outlineAmbientShadowColor = context.resources.getColor(note.color, context.theme)
+            binding.noteCard.outlineSpotShadowColor = context.resources.getColor(note.color, context.theme)
         }
         binding.noteTitle.text = note.title
-        binding.noteBody.text = note.body
+        markwon.setMarkdown(noteBody, note.body)
         binding.noteChipGroup.removeAllViews()
         for (category in note.categories!!){
             val chip = Chip(context)
-            chip.chipBackgroundColor = context.resources.getColorStateList(note.color)
+            chip.chipBackgroundColor = context.resources.getColorStateList(note.color, context.theme)
             chip.chipStrokeWidth = 2F
-            chip.chipStrokeColor = context.resources.getColorStateList(R.color.text_primary)
+            chip.chipStrokeColor = context.resources.getColorStateList(R.color.text_primary, context.theme)
             chip.text = category.title
             chip.id = category.id.toInt()
             chip.setOnClickListener{

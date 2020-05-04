@@ -3,6 +3,10 @@ package com.noted.noted.view.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.Editable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextWatcher
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -16,11 +20,16 @@ import com.noted.noted.R
 import com.noted.noted.databinding.ActivityNoteAddBinding
 import com.noted.noted.model.Note
 import com.noted.noted.model.NoteCategory
+import com.noted.noted.view.customView.MarkdownEditText
+import io.noties.markwon.Markwon
+import io.noties.markwon.editor.MarkwonEditor
+import io.noties.markwon.editor.MarkwonEditorTextWatcher
 import io.realm.Realm
 import io.realm.RealmList
 import org.parceler.Parcels
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.Executors
 import kotlin.collections.HashMap
 import kotlin.properties.Delegates
 
@@ -32,6 +41,7 @@ lateinit var note: Note
 var newColor by Delegates.notNull<Int>()
 var realm: Realm = Realm.getDefaultInstance()
 var noteId by Delegates.notNull<Long>()
+lateinit var markwon:Markwon
 
 class NoteAddActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,24 +60,26 @@ class NoteAddActivity : AppCompatActivity() {
         noteId = UUID.randomUUID().mostSignificantBits
         categoriesList = RealmList()
         newColor = R.color.background
+        markwon = Markwon.create(this)
         if (intent.getParcelableExtra<Parcelable>("note") != null) {
             note = Parcels.unwrap(intent.getParcelableExtra("note"))
             noteId = note.id
             newColor = note.color
-            binding.activityNoteAddContainer.setBackgroundColor(resources.getColor(newColor))
+            binding.activityNoteAddContainer.setBackgroundColor(resources.getColor(newColor, theme))
             binding.noteTitleEditText.setText(note.title)
-            binding.noteBodyEditText.setText(note.body)
+            val markdown = markwon.toMarkdown(note.body)
+            binding.noteBodyEditText.setText(markdown)
             val date =
                 SimpleDateFormat("d MMM HH:mm aaa", Locale.getDefault()).format(Date(note.date))
             binding.noteDate.text = "Edited $date"
-            window.statusBarColor = resources.getColor(newColor)
-            window.navigationBarColor = resources.getColor(newColor)
+            window.statusBarColor = resources.getColor(newColor, theme)
+            window.navigationBarColor = resources.getColor(newColor, theme)
             binding.noteAddCategoryChip.chipBackgroundColor =
-                resources.getColorStateList(newColor).withAlpha(200)
+                resources.getColorStateList(newColor, theme).withAlpha(200)
             categoriesList = note.categories
 
         }
-
+        setupMarkwon()
         setSupportActionBar(binding.activityNoteAddToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
@@ -112,7 +124,7 @@ class NoteAddActivity : AppCompatActivity() {
                 val note = Note(
                     noteId,
                     binding.noteTitleEditText.text.toString(),
-                    binding.noteBodyEditText.text.toString(),
+                    binding.noteBodyEditText.getMD(),
                     System.currentTimeMillis(),
                     newColor,
                     categoriesList
@@ -127,7 +139,7 @@ class NoteAddActivity : AppCompatActivity() {
 
     private fun initBottomSheet() {
         val view = layoutInflater.inflate(R.layout.note_add_bottom_sheet, null)
-        view.setBackgroundColor(resources.getColor(newColor))
+        view.setBackgroundColor(resources.getColor(newColor, theme))
         bottomSheet = BottomSheetDialog(this, R.style.CustomBottomSheetDialog)
         bottomSheet.setContentView(view)
         val listView: ListView = view.findViewById(R.id.bottom_sheet_listView)
@@ -148,7 +160,7 @@ class NoteAddActivity : AppCompatActivity() {
         val simpleAdapter =
             SimpleAdapter(this, itemsList, R.layout.simple_list_layout, from, to.toIntArray())
         listView.adapter = simpleAdapter
-        listView.setOnItemClickListener { parent, view, position, id ->
+        listView.setOnItemClickListener { _, view, position, id ->
             when (position) {
                 0 -> deleteNote()
             }
@@ -282,5 +294,16 @@ class NoteAddActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupMarkwon(){
+
+        binding.boldButton.setOnCheckedChangeListener { buttonView, isChecked ->
+            binding.noteBodyEditText.triggerStyle(MarkdownEditText.TextStyle.BOLD, !isChecked)
+        }
+        binding.italicButton.setOnCheckedChangeListener { buttonView, isChecked ->
+            binding.noteBodyEditText.triggerStyle(MarkdownEditText.TextStyle.ITALIC, !isChecked)
+        }
+
+
+    }
 
 }

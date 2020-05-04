@@ -33,8 +33,8 @@ class MainActivity : BaseActivity() {
         setContentView(binding.root)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
-            binding.mainFab.outlineAmbientShadowColor = resources.getColor(R.color.primary)
-            binding.mainFab.outlineSpotShadowColor = resources.getColor(R.color.primary)
+            binding.mainFab.outlineAmbientShadowColor = resources.getColor(R.color.primary,theme)
+            binding.mainFab.outlineSpotShadowColor = resources.getColor(R.color.primary,theme)
         }
 
         binding.mainFab.setOnClickListener {

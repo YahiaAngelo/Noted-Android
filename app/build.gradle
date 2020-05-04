@@ -61,6 +61,8 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
     implementation 'org.parceler:parceler-api:1.1.13'
     kapt 'org.parceler:parceler:1.1.13'
+    implementation "io.noties.markwon:core:4.3.1"
+    implementation "io.noties.markwon:editor:4.3.1"
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation("com.apollographql.apollo:apollo-runtime:1.4.4")
