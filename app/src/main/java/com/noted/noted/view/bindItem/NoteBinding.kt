@@ -2,6 +2,7 @@ package com.noted.noted.view.bindItem
 
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -12,6 +13,7 @@ import com.noted.noted.R
 import com.noted.noted.databinding.ItemNoteBinding
 import com.noted.noted.model.Note
 import io.noties.markwon.Markwon
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 
 class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
 
@@ -32,7 +34,9 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
         noteCard = binding.noteCard
         noteTitle = binding.noteTitle
         noteBody = binding.noteBody
-        val markwon = Markwon.create(context)
+        val  markwon = Markwon.builder(context)
+            .usePlugin(StrikethroughPlugin.create())
+            .build()
         binding.noteCard.setCardBackgroundColor(context.resources.getColorStateList(note.color, context.theme))
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
             binding.noteCard.outlineAmbientShadowColor = context.resources.getColor(note.color, context.theme)

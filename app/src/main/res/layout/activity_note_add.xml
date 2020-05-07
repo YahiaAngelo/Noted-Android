@@ -27,6 +27,7 @@
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"
         app:layout_constraintTop_toBottomOf="@id/add_note_appbar"
+        android:paddingStart="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -35,7 +36,6 @@
             style="@style/Widget.MaterialComponents.Chip.Action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
             android:text="@string/category"
             android:textColor="@color/text_primary"
             app:chipIcon="@drawable/ic_add"
@@ -44,44 +44,49 @@
             app:chipStrokeWidth="1dp"
             app:closeIconEnabled="false" />
     </com.google.android.material.chip.ChipGroup>
+
     <androidx.core.widget.NestedScrollView
-        app:layout_constraintTop_toBottomOf="@id/chipGroup"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginBottom="34dp"
         android:fillViewport="true"
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chipGroup">
 
         <LinearLayout
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/note_title_editText"
                 android:layout_width="match_parent"
                 android:layout_height="68dp"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/roboto_bold"
                 android:hint="Title"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                android:background="@android:color/transparent"
-                android:transitionName="note_title"
-                android:fontFamily="@font/roboto_bold"
-                android:id="@+id/note_title_editText"/>
+                android:transitionName="note_title" />
 
             <com.noted.noted.view.customView.MarkdownEditText
                 android:id="@+id/note_body_editText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="18dp"
-                android:padding="12dp"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/roboto_bold"
+                android:lineSpacingExtra="4dp"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionDone"
                 android:gravity="top"
-                android:transitionName="note_body"
+                android:hint="Note"
+                android:padding="12dp"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                android:fontFamily="@font/roboto_bold"
-                android:hint="Note"
-                android:background="@android:color/transparent"
+                android:transitionName="note_body"
                 app:layout_constraintTop_toBottomOf="@+id/note_title_editText" />
 
         </LinearLayout>
@@ -101,20 +106,14 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:text="Edited Today 20:25" />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/bold_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bold"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/italic_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/bold_button" />
+    <com.noted.noted.view.customView.MarkdownStylesBar
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:clipToPadding="false"
+        android:id="@+id/note_styles_bar"
+        android:visibility="gone"
+        android:paddingStart="8dp"
+        android:backgroundTint="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/note_date" />
 </androidx.constraintlayout.widget.ConstraintLayout>

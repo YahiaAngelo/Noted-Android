@@ -7,9 +7,14 @@ import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextWatcher
+import android.text.style.QuoteSpan
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -21,11 +26,17 @@ import com.noted.noted.databinding.ActivityNoteAddBinding
 import com.noted.noted.model.Note
 import com.noted.noted.model.NoteCategory
 import com.noted.noted.view.customView.MarkdownEditText
-import io.noties.markwon.Markwon
+import com.transitionseverywhere.extra.Scale
+import io.noties.markwon.*
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.realm.Realm
 import io.realm.RealmList
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import org.commonmark.node.BlockQuote
+import org.commonmark.node.SoftLineBreak
 import org.parceler.Parcels
 import java.text.SimpleDateFormat
 import java.util.*
@@ -60,7 +71,23 @@ class NoteAddActivity : AppCompatActivity() {
         noteId = UUID.randomUUID().mostSignificantBits
         categoriesList = RealmList()
         newColor = R.color.background
-        markwon = Markwon.create(this)
+        markwon = Markwon.builder(this)
+            .usePlugin(StrikethroughPlugin.create())
+            .usePlugin(object : AbstractMarkwonPlugin() {
+                override fun configureSpansFactory(builder: MarkwonSpansFactory.Builder) {
+                    super.configureSpansFactory(builder)
+                    builder.setFactory(BlockQuote::class.java, SpanFactory { _, _ ->
+                        return@SpanFactory QuoteSpan(resources.getColor(R.color.divider, theme), 10, 28)
+                    })
+                }
+
+                override fun configureVisitor(builder: MarkwonVisitor.Builder) {
+                    super.configureVisitor(builder)
+                    builder.on(SoftLineBreak::class.java
+                    ) { visitor, n -> visitor.forceNewLine() }
+                }
+            })
+            .build()
         if (intent.getParcelableExtra<Parcelable>("note") != null) {
             note = Parcels.unwrap(intent.getParcelableExtra("note"))
             noteId = note.id
@@ -79,7 +106,6 @@ class NoteAddActivity : AppCompatActivity() {
             categoriesList = note.categories
 
         }
-        setupMarkwon()
         setSupportActionBar(binding.activityNoteAddToolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
@@ -87,6 +113,7 @@ class NoteAddActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setupMarkwon()
 
         for (category in categoriesList) {
             addCategoryChip(category)
@@ -119,6 +146,7 @@ class NoteAddActivity : AppCompatActivity() {
 
     private fun saveNote() {
         if (binding.noteTitleEditText.text!!.isNotEmpty()) {
+            binding.noteStylesBar.visibility = View.GONE
             realm = Realm.getDefaultInstance()
             realm.use { realm ->
                 val note = Note(
@@ -296,13 +324,19 @@ class NoteAddActivity : AppCompatActivity() {
 
     private fun setupMarkwon(){
 
-        binding.boldButton.setOnCheckedChangeListener { buttonView, isChecked ->
-            binding.noteBodyEditText.triggerStyle(MarkdownEditText.TextStyle.BOLD, !isChecked)
-        }
-        binding.italicButton.setOnCheckedChangeListener { buttonView, isChecked ->
-            binding.noteBodyEditText.triggerStyle(MarkdownEditText.TextStyle.ITALIC, !isChecked)
-        }
+        binding.noteStylesBar.markdownEditText = binding.noteBodyEditText
+        KeyboardVisibilityEvent.setEventListener(this, object :KeyboardVisibilityEventListener{
+            override fun onVisibilityChanged(isOpen: Boolean) {
+                val set: TransitionSet = TransitionSet()
+                    .addTransition(Fade())
+                    .setInterpolator(FastOutLinearInInterpolator())
 
+                TransitionManager.beginDelayedTransition(binding.noteStylesBar, set)
+                binding.noteStylesBar.visibility = if (isOpen) View.VISIBLE else View.GONE
+                binding.noteDate.visibility = if (isOpen) View.GONE else View.VISIBLE
+            }
+
+        })
 
     }
 
