@@ -39,6 +39,7 @@
                    android:layout_height="wrap_content"
                    android:background="@color/icon"
                    android:hint="@string/search_your_notes"
+                   android:id="@+id/main_search"
                    android:textColorHint="@color/text_secondary"
                    android:layout_marginStart="16dp"
                    android:textColor="@color/text_primary"
@@ -78,6 +79,7 @@
         android:layout_gravity="bottom"
         app:backgroundTint="@color/icon"
         app:menu="@menu/main_bottom_nav"
+        android:id="@+id/main_bottom_navigation"
         />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

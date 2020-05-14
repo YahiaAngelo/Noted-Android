@@ -1343,8 +1343,19 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
                 MaterialButton materialButton = (MaterialButton) getChildAt(i);
                 if (materialButton.isChecked()){
                     materialButton.performClick();
+
                 }
             }
         }
+    }
+
+    public View getViewWithId(int id){
+        View view = new MaterialButton(getContext());
+        for (int i = 0; i < mAdapter.getCount(); i++){
+            if (getChildAt(i) != null && getChildAt(i).getId() == id){
+                view = getChildAt(i);
+            }
+        }
+        return view;
     }
 }

@@ -5,7 +5,6 @@ import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
-import android.text.style.MetricAffectingSpan
 import android.text.style.QuoteSpan
 import android.text.style.StrikethroughSpan
 import android.util.AttributeSet
@@ -13,6 +12,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import androidx.core.text.getSpans
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap
 import com.noted.noted.R
@@ -22,8 +22,10 @@ import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 
 class MarkdownEditText : TextInputEditText {
 
-    var markwon: Markwon
+    private var markwon: Markwon
     private var textWatcher: TextWatcher? = null
+    var markdownStylesBar: MarkdownStylesBar? = null
+    private val textWatchers : MutableList<TextWatcher> =  emptyList<TextWatcher>().toMutableList()
 
     constructor(context: Context) : super(context, null) {
         markwon = Markwon.builder(context)
@@ -55,10 +57,9 @@ class MarkdownEditText : TextInputEditText {
     }
 
 
-
     fun triggerStyle(textStyle: TextStyle, stop: Boolean) {
         if (stop) {
-            removeTextChangedListener(textWatcher)
+            clearTextWatchers()
         } else {
             textWatcher = object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
@@ -82,78 +83,107 @@ class MarkdownEditText : TextInputEditText {
                     count: Int
                 ) {
 
+                    Log.e("Noted", "text ${text.toString()} start $start before $before count $count")
                     styliseText(textStyle, s, start, before, count)
 
                 }
 
             }
-            addTextChangedListener(textWatcher)
+            addTextWatcher(textWatcher!!)
         }
 
 
     }
-    fun addQuote(){
+
+    fun addQuote() {
         text!!.append("\n  ")
-        val quoteSpan = QuoteSpan(context.resources.getColor(R.color.divider, context.theme), 10, 28)
-        text!!.setSpan(quoteSpan, text!!.length - 2, text!!.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val quoteSpan =
+            QuoteSpan(context.resources.getColor(R.color.divider, context.theme), 10, 28)
+        text!!.setSpan(
+            quoteSpan,
+            text!!.length - 2,
+            text!!.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
 
     }
 
-    fun triggerUnOrderedListStyle(stop : Boolean){
-        if (stop){
+    fun triggerUnOrderedListStyle(stop: Boolean) {
+        if (stop) {
             setOnEditorActionListener(null)
-        }else{
-            if (text!!.isNotEmpty()){
-                if (text.toString().substring(text!!.length - 2, text!!.length) != "\n"){
+        } else {
+            if (text!!.isNotEmpty()) {
+                if (text.toString().substring(text!!.length - 2, text!!.length) != "\n") {
                     text!!.append("\n  ")
-                }else{
+                } else {
                     text!!.append("  ")
                 }
-            }else{
+            } else {
                 text!!.append("  ")
             }
 
 
-            text!!.setSpan(BulletListItemSpan(markwon.configuration().theme(), 0), text!!.length - 2, text!!.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            text!!.setSpan(
+                BulletListItemSpan(markwon.configuration().theme(), 0),
+                text!!.length - 2,
+                text!!.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
 
             setOnEditorActionListener { v, actionId, event ->
 
-                if ((actionId == EditorInfo.IME_ACTION_DONE) || ((event.keyCode == KeyEvent.KEYCODE_ENTER) && (event.action == KeyEvent.ACTION_DOWN ))){
+                if ((actionId == EditorInfo.IME_ACTION_DONE) || ((event.keyCode == KeyEvent.KEYCODE_ENTER) && (event.action == KeyEvent.ACTION_DOWN))) {
                     text!!.append("\n  ")
-                    text!!.setSpan(BulletListItemSpan(markwon.configuration().theme(), 0), text!!.length - 2, text!!.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    return@setOnEditorActionListener  true
-                }else{
+                    text!!.setSpan(
+                        BulletListItemSpan(markwon.configuration().theme(), 0),
+                        text!!.length - 2,
+                        text!!.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    return@setOnEditorActionListener true
+                } else {
                     return@setOnEditorActionListener false
                 }
             }
         }
     }
-    fun triggerOrderedListStyle(stop : Boolean){
-        if (stop){
+
+    fun triggerOrderedListStyle(stop: Boolean) {
+        if (stop) {
             setOnEditorActionListener(null)
-        }else{
+        } else {
             var currentNum = 1
-            if (text!!.isNotEmpty()){
-                if (text.toString().substring(text!!.length - 2, text!!.length) != "\n"){
+            if (text!!.isNotEmpty()) {
+                if (text.toString().substring(text!!.length - 2, text!!.length) != "\n") {
                     text!!.append("\n  ")
-                }else{
+                } else {
                     text!!.append("  ")
                 }
-            }else{
+            } else {
                 text!!.append("  ")
             }
 
-            text!!.setSpan(OrderedListItemSpan(markwon.configuration().theme(), "${currentNum}-"), text!!.length - 2, text!!.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            currentNum ++
+            text!!.setSpan(
+                OrderedListItemSpan(markwon.configuration().theme(), "${currentNum}-"),
+                text!!.length - 2,
+                text!!.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            currentNum++
 
             setOnEditorActionListener { v, actionId, event ->
 
-                if ((actionId == EditorInfo.IME_ACTION_DONE) || ((event.keyCode == KeyEvent.KEYCODE_ENTER) && (event.action == KeyEvent.ACTION_DOWN ))){
+                if ((actionId == EditorInfo.IME_ACTION_DONE) || ((event.keyCode == KeyEvent.KEYCODE_ENTER) && (event.action == KeyEvent.ACTION_DOWN))) {
                     text!!.append("\n  ")
-                    text!!.setSpan(OrderedListItemSpan(markwon.configuration().theme(), "${currentNum}-"), text!!.length - 2, text!!.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    currentNum ++
-                    return@setOnEditorActionListener  true
-                }else{
+                    text!!.setSpan(
+                        OrderedListItemSpan(
+                            markwon.configuration().theme(),
+                            "${currentNum}-"
+                        ), text!!.length - 2, text!!.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    currentNum++
+                    return@setOnEditorActionListener true
+                } else {
                     return@setOnEditorActionListener false
                 }
             }
@@ -170,32 +200,46 @@ class MarkdownEditText : TextInputEditText {
         when (textStyle) {
             TextStyle.BOLD -> {
                 if (before < count) {
-                        text!!.setSpan(
-                            StrongEmphasisSpan(),
-                            start,
-                            start + 1,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
+                    text!!.setSpan(
+                        StrongEmphasisSpan(),
+                        start,
+                        start + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
             }
             TextStyle.ITALIC -> {
                 if (before < count) {
-                        text!!.setSpan(
-                            EmphasisSpan(),
-                            start,
-                            start + 1,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
+                    text!!.setSpan(
+                        EmphasisSpan(),
+                        start,
+                        start + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
             }
             TextStyle.STRIKE -> {
+                text!!.setSpan(
+                    StrikethroughSpan(),
+                    start,
+                    start + 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+            }
+            TextStyle.QUOTE -> {
+
+                val quoteSpan =
+                    QuoteSpan(context.resources.getColor(R.color.divider, context.theme), 10, 28)
+                if (text!!.getSpans(start -1, start, QuoteSpan::class.java).isEmpty()){
                     text!!.setSpan(
-                        StrikethroughSpan(),
+                        quoteSpan,
                         start,
                         start + 1,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
 
+                }
             }
 
             else -> {
@@ -220,7 +264,16 @@ class MarkdownEditText : TextInputEditText {
         val endList = emptyList<Int>().toMutableList()
         var i = 0
 
-        for ((index, span) in text!!.getGivenSpans(span = *arrayOf(TextStyle.BOLD, TextStyle.ITALIC, TextStyle.STRIKE, TextStyle.QUOTE, TextStyle.UNORDERED_LIST, TextStyle.ORDERED_LIST)).withIndex()) {
+        for ((index, span) in text!!.getGivenSpans(
+            span = *arrayOf(
+                TextStyle.BOLD,
+                TextStyle.ITALIC,
+                TextStyle.STRIKE,
+                TextStyle.QUOTE,
+                TextStyle.UNORDERED_LIST,
+                TextStyle.ORDERED_LIST
+            )
+        ).withIndex()) {
             val start = text!!.getSpanStart(span)
             val end = text!!.getSpanEnd(span)
             startList.add(index, start)
@@ -237,35 +290,72 @@ class MarkdownEditText : TextInputEditText {
                         when (selectedSpan) {
                             is StrongEmphasisSpan -> {
                                 val mdString = "**$spannedText**"
-                                mdText = SpannableStringBuilder(mdText!!.replaceRange(start + i, end + i, mdString))
+                                mdText = SpannableStringBuilder(
+                                    mdText!!.replaceRange(
+                                        start + i,
+                                        end + i,
+                                        mdString
+                                    )
+                                )
                                 i += 4
                             }
                             is EmphasisSpan -> {
                                 val mdString = "_${spannedText}_"
-                                mdText = SpannableStringBuilder(mdText!!.replaceRange(start + i, end + i, mdString))
+                                mdText = SpannableStringBuilder(
+                                    mdText!!.replaceRange(
+                                        start + i,
+                                        end + i,
+                                        mdString
+                                    )
+                                )
                                 i += 2
                             }
                             is StrikethroughSpan -> {
                                 val mdString = "~~$spannedText~~"
-                                mdText = SpannableStringBuilder(mdText!!.replaceRange(start + i, end + i, mdString))
+                                mdText = SpannableStringBuilder(
+                                    mdText!!.replaceRange(
+                                        start + i,
+                                        end + i,
+                                        mdString
+                                    )
+                                )
                                 i += 4
                             }
                             is QuoteSpan -> {
-                                val mdString = ">$spannedText"
-                                mdText = SpannableStringBuilder(mdText!!.replaceRange(start + i, end + i, mdString))
+                                val mdString = ">${spannedText}"
+                                mdText = SpannableStringBuilder(
+                                    mdText!!.replaceRange(
+                                        start + i,
+                                        end + i,
+                                        mdString
+                                    )
+                                )
                                 i += 1
                             }
                             is BulletListItemSpan -> {
                                 val mdString = "* $spannedText"
-                                mdText = SpannableStringBuilder(mdText!!.replaceRange(start + i, end + i, mdString))
+                                mdText = SpannableStringBuilder(
+                                    mdText!!.replaceRange(
+                                        start + i,
+                                        end + i,
+                                        mdString
+                                    )
+                                )
                                 i += 2
                             }
 
                             is OrderedListItemSpan -> {
 
-                                val mdString = "* $spannedText"
-                                mdText = SpannableStringBuilder(mdText!!.replaceRange(start + i, end + i, mdString))
-                                i += 2
+                                val mdString = "${selectedSpan.number}. $spannedText"
+                                Log.e("Noted", mdString)
+                                mdText = SpannableStringBuilder(
+                                    mdText!!.replaceRange(
+                                        start + i,
+                                        start + i + 3,
+                                        mdString
+                                    )
+                                )
+                                i += 3
                             }
                         }
                     }
@@ -277,10 +367,10 @@ class MarkdownEditText : TextInputEditText {
     }
 
 
-    private  fun Editable.getGivenSpans(vararg span : TextStyle): MutableList<Any>{
+    private fun Editable.getGivenSpans(vararg span: TextStyle): MutableList<Any> {
         val spanList = emptyArray<Any>().toMutableList()
-        for (selectedSpan in span){
-            when(selectedSpan){
+        for (selectedSpan in span) {
+            when (selectedSpan) {
                 TextStyle.BOLD -> {
                     this.getSpans<StrongEmphasisSpan>().forEach {
                         spanList.add(it)
@@ -301,12 +391,12 @@ class MarkdownEditText : TextInputEditText {
                         spanList.add(it)
                     }
                 }
-                TextStyle.UNORDERED_LIST ->  {
+                TextStyle.UNORDERED_LIST -> {
                     this.getSpans<BulletListItemSpan>().forEach {
                         spanList.add(it)
                     }
                 }
-                TextStyle.ORDERED_LIST ->  {
+                TextStyle.ORDERED_LIST -> {
                     this.getSpans<OrderedListItemSpan>().forEach {
                         spanList.add(it)
                     }
@@ -314,5 +404,142 @@ class MarkdownEditText : TextInputEditText {
             }
         }
         return spanList
+    }
+
+    private fun Editable.getGivenSpansAt(
+        vararg span: TextStyle,
+        start: Int,
+        end: Int
+    ): MutableList<Any> {
+        val spanList = emptyArray<Any>().toMutableList()
+        for (selectedSpan in span) {
+            when (selectedSpan) {
+                TextStyle.BOLD -> {
+                    this.getSpans<StrongEmphasisSpan>(start, end).forEach {
+                        spanList.add(it)
+                    }
+                }
+                TextStyle.ITALIC -> {
+                    this.getSpans<EmphasisSpan>(start, end).forEach {
+                        spanList.add(it)
+                    }
+                }
+                TextStyle.STRIKE -> {
+                    this.getSpans<StrikethroughSpan>(start, end).forEach {
+                        spanList.add(it)
+                    }
+                }
+                TextStyle.QUOTE -> {
+                    this.getSpans<QuoteSpan>(start, end).forEach {
+                        spanList.add(it)
+                    }
+                }
+                TextStyle.UNORDERED_LIST -> {
+                    this.getSpans<BulletListItemSpan>(start, end).forEach {
+                        spanList.add(it)
+                    }
+                }
+                TextStyle.ORDERED_LIST -> {
+                    this.getSpans<OrderedListItemSpan>(start, end).forEach {
+                        spanList.add(it)
+                    }
+                }
+            }
+        }
+        return spanList
+    }
+    private var selectedButtonId: Int? = null
+
+    override fun onSelectionChanged(selStart: Int, selEnd: Int) {
+
+        if (selStart == selEnd && markdownStylesBar != null && selStart > 0) {
+            val selectedSpans = text!!.getGivenSpansAt(
+                span = *arrayOf(
+                    TextStyle.BOLD,
+                    TextStyle.ITALIC,
+                    TextStyle.STRIKE,
+                    TextStyle.QUOTE,
+                    TextStyle.UNORDERED_LIST,
+                    TextStyle.ORDERED_LIST
+                ),
+                start = selStart - 1, end = selStart
+            )
+            if (selectedSpans.size > 0) {
+                for (span in selectedSpans.distinctBy { it.javaClass }) {
+                    when (span) {
+                        is StrongEmphasisSpan -> {
+                            val boldButton =
+                                markdownStylesBar!!.horizontalListView.getViewWithId(R.id.style_button_bold) as MaterialButton
+                            if (!boldButton.isChecked) {
+                                boldButton.isChecked = true
+                            }
+                            selectedButtonId = boldButton.id
+                        }
+                        is EmphasisSpan -> {
+                            val italicButton =
+                                markdownStylesBar!!.horizontalListView.getViewWithId(R.id.style_button_italic) as MaterialButton
+                            if (!italicButton.isChecked) {
+                                italicButton.isChecked = true
+                            }
+                            selectedButtonId = italicButton.id
+                        }
+                        is StrikethroughSpan -> {
+                            val strikeThroughButton =
+                                markdownStylesBar!!.horizontalListView.getViewWithId(R.id.style_button_strike) as MaterialButton
+                            if (!strikeThroughButton.isChecked) {
+                                strikeThroughButton.isChecked = true
+                            }
+                            selectedButtonId = strikeThroughButton.id
+                        }
+                        is QuoteSpan -> {
+                            val quoteButton =
+                                markdownStylesBar!!.horizontalListView.getViewWithId(R.id.style_button_quote) as MaterialButton
+                            if (!quoteButton.isChecked) {
+                                quoteButton.isChecked = true
+                            }
+                            selectedButtonId = quoteButton.id
+                        }
+                        is BulletListItemSpan -> {
+                            val bulletListButton =
+                                markdownStylesBar!!.horizontalListView.getViewWithId(R.id.style_button_unordered_list) as MaterialButton
+                            if (!bulletListButton.isChecked) {
+                                bulletListButton.isChecked = true
+                            }
+                            selectedButtonId = bulletListButton.id
+                        }
+
+                        is OrderedListItemSpan -> {
+                            val numberedListButton =
+                                markdownStylesBar!!.horizontalListView.getViewWithId(R.id.style_button_ordered_list) as MaterialButton
+                            if (!numberedListButton.isChecked) {
+                                numberedListButton.isChecked = true
+                            }
+                            selectedButtonId = numberedListButton.id
+
+                        }
+
+                    }
+                }
+            } else {
+                if (selectedButtonId != null) {
+                    val button =
+                        markdownStylesBar!!.horizontalListView.getViewWithId(selectedButtonId!!) as MaterialButton
+                    if (button.isChecked) {
+                        button.isChecked = false
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addTextWatcher(textWatcher: TextWatcher){
+        textWatchers.add(textWatcher)
+        addTextChangedListener(textWatcher)
+    }
+
+    private fun clearTextWatchers(){
+        for (textWatcher in textWatchers){
+            removeTextChangedListener(textWatcher)
+        }
     }
 }

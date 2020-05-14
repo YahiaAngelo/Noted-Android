@@ -10,8 +10,8 @@ open class BaseFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        exitTransition = Hold()
-        sharedElementEnterTransition = MaterialContainerTransform()
+        enterTransition = MaterialFadeThrough.create()
+        exitTransition = MaterialFadeThrough.create()
 
     }
 }

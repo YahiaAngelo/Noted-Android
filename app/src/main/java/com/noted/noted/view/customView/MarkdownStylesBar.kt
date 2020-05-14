@@ -14,6 +14,7 @@ class MarkdownStylesBar @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
+    val horizontalListView = HorizontalListView(context, null)
     lateinit var adapter: StylesBarAdapter
     var markdownEditText: MarkdownEditText? = null
     set(value) {adapter.markdownEditText = value}
@@ -23,7 +24,6 @@ class MarkdownStylesBar @JvmOverloads constructor(
 
     private fun initView() {
 
-        val horizontalListView = HorizontalListView(context, null)
         horizontalListView.setDividerWidth(28)
         val styleButtons = ArrayList<StyleButton>()
         styleButtons.add(StyleButton(R.drawable.ic_format_bold, R.id.style_button_bold))
@@ -34,10 +34,10 @@ class MarkdownStylesBar @JvmOverloads constructor(
         styleButtons.add(StyleButton(R.drawable.ic_format_list_numbered, R.id.style_button_ordered_list))
 
         adapter = StylesBarAdapter(styleButtons, context,
-            OnClickListener { v -> horizontalListView.selectMaterialButtonItem(v) })
-        if (markdownEditText != null) {
-            adapter.markdownEditText = markdownEditText
-        }
+            OnClickListener { v ->
+
+                /*horizontalListView.selectMaterialButtonItem(v)*/
+            })
         horizontalListView.adapter = adapter
         addView(horizontalListView)
 
@@ -51,31 +51,14 @@ class MarkdownStylesBar @JvmOverloads constructor(
         context: Context,
        var onClickListener: OnClickListener
     ) : ArrayAdapter<StyleButton>(context, R.layout.styles_bar_item, data), View.OnClickListener {
+        private var selectedButton:MaterialButton? = null
         var markdownEditText: MarkdownEditText? = null
 
         override fun onClick(v: View?) {
             onClickListener.onClick(v)
             val button = v as MaterialButton
 
-            if (markdownEditText != null) {
-                when (button.id) {
-                    R.id.style_button_bold -> markdownEditText!!.triggerStyle(
-                        MarkdownEditText.TextStyle.BOLD,
-                        !button.isChecked
-                    )
-                    R.id.style_button_italic -> markdownEditText!!.triggerStyle(
-                        MarkdownEditText.TextStyle.ITALIC,
-                        !button.isChecked
-                    )
-                    R.id.style_button_strike -> markdownEditText!!.triggerStyle(
-                        MarkdownEditText.TextStyle.STRIKE,
-                        !button.isChecked
-                    )
-                    R.id.style_button_quote -> markdownEditText!!.addQuote()
-                    R.id.style_button_unordered_list -> markdownEditText!!.triggerUnOrderedListStyle(!button.isChecked)
-                    R.id.style_button_ordered_list -> markdownEditText!!.triggerOrderedListStyle(!button.isChecked)
-                }
-            }
+
         }
 
         private var lastPosition = -1
@@ -100,11 +83,46 @@ class MarkdownStylesBar @JvmOverloads constructor(
             viewHolder.materialButton.icon = context.getDrawable(styleButton!!.icon)
             viewHolder.materialButton.id = styleButton.id
             viewHolder.materialButton.setOnClickListener(this)
-            if (styleButton.id == R.id.style_button_quote){
-                viewHolder.materialButton.isCheckable = false
+            viewHolder.materialButton.addOnCheckedChangeListener { button, isChecked ->
+                if (selectedButton != null){
+                    if (selectedButton != button){
+                        styleButtonClick(selectedButton!!)
+                        selectedButton!!.isChecked = false
+                    }
+                    styleButtonClick(button)
+                    selectedButton = button
+                }else{
+                    styleButtonClick(button)
+                    selectedButton = button
+                }
             }
             viewHolder.materialButton.tag = position
             return result
+        }
+
+        private fun styleButtonClick(button:MaterialButton){
+            if (markdownEditText != null) {
+                when (button.id) {
+                    R.id.style_button_bold -> markdownEditText!!.triggerStyle(
+                        MarkdownEditText.TextStyle.BOLD,
+                        !button.isChecked
+                    )
+                    R.id.style_button_italic -> markdownEditText!!.triggerStyle(
+                        MarkdownEditText.TextStyle.ITALIC,
+                        !button.isChecked
+                    )
+                    R.id.style_button_strike -> markdownEditText!!.triggerStyle(
+                        MarkdownEditText.TextStyle.STRIKE,
+                        !button.isChecked
+                    )
+                    R.id.style_button_quote -> markdownEditText!!.triggerStyle(
+                        MarkdownEditText.TextStyle.QUOTE,
+                        !button.isChecked
+                    )
+                    R.id.style_button_unordered_list -> markdownEditText!!.triggerUnOrderedListStyle(!button.isChecked)
+                    R.id.style_button_ordered_list -> markdownEditText!!.triggerOrderedListStyle(!button.isChecked)
+                }
+            }
         }
     }
 

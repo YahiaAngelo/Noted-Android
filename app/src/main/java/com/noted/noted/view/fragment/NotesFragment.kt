@@ -3,12 +3,16 @@ package com.noted.noted.view.fragment
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import androidx.appcompat.view.ActionMode
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.transition.Hold
+import com.google.android.material.transition.MaterialContainerTransform
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
@@ -28,11 +32,20 @@ import io.realm.Sort
 import org.parceler.Parcels
 
 class NotesFragment : BaseFragment(), ItemTouchCallback {
-
+    private var searchView : TextInputEditText? = null
     var actionMode: ActionMode? = null
     private val itemAdapter = ItemAdapter<NoteBinding>()
     private val fastAdapter = FastAdapter.with(itemAdapter)
     private lateinit var mRealm: Realm
+    private var searchTextWatcher : TextWatcher? = null
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = Hold()
+        sharedElementEnterTransition = MaterialContainerTransform()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -73,6 +86,10 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
 
                 }
             }
+        }
+        itemAdapter.itemFilter.filterPredicate = {
+                item: NoteBinding, constraint: CharSequence? ->
+            item.noteBody.text.contains(constraint.toString(), true)
         }
         fastAdapter.onLongClickListener = object : LongClickListener<NoteBinding>{
             override fun invoke(
@@ -174,6 +191,35 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
             }
 
         }
+
+        initSearch()
+    }
+
+    private fun initSearch(){
+        val activity = this.activity
+        if(activity is MainActivity){
+             searchView = activity.findViewById(R.id.main_search)
+            searchTextWatcher = object : TextWatcher{
+                override fun afterTextChanged(s: Editable?) {
+
+                }
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                        itemAdapter.filter(s)
+                }
+
+
+            }
+            searchView!!.addTextChangedListener(searchTextWatcher)
+        }
     }
 
   /*  private fun generateItems(): List<NoteBinding> {
@@ -198,7 +244,6 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         val notesList = mRealm.where(Note::class.java).sort("date", Sort.DESCENDING).findAll()
             itemAdapter.setNewList(notesList.toBinding())
 
-        Log.e("Noted", "list size is ${notesList.size}")
     }
 
 
@@ -223,5 +268,11 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
     override fun onResume() {
         super.onResume()
         update()
+    }
+    override fun onPause() {
+        if (searchView != null && searchTextWatcher != null){
+            searchView!!.removeTextChangedListener(searchTextWatcher)
+        }
+        super.onPause()
     }
 }

@@ -21,10 +21,7 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
     lateinit var noteTitle:TextView
     lateinit var noteBody:TextView
 
-    override var identifier: Long
-        get() = note.id
-        set(value) {}
-
+    override var identifier: Long  = note.id
     override val type: Int
         get() = R.id.fastadapter_item
 

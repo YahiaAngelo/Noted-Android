@@ -3,13 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/notesFragment">
+    app:startDestination="@id/notes">
 
     <fragment
-        android:id="@+id/notesFragment"
+        android:id="@+id/notes"
         android:name="com.noted.noted.view.fragment.NotesFragment"
         android:label="fragment_notes"
         tools:layout="@layout/fragment_notes" >
+        <action
+            android:id="@+id/action_notes_to_tasks"
+            app:destination="@id/tasks"/>
+    </fragment>
+    <fragment
+        android:id="@+id/tasks"
+        android:name="com.noted.noted.view.fragment.TasksFragment"
+        android:label="fragment_tasks"
+        tools:layout="@layout/fragment_tasks" >
+        <action
+            android:id="@+id/action_tasks_to_reminders"
+            app:destination="@id/reminders"/>
+    </fragment>
+    <fragment
+        android:id="@+id/reminders"
+        android:name="com.noted.noted.view.fragment.RemindersFragment"
+        android:label="fragment_reminders"
+        tools:layout="@layout/fragment_reminders">
     </fragment>
 
 </navigation>
