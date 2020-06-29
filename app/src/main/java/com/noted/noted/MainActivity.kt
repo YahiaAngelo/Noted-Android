@@ -8,21 +8,17 @@ import android.view.Window
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import com.google.android.material.transition.Hold
-import com.google.android.material.transition.MaterialContainerTransform
-import com.google.android.material.transition.MaterialContainerTransformSharedElementCallback
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.noted.noted.databinding.ActivityMainBinding
-import com.noted.noted.utils.ContainerTransformConfigurationHelper
 import com.noted.noted.view.activity.BaseActivity
 import com.noted.noted.view.activity.NoteAddActivity
 import com.noted.noted.view.fragment.NotesFragment
+import com.noted.noted.view.fragment.TasksFragment
 import com.transitionseverywhere.extra.Scale
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
@@ -48,10 +44,10 @@ class MainActivity : BaseActivity() {
         NavigationUI.setupWithNavController(binding.mainBottomNavigation, navHostFragment.navController)
 
         binding.mainFab.setOnClickListener {
-            val currentFragment = supportFragmentManager.currentNavigationFragment
-            if (currentFragment is NotesFragment){
-                val intent = Intent(this, NoteAddActivity::class.java)
-                startActivity(intent)
+            when(val currentFragment = supportFragmentManager.currentNavigationFragment){
+                is NotesFragment -> {val intent = Intent(this, NoteAddActivity::class.java)
+                    startActivity(intent)}
+                is TasksFragment -> currentFragment.showTasksAdd()
             }
 
         }
@@ -78,7 +74,7 @@ class MainActivity : BaseActivity() {
 
     }
 
-    val FragmentManager.currentNavigationFragment: Fragment?
+    private val FragmentManager.currentNavigationFragment: Fragment?
         get() = primaryNavigationFragment?.childFragmentManager?.fragments?.first()
 
     override fun onBackPressed() {

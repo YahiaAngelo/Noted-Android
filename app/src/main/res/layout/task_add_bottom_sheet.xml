@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/background"
+    android:id="@+id/bottom_sheet_container"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:background="@android:color/transparent"
+        android:hint="Task Title"
+        android:textSize="18sp"
+        android:maxLines="1"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:nextFocusDown="@id/task_add_desc_editText"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/text_primary"
+        android:id="@+id/task_add_editText"/>
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:maxLines="1"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
+        android:hint="Details"
+        android:textSize="16sp"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/text_primary"
+        android:id="@+id/task_add_desc_editText"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_notes"
+            app:iconGravity="start"
+            android:id="@+id/task_add_desc"
+            android:layout_alignParentStart="true"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            app:iconTint="@color/checkable_button_color"/>
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_today"
+            app:iconGravity="textStart"
+            android:checkable="true"
+            app:iconPadding="0dp"
+            android:id="@+id/task_add_reminder"
+            android:layout_toEndOf="@id/task_add_desc"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            app:iconTint="@color/checkable_button_color"/>
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_repeat"
+            app:iconGravity="textStart"
+            android:checkable="true"
+            app:iconPadding="0dp"
+            android:id="@+id/task_add_repeat"
+            android:layout_toEndOf="@id/task_add_reminder"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            app:iconTint="@color/checkable_button_color"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primary"
+            android:fontFamily="@font/roboto_bold"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/task_add_save"
+            android:text="Save"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

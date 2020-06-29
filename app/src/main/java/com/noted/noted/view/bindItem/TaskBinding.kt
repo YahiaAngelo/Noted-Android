@@ -14,6 +14,7 @@ import com.mikepenz.fastadapter.binding.AbstractBindingItem
 import com.noted.noted.R
 import com.noted.noted.databinding.ItemTaskBinding
 import com.noted.noted.model.Task
+import io.realm.Realm
 
 class TaskBinding(var task: Task) : AbstractBindingItem<ItemTaskBinding>(){
 
@@ -35,6 +36,12 @@ class TaskBinding(var task: Task) : AbstractBindingItem<ItemTaskBinding>(){
             binding.taskTitle.text = spannableStringBuilder
         }
         binding.taskCheckbox.setOnCheckedChangeListener { buttonView, isChecked ->
+            val realm = Realm.getDefaultInstance()
+            realm.use {
+                realm.beginTransaction()
+                task.checked = isChecked
+                realm.commitTransaction()
+            }
             if (isChecked){
                 binding.taskTitle.startStrikeThroughAnimation()
             }else{

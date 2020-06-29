@@ -3,10 +3,6 @@ package com.noted.noted.view.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.Editable
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.TextWatcher
 import android.text.style.QuoteSpan
 import android.view.*
 import android.widget.*
@@ -19,17 +15,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.transition.MaterialContainerTransform
-import com.google.android.material.transition.MaterialContainerTransformSharedElementCallback
+import com.google.android.material.transition.platform.MaterialContainerTransform
+import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.noted.noted.R
 import com.noted.noted.databinding.ActivityNoteAddBinding
 import com.noted.noted.model.Note
 import com.noted.noted.model.NoteCategory
-import com.noted.noted.view.customView.MarkdownEditText
-import com.transitionseverywhere.extra.Scale
 import io.noties.markwon.*
-import io.noties.markwon.editor.MarkwonEditor
-import io.noties.markwon.editor.MarkwonEditorTextWatcher
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.realm.Realm
 import io.realm.RealmList
@@ -40,7 +32,6 @@ import org.commonmark.node.SoftLineBreak
 import org.parceler.Parcels
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.Executors
 import kotlin.collections.HashMap
 import kotlin.properties.Delegates
 
@@ -52,7 +43,7 @@ lateinit var note: Note
 var newColor by Delegates.notNull<Int>()
 var realm: Realm = Realm.getDefaultInstance()
 var noteId by Delegates.notNull<Long>()
-lateinit var markwon:Markwon
+lateinit var markwon: Markwon
 
 class NoteAddActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,13 +68,18 @@ class NoteAddActivity : AppCompatActivity() {
                 override fun configureSpansFactory(builder: MarkwonSpansFactory.Builder) {
                     super.configureSpansFactory(builder)
                     builder.setFactory(BlockQuote::class.java, SpanFactory { _, _ ->
-                        return@SpanFactory QuoteSpan(resources.getColor(R.color.divider, theme), 10, 28)
+                        return@SpanFactory QuoteSpan(
+                            resources.getColor(R.color.divider, theme),
+                            10,
+                            28
+                        )
                     })
                 }
 
                 override fun configureVisitor(builder: MarkwonVisitor.Builder) {
                     super.configureVisitor(builder)
-                    builder.on(SoftLineBreak::class.java
+                    builder.on(
+                        SoftLineBreak::class.java
                     ) { visitor, n -> visitor.forceNewLine() }
                 }
             })
@@ -280,23 +276,23 @@ class NoteAddActivity : AppCompatActivity() {
 
 
     private fun addCategoryChip(noteCategory: NoteCategory) {
-       if (binding.chipGroup.findViewById<Chip>(noteCategory.id.toInt()) == null){
-           val chip = Chip(this)
-           chip.id = noteCategory.id.toInt()
-           chip.chipBackgroundColor = resources.getColorStateList(newColor, theme).withAlpha(200)
-           chip.chipStrokeWidth = 2F
-           chip.chipStrokeColor = resources.getColorStateList(R.color.text_primary, theme)
-           chip.text = noteCategory.title
-           chip.setTextColor(resources.getColor(R.color.text_primary, theme))
-           chip.closeIcon = resources.getDrawable(R.drawable.ic_close, theme)
-           chip.closeIconTint = resources.getColorStateList(R.color.text_secondary, theme)
-           chip.isCloseIconVisible = true
-           chip.setOnCloseIconClickListener {
-               categoriesList.remove(noteCategory)
-               binding.chipGroup.removeView(chip)
-           }
-           binding.chipGroup.addView(chip)
-       }
+        if (binding.chipGroup.findViewById<Chip>(noteCategory.id.toInt()) == null) {
+            val chip = Chip(this)
+            chip.id = noteCategory.id.toInt()
+            chip.chipBackgroundColor = resources.getColorStateList(newColor, theme).withAlpha(200)
+            chip.chipStrokeWidth = 2F
+            chip.chipStrokeColor = resources.getColorStateList(R.color.text_primary, theme)
+            chip.text = noteCategory.title
+            chip.setTextColor(resources.getColor(R.color.text_primary, theme))
+            chip.closeIcon = resources.getDrawable(R.drawable.ic_close, theme)
+            chip.closeIconTint = resources.getColorStateList(R.color.text_secondary, theme)
+            chip.isCloseIconVisible = true
+            chip.setOnCloseIconClickListener {
+                categoriesList.remove(noteCategory)
+                binding.chipGroup.removeView(chip)
+            }
+            binding.chipGroup.addView(chip)
+        }
 
 
     }
@@ -322,10 +318,10 @@ class NoteAddActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupMarkwon(){
+    private fun setupMarkwon() {
         binding.noteStylesBar.markdownEditText = binding.noteBodyEditText
         binding.noteBodyEditText.markdownStylesBar = binding.noteStylesBar
-        KeyboardVisibilityEvent.setEventListener(this, object :KeyboardVisibilityEventListener{
+        KeyboardVisibilityEvent.setEventListener(this, object : KeyboardVisibilityEventListener {
             override fun onVisibilityChanged(isOpen: Boolean) {
                 val set: TransitionSet = TransitionSet()
                     .addTransition(Fade())
