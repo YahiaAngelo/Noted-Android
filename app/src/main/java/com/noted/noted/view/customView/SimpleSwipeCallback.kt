@@ -129,7 +129,6 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
                 val left = if (isLeft) itemView.right + dX.toInt() else itemView.left
                 val right = if (isLeft) itemView.right else itemView.left + dX.toInt()
                 val rectF = RectF(left.toFloat() - 18, itemView.top.toFloat(), right.toFloat() + 18, itemView.bottom.toFloat())
-                //c.drawRoundRect(rectF, 12F, 12F, bgPaint)
                 val path = Path()
                 path.addRoundRect(rectF, 12F, 12F, Path.Direction.CW)
                 c.clipPath(path)

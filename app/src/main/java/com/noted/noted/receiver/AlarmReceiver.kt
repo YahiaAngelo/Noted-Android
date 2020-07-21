@@ -10,7 +10,10 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.noted.noted.MainActivity
 import com.noted.noted.R
+import com.noted.noted.model.Reminder
 import com.noted.noted.model.Task
+import io.realm.Realm
+import io.realm.kotlin.where
 import org.parceler.Parcels
 
 class AlarmReceiver : BroadcastReceiver() {
@@ -18,7 +21,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) { 
 
-        Log.e("Noted", "Just received an alarm")
         if (intent!!.getStringExtra("myAction") != null && intent.getStringExtra("myAction") == "alarmNotify"){
             val manager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val builder = NotificationCompat.Builder(context, channelId)

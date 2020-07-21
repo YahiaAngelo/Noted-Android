@@ -18,7 +18,6 @@
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <item name="actionMenuTextColor">@color/primary</item>
         <item name="android:actionMenuTextColor">@color/primary</item>
-        <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
 
     </style>
 

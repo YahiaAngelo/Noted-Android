@@ -73,7 +73,7 @@
                 android:textStyle="bold"
                 android:transitionName="note_title" />
 
-            <com.noted.noted.view.customView.MarkdownEditText
+            <com.yahiaangelo.markdownedittext.MarkdownEditText
                 android:id="@+id/note_body_editText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -81,8 +81,6 @@
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/roboto_bold"
                 android:lineSpacingExtra="4dp"
-                android:inputType="textMultiLine"
-                android:imeOptions="actionDone"
                 android:gravity="top"
                 android:hint="Note"
                 android:padding="12dp"
@@ -109,7 +107,7 @@
         tools:text="Edited Today 20:25" />
 
 
-    <com.noted.noted.view.customView.MarkdownStylesBar
+    <com.yahiaangelo.markdownedittext.MarkdownStylesBar
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:clipToPadding="false"

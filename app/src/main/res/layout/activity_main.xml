@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:id="@+id/main_drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -10,42 +17,20 @@
     <com.google.android.material.appbar.AppBarLayout
         android:background="@color/background"
         android:layout_width="match_parent"
-        app:elevation="0dp"
         android:id="@+id/main_appBar"
+        app:liftOnScroll="true"
         android:layout_height="wrap_content">
-       <com.google.android.material.card.MaterialCardView
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           app:cardBackgroundColor="@color/icon"
-           app:layout_scrollFlags="scroll|enterAlways|snap"
-           android:id="@+id/main_search_card"
-           android:layout_margin="12dp"
-           app:cardCornerRadius="8dp"
-           android:elevation="6dp">
 
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_margin="12dp"
-               android:orientation="horizontal">
-               <ImageView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/ic_hamburger"
-                   android:tint="@color/text_primary"/>
-
-               <com.google.android.material.textfield.TextInputEditText
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:background="@color/icon"
-                   android:hint="@string/search_your_notes"
-                   android:id="@+id/main_search"
-                   android:textColorHint="@color/text_secondary"
-                   android:layout_marginStart="16dp"
-                   android:textColor="@color/text_primary"
-                   android:fontFamily="@font/roboto_regular"/>
-           </LinearLayout>
-       </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/background"
+            android:id="@+id/main_toolbar"
+            app:title="Noted"
+            app:menu="@menu/main_toolbar"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:navigationIcon="@drawable/ic_menu"
+            />
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -54,7 +39,7 @@
         android:layout_marginBottom="70dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/add"
-        app:backgroundTint="@color/primary"
+        app:backgroundTint="@color/accent"
         android:id="@+id/main_fab"
         app:srcCompat="@android:drawable/ic_input_add"
         app:tint="@color/background"
@@ -77,9 +62,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:backgroundTint="@color/icon"
         app:backgroundTint="@color/icon"
         app:menu="@menu/main_bottom_nav"
         android:id="@+id/main_bottom_navigation"
         />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.shreyaspatil.material.navigationview.MaterialNavigationView
+        android:id="@+id/nav_view"
+        android:theme="@style/Widget.NavigationView.RippleEffect"
+        android:layout_gravity="start"
+        app:insetForeground="@android:color/transparent"
+        android:backgroundTint="@color/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:itemStyle="rounded_rectangle"
+        app:menu="@menu/main_nav_drawer"/>
+</androidx.drawerlayout.widget.DrawerLayout>

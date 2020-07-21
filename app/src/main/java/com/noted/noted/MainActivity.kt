@@ -1,10 +1,16 @@
 package com.noted.noted
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.view.Window
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator
@@ -15,17 +21,23 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.noted.noted.databinding.ActivityMainBinding
+import com.noted.noted.model.NoteCategory
+import com.noted.noted.utils.Utils
 import com.noted.noted.view.activity.BaseActivity
 import com.noted.noted.view.activity.NoteAddActivity
+import com.noted.noted.view.fragment.BaseFragment
 import com.noted.noted.view.fragment.NotesFragment
 import com.noted.noted.view.fragment.TasksFragment
 import com.transitionseverywhere.extra.Scale
+import io.realm.Realm
+import io.realm.kotlin.where
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
 
 class MainActivity : BaseActivity() {
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
+    private var realm = Realm.getDefaultInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
@@ -34,10 +46,11 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        setupNavSlider()
+        setSupportActionBar(binding.mainToolbar)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
-            binding.mainFab.outlineAmbientShadowColor = resources.getColor(R.color.primary,theme)
-            binding.mainFab.outlineSpotShadowColor = resources.getColor(R.color.primary,theme)
+            binding.mainFab.outlineAmbientShadowColor = binding.mainFab.backgroundTintList!!.defaultColor
+            binding.mainFab.outlineSpotShadowColor = binding.mainFab.backgroundTintList!!.defaultColor
         }
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -52,25 +65,61 @@ class MainActivity : BaseActivity() {
 
         }
 
-        KeyboardVisibilityEvent.setEventListener(this, object : KeyboardVisibilityEventListener {
-            override fun onVisibilityChanged(isOpen: Boolean) {
-               if (!isOpen && binding.mainSearch.isFocused){
-                   binding.mainSearch.clearFocus()
-               }
+    }
+
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_toolbar, menu)
+        val searchItem = menu!!.findItem(R.id.main_search)
+        val searchView = searchItem.actionView as SearchView
+        val currentFragment = supportFragmentManager.currentNavigationFragment as BaseFragment
+        searchView.queryHint = "Search"
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+               currentFragment.filterItem(newText!!)
+                return false
             }
 
         })
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
+        return super.onCreateOptionsMenu(menu)
     }
 
-    fun hideMainSearch(hide: Boolean) {
-        val set: TransitionSet = TransitionSet()
-            .addTransition(Scale(0.7f))
-            .addTransition(Fade())
-            .setInterpolator(FastOutLinearInInterpolator())
+    private fun setupNavSlider(){
+        val categoriesList = realm.where(NoteCategory::class.java).findAll()
+        val menu = binding.navView.menu
+        val categoriesSubMenu = menu.addSubMenu(R.id.categories_group, 123, Menu.NONE, "Categories")
 
-        TransitionManager.beginDelayedTransition(binding.mainSearchCard, set)
-        if (hide) binding.mainSearchCard.visibility = View.INVISIBLE
-        else binding.mainSearchCard.visibility = View.VISIBLE
+        categoriesSubMenu.add(R.id.categories_group, R.id.all_categories_item, Menu.NONE, "All categories").setIcon(R.drawable.ic_label).isCheckable = true
+
+        for (category in categoriesList){
+            categoriesSubMenu.add(R.id.categories_group, category.id.toInt(), Menu.NONE, category.title).setIcon(R.drawable.ic_label).isCheckable = true
+        }
+        categoriesSubMenu.add(R.id.categories_group, R.id.all_categories_item, Menu.NONE, "Add category").setIcon(R.drawable.ic_add).isCheckable = false
+
+        menu.add(R.id.others_group, R.id.settings_item, Menu.NONE, "Settings").setIcon(R.drawable.ic_settings).isCheckable = false
+
+        binding.navView.setNavigationItemSelectedListener {
+            val currentFragment = supportFragmentManager.currentNavigationFragment as BaseFragment
+            when(it.itemId){
+                R.id.all_categories_item ->{currentFragment.refresh()}
+                R.id.add_category_item ->{Utils.showCategories(this, layoutInflater, object : Utils.Companion.OnSelectedCategory{
+                    override fun onSelected(noteCategory: NoteCategory) {}
+                })}
+                R.id.settings_item ->{}
+                else -> currentFragment.filterCategories(it.title.toString())
+            }
+            binding.mainDrawerLayout.closeDrawer(binding.navView)
+            return@setNavigationItemSelectedListener true
+        }
 
     }
 

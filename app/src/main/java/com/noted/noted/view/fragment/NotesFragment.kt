@@ -103,7 +103,6 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
                 if (mainActivity is MainActivity) {
                     if (itemsSize > 0) {
                         if (actionMode == null) {
-                            mainActivity.hideMainSearch(true)
                             actionMode =
                                 mainActivity.startSupportActionMode(object :
                                     ActionMode.Callback {
@@ -137,7 +136,6 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
                                     }
 
                                     override fun onDestroyActionMode(mode: ActionMode?) {
-                                        mainActivity.hideMainSearch(false)
                                         for (selectedItem : NoteBinding in fastAdapter.getSelectExtension().selectedItems){
                                             selectedItem.isSelected = false
                                             selectedItem.noteCard.isChecked = false
@@ -153,7 +151,6 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
                     } else {
                         actionMode!!.finish()
                     }
-                    Log.e("Noted", "U selected item")
                 }
                 return true
             }
@@ -192,54 +189,9 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
 
         }
 
-        initSearch()
     }
 
-    private fun initSearch(){
-        val activity = this.activity
-        if(activity is MainActivity){
-             searchView = activity.findViewById(R.id.main_search)
-            searchTextWatcher = object : TextWatcher{
-                override fun afterTextChanged(s: Editable?) {
 
-                }
-
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                        itemAdapter.filter(s)
-                }
-
-
-            }
-            searchView!!.addTextChangedListener(searchTextWatcher)
-        }
-    }
-
-  /*  private fun generateItems(): List<NoteBinding> {
-        val noteBinding =
-            NoteBinding(Note(1234658, "Test note", "Test note", System.currentTimeMillis(), R.color.card_blue))
-        val noteBinding2 =
-            NoteBinding(Note(1234659, "Another test note", "Yup, that's another test note", System.currentTimeMillis(), R.color.card_green))
-        val noteBinding3 =
-            NoteBinding(Note(12346510, "Test note", "Another test note... \nAGAIN!!", System.currentTimeMillis(), R.color.card_purple))
-        val noteBinding4 =
-            NoteBinding(Note(12346511, "Test note", "You what's up, this is a test note :)", System.currentTimeMillis(), R.color.card_red))
-        val noteBinding5 =
-            NoteBinding(Note(12346512, "Test note", "Test note", System.currentTimeMillis(), R.color.card_violet))
-        val noteBinding6 =
-            NoteBinding(Note(12346513, "Test note", "Test note", System.currentTimeMillis(), R.color.card_yellow))
-
-        return listOf(noteBinding, noteBinding2, noteBinding3, noteBinding4, noteBinding5, noteBinding6)
-    }
-
-   */
     private fun update(){
         val notesList = mRealm.where(Note::class.java).sort("date", Sort.DESCENDING).findAll()
             itemAdapter.setNewList(notesList.toBinding())
@@ -274,5 +226,18 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
             searchView!!.removeTextChangedListener(searchTextWatcher)
         }
         super.onPause()
+    }
+
+    override fun refresh() {
+        update()
+    }
+
+    override fun filterCategories(categoryName : String) {
+        val notesList = mRealm.where(Note::class.java).equalTo("categories.title", categoryName).sort("date", Sort.DESCENDING).findAll()
+        itemAdapter.setNewList(notesList.toBinding())
+    }
+
+    override fun filterItem(string: String) {
+        itemAdapter.filter(string)
     }
 }

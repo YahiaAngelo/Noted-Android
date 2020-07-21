@@ -14,7 +14,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add">Add</string>
-    <string name="search_your_notes">Search your notes</string>
+    <string name="search_your_notes">Search</string>
     <string name="options">Options</string>
     <string name="save">Save</string>
     <string name="category">Category</string>

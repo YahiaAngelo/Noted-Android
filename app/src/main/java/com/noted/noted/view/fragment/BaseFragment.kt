@@ -1,9 +1,8 @@
 package com.noted.noted.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
-import com.google.android.material.transition.Hold
-import com.google.android.material.transition.MaterialContainerTransform
 import com.google.android.material.transition.MaterialFadeThrough
 
 open class BaseFragment : Fragment() {
@@ -12,6 +11,9 @@ open class BaseFragment : Fragment() {
         super.onCreate(savedInstanceState)
         enterTransition = MaterialFadeThrough()
         exitTransition = MaterialFadeThrough()
-
     }
+
+    open fun filterCategories(categoryName : String){}
+    open fun refresh(){}
+    open fun filterItem(string:String){}
 }
