@@ -7,6 +7,7 @@
     android:layout_marginStart="12dp"
     android:layout_marginEnd="12dp"
     android:layout_marginBottom="8dp"
+    android:transitionName="task_shared_element_container"
     app:strokeColor="@color/card_stroke_color"
     app:strokeWidth="2dp"
     app:cardCornerRadius="8dp"
@@ -45,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_regular"
                 android:textColor="@color/text_primary"
+                android:transitionName="task_title"
                 android:textSize="15sp"
                 tools:text="This is a task" />
 
@@ -55,6 +57,7 @@
                 android:fontFamily="@font/roboto_light"
                 android:visibility="gone"
                 android:lines="1"
+                android:transitionName="task_desc"
                 android:textColor="@color/text_secondary"
                 tools:text="This is task desc text" />
 

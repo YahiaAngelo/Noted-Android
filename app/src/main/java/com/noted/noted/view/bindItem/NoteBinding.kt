@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.mikepenz.fastadapter.binding.AbstractBindingItem
 import com.noted.noted.R
 import com.noted.noted.databinding.ItemNoteBinding
@@ -21,6 +22,7 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
     lateinit var noteCard:MaterialCardView
     private lateinit var noteTitle:TextView
     lateinit var noteBody:TextView
+    lateinit var categoriesChipGroup: ChipGroup
 
     override var identifier: Long  = note.id
     override val type: Int
@@ -32,6 +34,7 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
         noteCard = binding.noteCard
         noteTitle = binding.noteTitle
         noteBody = binding.noteBody
+        categoriesChipGroup = binding.noteChipGroup
         val markwon = Markwon.builder(context)
             .usePlugin(StrikethroughPlugin.create())
             .usePlugin(object : AbstractMarkwonPlugin() {

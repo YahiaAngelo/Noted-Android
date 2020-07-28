@@ -115,7 +115,7 @@ class NoteAddActivity : AppCompatActivity() {
         if (binding.noteTitleEditText.text!!.isNotEmpty()) {
             binding.noteStylesBar.visibility = View.GONE
             realm = Realm.getDefaultInstance()
-            realm.use { realm ->
+            realm.use {
                 val note = Note(
                     noteId,
                     binding.noteTitleEditText.text.toString(),
@@ -124,9 +124,10 @@ class NoteAddActivity : AppCompatActivity() {
                     newColor,
                     categoriesList
                 )
-                realm.beginTransaction()
-                realm.copyToRealmOrUpdate(note)
-                realm.commitTransaction()
+                it.beginTransaction()
+                it.copyToRealmOrUpdate(note)
+                it.commitTransaction()
+                it.close()
                 onBackPressed()
             }
         }
@@ -211,7 +212,7 @@ class NoteAddActivity : AppCompatActivity() {
             SimpleAdapter(this, itemsList, R.layout.simple_list_layout, from, to.toIntArray())
         listView.adapter = simpleAdapter
 
-        listView.setOnItemClickListener { parent, view, position, id ->
+        listView.setOnItemClickListener { _, _, position, _ ->
             when (position) {
                 0 -> {
                     MaterialAlertDialogBuilder(this)
@@ -275,6 +276,7 @@ class NoteAddActivity : AppCompatActivity() {
             realm.beginTransaction()
             realm.copyToRealm(noteCategory)
             realm.commitTransaction()
+            realm.close()
         }
     }
 
@@ -285,6 +287,7 @@ class NoteAddActivity : AppCompatActivity() {
             realm.beginTransaction()
             note!!.deleteFromRealm()
             realm.commitTransaction()
+            realm.close()
             bottomSheet.dismiss()
             finish()
         }

@@ -16,9 +16,18 @@
         <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.Dark.ActionBar</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+        <item name="android:dialogTheme">@style/Theme.Dialog</item> <!-- TimePicker dialog -->
+        <item name="android:alertDialogTheme">@style/Theme.Dialog</item> <!-- Alert dialog -->
         <item name="actionMenuTextColor">@color/primary</item>
         <item name="android:actionMenuTextColor">@color/primary</item>
 
+    </style>
+
+    <style name="Theme.Dialog"
+        parent="android:Theme.Material.Dialog">
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
     </style>
 
     <style name="Widget.App.ActionMode" parent="Widget.AppCompat.ActionMode">

@@ -3,11 +3,13 @@ package com.noted.noted.view.fragment
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import androidx.appcompat.view.ActionMode
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.SavedStateViewModelFactory
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.textfield.TextInputEditText
@@ -23,12 +25,9 @@ import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.noted.noted.MainActivity
 import com.noted.noted.R
 import com.noted.noted.databinding.FragmentNotesBinding
-import com.noted.noted.model.Note
 import com.noted.noted.view.activity.NoteAddActivity
 import com.noted.noted.view.bindItem.NoteBinding
-import io.realm.Realm
-import io.realm.RealmResults
-import io.realm.Sort
+import com.noted.noted.viewmodel.NotesFragmentViewModel
 import org.parceler.Parcels
 
 class NotesFragment : BaseFragment(), ItemTouchCallback {
@@ -36,8 +35,8 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
     var actionMode: ActionMode? = null
     private val itemAdapter = ItemAdapter<NoteBinding>()
     private val fastAdapter = FastAdapter.with(itemAdapter)
-    private lateinit var mRealm: Realm
     private var searchTextWatcher : TextWatcher? = null
+    private val viewModel: NotesFragmentViewModel by viewModels(factoryProducer = { SavedStateViewModelFactory(requireActivity().application, this)})
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,10 +51,7 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
     ): View? {
         val binding = FragmentNotesBinding.inflate(layoutInflater, container, false)
 
-
         initAdapter()
-        mRealm = Realm.getDefaultInstance()
-
 
         val dragCallback = SimpleDragCallback()
         val touchHelper = ItemTouchHelper(dragCallback)
@@ -63,13 +59,6 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         val layoutManager = StaggeredGridLayoutManager(2, 1)
         binding.notesRecyclerView.layoutManager = layoutManager
         binding.notesRecyclerView.adapter = fastAdapter
-
-
-        //itemAdapter.add(generateItems())
-
-
-
-
 
         return binding.root
     }
@@ -86,10 +75,6 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
 
                 }
             }
-        }
-        itemAdapter.itemFilter.filterPredicate = {
-                item: NoteBinding, constraint: CharSequence? ->
-            item.noteBody.text.contains(constraint.toString(), true)
         }
         fastAdapter.onLongClickListener = object : LongClickListener<NoteBinding>{
             override fun invoke(
@@ -167,12 +152,6 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
                 if (actionMode!=null){
                     v!!.performLongClick()
                 }else{
-                    /* val extras = FragmentNavigatorExtras(item.noteCard to "note_shared_element_container")
-                     val note = NotesFragmentDirections.actionNotesFragmentToNoteAddFragment(item.note)
-                     findNavController().navigate(note, extras)
-
-                     */
-
                     val intent = Intent(activity, NoteAddActivity::class.java)
 
                     val options = ActivityOptions.makeSceneTransitionAnimation(
@@ -189,23 +168,17 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
 
         }
 
+        viewModel.getNotes().observe(viewLifecycleOwner){
+            itemAdapter.setNewList(it)
+        }
     }
 
 
     private fun update(){
-        val notesList = mRealm.where(Note::class.java).sort("date", Sort.DESCENDING).findAll()
-            itemAdapter.setNewList(notesList.toBinding())
 
     }
 
 
-    private fun RealmResults<Note>.toBinding():List<NoteBinding>{
-        val noteBindingList : MutableList<NoteBinding> = mutableListOf()
-        for (note in this){
-            noteBindingList.add(NoteBinding(note))
-        }
-        return noteBindingList
-    }
     override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
         itemAdapter.getAdapterItem(newPosition).noteCard.isDragged = false
 
@@ -233,11 +206,20 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
     }
 
     override fun filterCategories(categoryName : String) {
-        val notesList = mRealm.where(Note::class.java).equalTo("categories.title", categoryName).sort("date", Sort.DESCENDING).findAll()
-        itemAdapter.setNewList(notesList.toBinding())
+        itemAdapter.itemFilter.filterPredicate = {
+                item: NoteBinding, constraint: CharSequence? ->
+            item.note.categories.any {
+                return@any it.title == constraint
+            }
+        }
+        itemAdapter.filter(categoryName)
     }
 
     override fun filterItem(string: String) {
+        itemAdapter.itemFilter.filterPredicate = {
+                item: NoteBinding, constraint: CharSequence? ->
+            item.noteBody.text.contains(constraint.toString(), true)
+        }
         itemAdapter.filter(string)
     }
 }

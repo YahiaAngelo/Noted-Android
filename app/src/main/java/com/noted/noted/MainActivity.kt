@@ -7,18 +7,12 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.View
 import android.view.Window
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import androidx.transition.Fade
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.noted.noted.databinding.ActivityMainBinding
 import com.noted.noted.model.NoteCategory
@@ -28,11 +22,7 @@ import com.noted.noted.view.activity.NoteAddActivity
 import com.noted.noted.view.fragment.BaseFragment
 import com.noted.noted.view.fragment.NotesFragment
 import com.noted.noted.view.fragment.TasksFragment
-import com.transitionseverywhere.extra.Scale
 import io.realm.Realm
-import io.realm.kotlin.where
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 
 
 class MainActivity : BaseActivity() {
@@ -46,8 +36,8 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setupNavSlider()
         setSupportActionBar(binding.mainToolbar)
+        setupNavSlider()
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
             binding.mainFab.outlineAmbientShadowColor = binding.mainFab.backgroundTintList!!.defaultColor
             binding.mainFab.outlineSpotShadowColor = binding.mainFab.backgroundTintList!!.defaultColor
@@ -73,7 +63,6 @@ class MainActivity : BaseActivity() {
         menuInflater.inflate(R.menu.main_toolbar, menu)
         val searchItem = menu!!.findItem(R.id.main_search)
         val searchView = searchItem.actionView as SearchView
-        val currentFragment = supportFragmentManager.currentNavigationFragment as BaseFragment
         searchView.queryHint = "Search"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -81,7 +70,8 @@ class MainActivity : BaseActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-               currentFragment.filterItem(newText!!)
+                val currentFragment = supportFragmentManager.currentNavigationFragment as BaseFragment
+                currentFragment.filterItem(newText!!)
                 return false
             }
 
@@ -119,6 +109,10 @@ class MainActivity : BaseActivity() {
             }
             binding.mainDrawerLayout.closeDrawer(binding.navView)
             return@setNavigationItemSelectedListener true
+        }
+
+        binding.mainToolbar.setNavigationOnClickListener {
+            binding.mainDrawerLayout.openDrawer(binding.navView)
         }
 
     }

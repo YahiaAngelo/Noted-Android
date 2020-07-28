@@ -5,12 +5,15 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import com.noted.noted.repositories.TaskRepo
 import com.noted.noted.utils.AlarmUtils
 import com.noted.noted.utils.Extensions
+import com.noted.noted.viewmodel.TasksFragmentViewModel
 import io.realm.Realm
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidFileProperties
 import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
@@ -22,6 +25,8 @@ class AppController : Application(){
         val extensionsModule = module {
             single { Extensions() }
             single { AlarmUtils() }
+            viewModel { TasksFragmentViewModel(get())}
+            single { TaskRepo() }
         }
         startKoin {
             // use AndroidLogger as Koin Logger - default Level.INFO

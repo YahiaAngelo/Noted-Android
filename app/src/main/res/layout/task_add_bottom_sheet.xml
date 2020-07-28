@@ -80,7 +80,6 @@
         <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/primary"
             android:fontFamily="@font/roboto_bold"
             android:layout_alignParentEnd="true"
             android:id="@+id/task_add_save"

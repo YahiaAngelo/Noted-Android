@@ -18,6 +18,8 @@
         <item name="actionBarTheme">@style/ThemeOverlay.MaterialComponents.ActionBar</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+        <item name="android:dialogTheme">@style/Theme.Dialog</item> <!-- TimePicker dialog -->
+        <item name="android:alertDialogTheme">@style/Theme.Dialog</item> <!-- Alert dialog -->
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
@@ -36,17 +38,16 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:textColor">@color/text_primary</item>
     </style>
-
-    <style name="MyDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
-        <item name="colorControlNormal">@color/divider</item>
-        <item name="colorControlActivated">@color/primary</item>
-        <item name="colorAccent">@color/primary_dark</item>
-        <item name="android:textColorPrimary">@color/text_primary</item>
-        <item name="android:windowBackground">@drawable/timepicker_drawable</item>
+    <style name="Theme.Dialog"
+        parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
     </style>
 
     <style name="BottomSheetShapeAppearance" parent="ShapeAppearance.MaterialComponents.LargeComponent">
         <item name="cornerFamily">rounded</item>
+        <item name="background">@color/background</item>
         <item name="cornerSizeTopLeft">12dp</item>
         <item name="cornerSizeTopRight">12dp</item>
     </style>

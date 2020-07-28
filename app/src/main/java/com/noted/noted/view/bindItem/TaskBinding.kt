@@ -11,20 +11,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.chip.Chip
 import com.mikepenz.fastadapter.binding.AbstractBindingItem
 import com.noted.noted.R
 import com.noted.noted.databinding.ItemTaskBinding
 import com.noted.noted.model.Task
+import com.noted.noted.repositories.TaskRepo
 import com.noted.noted.utils.AlarmUtils
-import io.realm.Realm
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TaskBinding(var task: Task) : AbstractBindingItem<ItemTaskBinding>(){
+class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindingItem<ItemTaskBinding>(){
 
     lateinit var taskTitle: TextView
+    lateinit var taskCard: MaterialCardView
     private lateinit var taskCheckBox:MaterialCheckBox
     override var identifier: Long = task.id
 
@@ -34,6 +36,7 @@ class TaskBinding(var task: Task) : AbstractBindingItem<ItemTaskBinding>(){
     override fun bindView(binding: ItemTaskBinding, payloads: List<Any>) {
         val context = binding.root.context
         taskTitle = binding.taskTitle
+        taskCard = binding.root
         if (task.desc.isNotEmpty()){
             binding.taskDesc.text = task.desc
             binding.taskDesc.visibility = View.VISIBLE
@@ -83,12 +86,11 @@ class TaskBinding(var task: Task) : AbstractBindingItem<ItemTaskBinding>(){
             spannableStringBuilder.setSpan(StrikethroughSpan(), 0, spannableStringBuilder.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             if (task.desc.isNotEmpty()){
                 val descSpannableStringBuilder = SpannableStringBuilder(binding.taskDesc.text)
-                descSpannableStringBuilder.setSpan(StrikethroughSpan(), 0, spannableStringBuilder.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                descSpannableStringBuilder.setSpan(StrikethroughSpan(), 0, descSpannableStringBuilder.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             binding.taskTitle.text = spannableStringBuilder
         }
         binding.taskCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            val realm = Realm.getDefaultInstance()
             val alarmUtils = AlarmUtils()
             if (isChecked){
                 binding.taskTitle.startStrikeThroughAnimation()
@@ -109,11 +111,8 @@ class TaskBinding(var task: Task) : AbstractBindingItem<ItemTaskBinding>(){
                     alarmUtils.setAlarm(task, context)
                 }
             }
-            realm.use {
-                realm.beginTransaction()
-                task.checked = isChecked
-                realm.commitTransaction()
-            }
+            taskRepo.checkTask(task, isChecked)
+
         }
 
     }

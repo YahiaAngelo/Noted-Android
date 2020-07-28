@@ -1,13 +1,15 @@
 package com.noted.noted.view.fragment
 
+import android.app.ActivityOptions
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +19,9 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
+import com.mikepenz.fastadapter.ClickListener
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
@@ -27,15 +31,19 @@ import com.noted.noted.databinding.FragmentTasksBinding
 import com.noted.noted.model.NoteCategory
 import com.noted.noted.model.Reminder
 import com.noted.noted.model.Task
+import com.noted.noted.repositories.TaskRepo
 import com.noted.noted.utils.AlarmUtils
 import com.noted.noted.utils.Utils
+import com.noted.noted.view.activity.TaskViewActivity
 import com.noted.noted.view.bindItem.TaskBinding
 import com.noted.noted.view.customView.SimpleSwipeCallback
 import com.noted.noted.view.customView.SimpleSwipeDragCallback
+import com.noted.noted.viewmodel.TasksFragmentViewModel
 import io.realm.Realm
-import io.realm.RealmResults
 import io.realm.Sort
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.parceler.Parcels.*
 import java.util.*
 
 
@@ -49,8 +57,10 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
     private lateinit var mRealm: Realm
     private lateinit var touchCallback: SimpleDragCallback
     private lateinit var touchHelper: ItemTouchHelper
-    private var addTaskDialog : BottomSheetDialog? = null
-    private val alarmUtils : AlarmUtils by inject()
+    private var addTaskDialog: BottomSheetDialog? = null
+    private val alarmUtils: AlarmUtils by inject()
+    private val viewModel: TasksFragmentViewModel by viewModel()
+    private val taskRepo: TaskRepo by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,7 +73,11 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
         touchCallback = SimpleSwipeDragCallback(
             this,
             this,
-            ResourcesCompat.getDrawable(requireContext().resources, R.drawable.ic_delete, requireContext().theme)!!,
+            ResourcesCompat.getDrawable(
+                requireContext().resources,
+                R.drawable.ic_delete,
+                requireContext().theme
+            )!!,
             ItemTouchHelper.LEFT,
             requireContext().resources.getColor(R.color.card_red, requireContext().theme)
         ).withBackgroundSwipeRight(
@@ -73,7 +87,11 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
             )
         )
             .withLeaveBehindSwipeRight(
-                ResourcesCompat.getDrawable(requireContext().resources, R.drawable.ic_add, requireContext().theme)!!
+                ResourcesCompat.getDrawable(
+                    requireContext().resources,
+                    R.drawable.ic_add,
+                    requireContext().theme
+                )!!
             )
 
 
@@ -96,20 +114,43 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
         itemAdapter.itemFilter.filterPredicate = { item: TaskBinding, constraint: CharSequence? ->
             item.taskTitle.text.contains(constraint.toString(), true)
         }
+        fastAdapter.onClickListener = object : ClickListener<TaskBinding> {
+            override fun invoke(
+                v: View?,
+                adapter: IAdapter<TaskBinding>,
+                item: TaskBinding,
+                position: Int
+            ): Boolean {
+                val intent = Intent(activity, TaskViewActivity::class.java)
+                val options = ActivityOptions.makeSceneTransitionAnimation(
+                    activity,
+                    item.taskCard,
+                    "task_shared_element_container"
+                )
+                intent.putExtra("task", wrap(item.task))
+                startActivity(intent, options.toBundle())
+
+                return true
+            }
+
+        }
+        viewModel.getTasks().observe(viewLifecycleOwner) {
+            itemAdapter.setNewList(it)
+        }
     }
 
     private fun initTasksAdd() {
         val currentCalendar = Calendar.getInstance()
-        var selectedCalendar : Calendar? = null
+        var selectedCalendar: Calendar? = null
         val view = layoutInflater.inflate(R.layout.task_add_bottom_sheet, null)
         addTaskDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetMenuTheme)
         addTaskDialog!!.setContentView(view)
-        val titleEditText : TextInputEditText = view.findViewById(R.id.task_add_editText)
-        val descEditText : TextInputEditText = view.findViewById(R.id.task_add_desc_editText)
-        val descButton : MaterialButton = view.findViewById(R.id.task_add_desc)
-        val reminderButton : MaterialButton = view.findViewById(R.id.task_add_reminder)
-        val repeatButton : MaterialButton = view.findViewById(R.id.task_add_repeat)
-        val saveButton : MaterialButton = view.findViewById(R.id.task_add_save)
+        val titleEditText: TextInputEditText = view.findViewById(R.id.task_add_editText)
+        val descEditText: TextInputEditText = view.findViewById(R.id.task_add_desc_editText)
+        val descButton: MaterialButton = view.findViewById(R.id.task_add_desc)
+        val reminderButton: MaterialButton = view.findViewById(R.id.task_add_reminder)
+        val repeatButton: MaterialButton = view.findViewById(R.id.task_add_repeat)
+        val saveButton: MaterialButton = view.findViewById(R.id.task_add_save)
 
         descButton.setOnClickListener {
             descEditText.visibility = View.VISIBLE
@@ -123,7 +164,7 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
         materialDatePickerBuilder.setCalendarConstraints(calendarConstraints.build())
         val materialDatePicker = materialDatePickerBuilder.build()
         materialDatePicker.addOnCancelListener {
-            if (reminderButton.isChecked){
+            if (reminderButton.isChecked) {
                 reminderButton.performClick()
             }
         }
@@ -132,37 +173,45 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
             selectedCalendar = Calendar.getInstance()
             selectedCalendar!!.time = Date(it)
 
-            TimePickerDialog(requireContext(),
-                R.style.MyDialogTheme,TimePickerDialog.OnTimeSetListener {_ , hourOfDay, minute ->
+            TimePickerDialog(
+                requireContext(),
+                TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                     selectedCalendar!!.set(Calendar.HOUR_OF_DAY, hourOfDay)
                     selectedCalendar!!.set(Calendar.MINUTE, minute)
                     selectedCalendar!!.set(Calendar.SECOND, 0)
-
                 },
-                currentCalendar.get(Calendar.HOUR_OF_DAY), currentCalendar.get(Calendar.MINUTE), false).show()
+                currentCalendar.get(Calendar.HOUR_OF_DAY),
+                currentCalendar.get(Calendar.MINUTE),
+                false
+            ).show()
         }
 
         reminderButton.setOnClickListener {
-            if (reminderButton.isChecked){
+            if (reminderButton.isChecked) {
                 materialDatePicker.showNow(childFragmentManager, materialDatePicker.tag)
             }
         }
 
         saveButton.setOnClickListener {
-            if (titleEditText.text!!.isNotEmpty()){
-                mRealm = Realm.getDefaultInstance()
-                mRealm.use {
-                    val task = Task(UUID.randomUUID().mostSignificantBits, titleEditText.text.toString(), descEditText.text.toString(), false, System.currentTimeMillis())
-                    if (selectedCalendar != null){
-                      val reminder = Reminder(UUID.randomUUID().mostSignificantBits,
-                        selectedCalendar!!.time.time, repeatButton.isChecked)
-                        task.reminder = reminder
-                        alarmUtils.setAlarm(task, requireContext())
-                    }
-                    it.beginTransaction()
-                    it.copyToRealm(task)
-                    it.commitTransaction()
+            if (titleEditText.text!!.isNotEmpty()) {
+
+                val task = Task(
+                    UUID.randomUUID().mostSignificantBits,
+                    titleEditText.text.toString(),
+                    descEditText.text.toString(),
+                    false,
+                    System.currentTimeMillis()
+                )
+                if (selectedCalendar != null) {
+                    val reminder = Reminder(
+                        UUID.randomUUID().mostSignificantBits,
+                        selectedCalendar!!.time.time, repeatButton.isChecked
+                    )
+                    task.reminder = reminder
+                    alarmUtils.setAlarm(task, requireContext())
                 }
+
+                taskRepo.addTask(task)
                 update()
                 addTaskDialog!!.dismiss()
                 initTasksAdd()
@@ -173,50 +222,18 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
 
     }
 
-    fun showTasksAdd(){
-        if (addTaskDialog!=null){
+    fun showTasksAdd() {
+        if (addTaskDialog != null) {
             addTaskDialog!!.show()
         }
     }
 
     private fun update() {
-        val tasksList = mRealm.where(Task::class.java).sort( "checked", Sort.ASCENDING, "date", Sort.DESCENDING).findAll()
-        itemAdapter.setNewList(tasksList.toBinding())
+
 
     }
 
-    private fun RealmResults<Task>.toBinding(): List<TaskBinding> {
-        val taskBindingList: MutableList<TaskBinding> = mutableListOf()
-        for (task in this) {
-            taskBindingList.add(TaskBinding(task))
-        }
-        return taskBindingList
-    }
 
-
-    private fun generateItems(): List<TaskBinding> {
-        return listOf(
-            TaskBinding(
-                Task(
-                    1,
-                    "This is my first task",
-                    "",
-                    false,
-                    System.currentTimeMillis()
-                )
-            ),
-            TaskBinding(
-                Task(
-                    2,
-                    "This is my second task",
-                    "",
-                    false,
-                    System.currentTimeMillis()
-                )
-            )
-
-        )
-    }
 
     override fun onResume() {
         super.onResume()
@@ -243,36 +260,26 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
         if (direction == ItemTouchHelper.LEFT) {
             val task = itemAdapter.getAdapterItem(position).task
             itemAdapter.remove(position)
-            if (task.reminder != null){
+            if (task.reminder != null) {
                 alarmUtils.cancelAlarm(task.reminder!!, requireContext())
             }
-            mRealm = Realm.getDefaultInstance()
-            mRealm.use {
-                it.beginTransaction()
-                task.deleteFromRealm()
-                it.commitTransaction()
-            }
+            taskRepo.deleteTask(task)
+
         } else {
             fastAdapter.notifyItemChanged(position)
-            Utils.showCategories(requireContext(), layoutInflater, object:
+            Utils.showCategories(requireContext(), layoutInflater, object :
                 Utils.Companion.OnSelectedCategory {
                 override fun onSelected(noteCategory: NoteCategory) {
-                    mRealm = Realm.getDefaultInstance()
-                    mRealm.use {
-                        it.beginTransaction()
-                        itemAdapter.getAdapterItem(position).task.noteCategories.add(noteCategory)
-                        it.commitTransaction()
-                    }
+                    taskRepo.addCategoryToTask(itemAdapter.getAdapterItem(position).task, noteCategory)
                     fastAdapter.notifyItemChanged(position)
                 }
-            } )
+            })
         }
     }
 
 
     override fun filterCategories(categoryName: String) {
-        val tasksList = mRealm.where(Task::class.java).equalTo("noteCategories.title", categoryName).sort("date", Sort.DESCENDING).findAll()
-        itemAdapter.setNewList(tasksList.toBinding())
+       viewModel.filterCategory(categoryName)
     }
 
     override fun refresh() {
