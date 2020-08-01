@@ -7,18 +7,21 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.MenuItem
 import android.view.Window
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.noted.noted.databinding.ActivityMainBinding
 import com.noted.noted.model.NoteCategory
 import com.noted.noted.utils.Utils
 import com.noted.noted.view.activity.BaseActivity
 import com.noted.noted.view.activity.NoteAddActivity
+import com.noted.noted.view.activity.SettingsActivity
 import com.noted.noted.view.fragment.BaseFragment
 import com.noted.noted.view.fragment.NotesFragment
 import com.noted.noted.view.fragment.TasksFragment
@@ -30,7 +33,6 @@ class MainActivity : BaseActivity() {
     private var realm = Realm.getDefaultInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         window.sharedElementsUseOverlay = false
         setExitSharedElementCallback(MaterialContainerTransformSharedElementCallback())
         super.onCreate(savedInstanceState)
@@ -97,18 +99,21 @@ class MainActivity : BaseActivity() {
 
         menu.add(R.id.others_group, R.id.settings_item, Menu.NONE, "Settings").setIcon(R.drawable.ic_settings).isCheckable = false
 
-        binding.navView.setNavigationItemSelectedListener {
+        binding.navView.setNavigationItemSelectedListener { item ->
             val currentFragment = supportFragmentManager.currentNavigationFragment as BaseFragment
-            when(it.itemId){
+            when(item.itemId){
                 R.id.all_categories_item ->{currentFragment.refresh()}
-                R.id.add_category_item ->{Utils.showCategories(this, layoutInflater, object : Utils.Companion.OnSelectedCategory{
+                R.id.add_category_item ->{Utils.showCategories(this@MainActivity, layoutInflater, object : Utils.Companion.OnSelectedCategory{
                     override fun onSelected(noteCategory: NoteCategory) {}
                 })}
-                R.id.settings_item ->{}
-                else -> currentFragment.filterCategories(it.title.toString())
+                R.id.settings_item ->{
+                    val settingsIntent = Intent(this, SettingsActivity::class.java)
+                    startActivity(settingsIntent)
+                }
+                else -> currentFragment.filterCategories(item.itemId)
             }
             binding.mainDrawerLayout.closeDrawer(binding.navView)
-            return@setNavigationItemSelectedListener true
+            true
         }
 
         binding.mainToolbar.setNavigationOnClickListener {

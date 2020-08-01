@@ -14,6 +14,7 @@ import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.mikepenz.fastadapter.binding.AbstractBindingItem
 import com.noted.noted.R
 import com.noted.noted.databinding.ItemTaskBinding
@@ -27,6 +28,7 @@ class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindi
 
     lateinit var taskTitle: TextView
     lateinit var taskCard: MaterialCardView
+    lateinit var categoriesGroup: ChipGroup
     private lateinit var taskCheckBox:MaterialCheckBox
     override var identifier: Long = task.id
 
@@ -42,6 +44,7 @@ class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindi
             binding.taskDesc.visibility = View.VISIBLE
         }
         taskCheckBox = binding.taskCheckbox
+        categoriesGroup = binding.taskChipGroup
         binding.taskTitle.text = task.title
 
 
@@ -87,6 +90,7 @@ class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindi
             if (task.desc.isNotEmpty()){
                 val descSpannableStringBuilder = SpannableStringBuilder(binding.taskDesc.text)
                 descSpannableStringBuilder.setSpan(StrikethroughSpan(), 0, descSpannableStringBuilder.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                binding.taskDesc.text = descSpannableStringBuilder
             }
             binding.taskTitle.text = spannableStringBuilder
         }
@@ -102,7 +106,7 @@ class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindi
                     alarmUtils.cancelAlarm(task.reminder!!, context)
                 }
             }else{
-                binding.root.setCardForegroundColor(context.resources.getColorStateList(R.color.transparent, context.theme))
+                binding.root.setCardForegroundColor(context.resources.getColorStateList(android.R.color.transparent, context.theme))
                 binding.taskTitle.reverseStrikeThroughAnimation()
                 if (task.desc.isNotEmpty()){
                     binding.taskDesc.reverseStrikeThroughAnimation()

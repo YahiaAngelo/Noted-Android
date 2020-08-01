@@ -32,7 +32,6 @@
             android:gravity="start"
             android:textColor="@color/text_primary"
             android:fontFamily="@font/roboto_bold"
-            android:transitionName="note_title"
             android:textSize="18sp"
             tools:text="Test note" />
 
@@ -42,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:fontFamily="@font/roboto_regular"
-            android:transitionName="note_body"
             android:gravity="start"
             android:textColor="@color/text_primary"
             android:maxLines="10"

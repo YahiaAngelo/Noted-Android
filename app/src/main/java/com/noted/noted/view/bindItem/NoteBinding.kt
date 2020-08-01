@@ -20,7 +20,7 @@ import org.commonmark.node.SoftLineBreak
 class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
 
     lateinit var noteCard:MaterialCardView
-    private lateinit var noteTitle:TextView
+    lateinit var noteTitle:TextView
     lateinit var noteBody:TextView
     lateinit var categoriesChipGroup: ChipGroup
 

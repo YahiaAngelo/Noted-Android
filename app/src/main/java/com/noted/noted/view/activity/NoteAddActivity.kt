@@ -20,28 +20,30 @@ import com.noted.noted.R
 import com.noted.noted.databinding.ActivityNoteAddBinding
 import com.noted.noted.model.Note
 import com.noted.noted.model.NoteCategory
-import io.realm.Realm
+import com.noted.noted.repositories.NoteRepo
+import com.noted.noted.utils.Utils
 import io.realm.RealmList
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
+import org.koin.android.ext.android.inject
 import org.parceler.Parcels
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.properties.Delegates
 
-lateinit var binding: ActivityNoteAddBinding
-lateinit var bottomSheet: BottomSheetDialog
-lateinit var categoriesBottomSheet: BottomSheetDialog
-lateinit var categoriesList: RealmList<NoteCategory>
-lateinit var note: Note
-var newColor by Delegates.notNull<Int>()
-var realm: Realm = Realm.getDefaultInstance()
-var noteId by Delegates.notNull<Long>()
 
 class NoteAddActivity : AppCompatActivity() {
+    lateinit var binding: ActivityNoteAddBinding
+    private lateinit var bottomSheet: BottomSheetDialog
+    private lateinit var categoriesBottomSheet: BottomSheetDialog
+    private lateinit var categoriesList: RealmList<NoteCategory>
+    lateinit var note: Note
+    private var newColor by Delegates.notNull<Int>()
+    private var noteId by Delegates.notNull<Long>()
+    private val noteRepo: NoteRepo by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
         findViewById<View>(android.R.id.content).transitionName = "note_shared_element_container"
         setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
         window.sharedElementEnterTransition = MaterialContainerTransform().apply {
@@ -50,9 +52,14 @@ class NoteAddActivity : AppCompatActivity() {
         }
         window.sharedElementReturnTransition = MaterialContainerTransform().apply {
             addTarget(android.R.id.content)
-            duration = 300L
+            duration = 250L
         }
         binding = ActivityNoteAddBinding.inflate(layoutInflater)
+
+
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
         noteId = UUID.randomUUID().mostSignificantBits
         categoriesList = RealmList()
         newColor = R.color.background
@@ -77,9 +84,6 @@ class NoteAddActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
-
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
         setupMarkwon()
 
         for (category in categoriesList) {
@@ -114,8 +118,6 @@ class NoteAddActivity : AppCompatActivity() {
     private fun saveNote() {
         if (binding.noteTitleEditText.text!!.isNotEmpty()) {
             binding.noteStylesBar.visibility = View.GONE
-            realm = Realm.getDefaultInstance()
-            realm.use {
                 val note = Note(
                     noteId,
                     binding.noteTitleEditText.text.toString(),
@@ -124,12 +126,9 @@ class NoteAddActivity : AppCompatActivity() {
                     newColor,
                     categoriesList
                 )
-                it.beginTransaction()
-                it.copyToRealmOrUpdate(note)
-                it.commitTransaction()
-                it.close()
+                noteRepo.addNote(note)
                 onBackPressed()
-            }
+
         }
     }
 
@@ -156,10 +155,13 @@ class NoteAddActivity : AppCompatActivity() {
         val simpleAdapter =
             SimpleAdapter(this, itemsList, R.layout.simple_list_layout, from, to.toIntArray())
         listView.adapter = simpleAdapter
-        listView.setOnItemClickListener { _, view, position, id ->
+        listView.setOnItemClickListener { _, _, position, _ ->
             when (position) {
                 0 -> deleteNote()
+                1 -> Utils.copyToClipboard(this,"${binding.noteTitleEditText.text.toString()}\n\n${binding.noteBodyEditText.text.toString()}")
+                2 -> Utils.shareText(this, "${binding.noteTitleEditText.text.toString()}\n\n${binding.noteBodyEditText.text.toString()}")
             }
+            bottomSheet.dismiss()
         }
 
         chipGroup.setOnCheckedChangeListener { _, checkedId ->
@@ -184,7 +186,7 @@ class NoteAddActivity : AppCompatActivity() {
     }
 
     private fun initCategories() {
-        val dbCategories = realm.where(NoteCategory::class.java).findAll()
+        val dbCategories = noteRepo.getCategories()
         val view = layoutInflater.inflate(R.layout.simple_listview_layout, null)
         view.setBackgroundColor(resources.getColor(newColor, theme))
         categoriesBottomSheet = BottomSheetDialog(this, R.style.BottomSheetMenuTheme)
@@ -271,26 +273,13 @@ class NoteAddActivity : AppCompatActivity() {
     }
 
     private fun saveCategory(noteCategory: NoteCategory) {
-        realm = Realm.getDefaultInstance()
-        realm.use { realm ->
-            realm.beginTransaction()
-            realm.copyToRealm(noteCategory)
-            realm.commitTransaction()
-            realm.close()
-        }
+       noteRepo.saveCategory(noteCategory)
     }
 
     private fun deleteNote() {
-        realm = Realm.getDefaultInstance()
-        realm.use { realm ->
-            val note = realm.where(Note::class.java).equalTo("id", noteId).findFirst()
-            realm.beginTransaction()
-            note!!.deleteFromRealm()
-            realm.commitTransaction()
-            realm.close()
-            bottomSheet.dismiss()
-            finish()
-        }
+        noteRepo.deleteNote(note)
+        bottomSheet.dismiss()
+        finish()
     }
 
     private fun setupMarkwon() {

@@ -9,8 +9,4 @@
         android:id="@+id/tasks"
         android:title="Tasks"
         android:icon="@drawable/ic_assignment"/>
-    <item
-        android:id="@+id/reminders"
-        android:title="Reminders"
-        android:icon="@drawable/ic_access_alarms"/>
 </menu>

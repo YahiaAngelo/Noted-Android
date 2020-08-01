@@ -29,14 +29,6 @@ class TasksFragmentViewModel(private val taskRepo: TaskRepo) : ViewModel() {
 
     }
 
-    fun filterCategory(title: String){
-        val filteredTasks = taskRepo.filterTasksCategories(title)
-        mTasksResult = Transformations.map(filteredTasks, Function<RealmResults<Task>, List<TaskBinding>> {
-            return@Function it.toBinding()
-        })
-    }
-
-
     private fun RealmResults<Task>.toBinding(): List<TaskBinding> {
         val taskBindingList: MutableList<TaskBinding> = mutableListOf()
         for (task in this) {

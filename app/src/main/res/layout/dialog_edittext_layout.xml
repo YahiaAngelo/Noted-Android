@@ -14,15 +14,13 @@
         app:boxCornerRadiusBottomStart="8dp"
         app:boxCornerRadiusBottomEnd="8dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:boxBackgroundColor="@color/background"
-        app:boxStrokeColor="@color/text_secondary"
-        android:hint="@string/title"
+        app:boxStrokeColor="@color/primary_light" android:hint="@string/title"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:inputType="textEmailAddress"
             android:textColorHint="@color/text_secondary"
+            android:inputType="textCapSentences"
             android:id="@+id/dialog_editText"
             android:fontFamily="@font/roboto_regular"
             android:textColor="@color/text_primary"

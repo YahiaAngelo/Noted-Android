@@ -3,18 +3,12 @@ package com.noted.noted.view.fragment
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextWatcher
-import android.util.Log
 import android.view.*
 import androidx.appcompat.view.ActionMode
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.transition.Hold
-import com.google.android.material.transition.MaterialContainerTransform
+import com.google.android.material.chip.Chip
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
@@ -25,31 +19,29 @@ import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.noted.noted.MainActivity
 import com.noted.noted.R
 import com.noted.noted.databinding.FragmentNotesBinding
+import com.noted.noted.repositories.NoteRepo
+import com.noted.noted.utils.Utils
 import com.noted.noted.view.activity.NoteAddActivity
 import com.noted.noted.view.bindItem.NoteBinding
 import com.noted.noted.viewmodel.NotesFragmentViewModel
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.parceler.Parcels
 
 class NotesFragment : BaseFragment(), ItemTouchCallback {
-    private var searchView : TextInputEditText? = null
     var actionMode: ActionMode? = null
+    private lateinit var binding: FragmentNotesBinding
     private val itemAdapter = ItemAdapter<NoteBinding>()
     private val fastAdapter = FastAdapter.with(itemAdapter)
-    private var searchTextWatcher : TextWatcher? = null
-    private val viewModel: NotesFragmentViewModel by viewModels(factoryProducer = { SavedStateViewModelFactory(requireActivity().application, this)})
+    private val viewModel: NotesFragmentViewModel by viewModel()
+    private val noteRepo: NoteRepo by inject()
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        exitTransition = Hold()
-        sharedElementEnterTransition = MaterialContainerTransform()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentNotesBinding.inflate(layoutInflater, container, false)
+        binding = FragmentNotesBinding.inflate(layoutInflater, container, false)
 
         initAdapter()
 
@@ -112,12 +104,15 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
 
                                     override fun onActionItemClicked(
                                         mode: ActionMode?,
-                                        item: MenuItem?
+                                        menuItem: MenuItem?
                                     ): Boolean {
-                                        return when (item?.itemId) {
+                                         when (menuItem?.itemId) {
+                                            R.id.delete -> noteRepo.deleteNote(item.note)
+                                             R.id.share -> Utils.shareText(requireContext(), "${item.noteTitle.text}\n\n${item.noteBody.text}")
 
-                                            else -> false
                                         }
+                                        mode!!.finish()
+                                        return false
                                     }
 
                                     override fun onDestroyActionMode(mode: ActionMode?) {
@@ -170,12 +165,18 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
 
         viewModel.getNotes().observe(viewLifecycleOwner){
             itemAdapter.setNewList(it)
+            binding.notesPlaceholder.visibility = if (itemAdapter.adapterItemCount > 0)  View.GONE else View.VISIBLE
+
         }
     }
 
 
     private fun update(){
-
+        itemAdapter.itemFilter.filterPredicate = {
+                item: NoteBinding, constraint: CharSequence? ->
+            item.noteBody.text.contains(constraint.toString(), true)
+        }
+        itemAdapter.filter("")
     }
 
 
@@ -190,29 +191,17 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         return true
     }
 
-    override fun onResume() {
-        super.onResume()
-        update()
-    }
-    override fun onPause() {
-        if (searchView != null && searchTextWatcher != null){
-            searchView!!.removeTextChangedListener(searchTextWatcher)
-        }
-        super.onPause()
-    }
 
     override fun refresh() {
         update()
     }
 
-    override fun filterCategories(categoryName : String) {
+    override fun filterCategories(categoryId : Int) {
         itemAdapter.itemFilter.filterPredicate = {
                 item: NoteBinding, constraint: CharSequence? ->
-            item.note.categories.any {
-                return@any it.title == constraint
-            }
+            item.categoriesChipGroup.findViewById<Chip>(Integer.parseInt(constraint.toString())) != null
         }
-        itemAdapter.filter(categoryName)
+        itemAdapter.filter(categoryId.toString())
     }
 
     override fun filterItem(string: String) {

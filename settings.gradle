@@ -1,3 +1,2 @@
-include ':MarkdownEditText'
-include ':app', ':material-intro-screen'
+include ':app'
 rootProject.name = "Noted"

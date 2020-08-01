@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -49,12 +50,10 @@ import java.util.*
 
 class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback {
 
-    private var searchView: TextInputEditText? = null
-    private var searchTextWatcher: TextWatcher? = null
+
     private lateinit var binding: FragmentTasksBinding
     private val itemAdapter = ItemAdapter<TaskBinding>()
     private val fastAdapter = FastAdapter.with(itemAdapter)
-    private lateinit var mRealm: Realm
     private lateinit var touchCallback: SimpleDragCallback
     private lateinit var touchHelper: ItemTouchHelper
     private var addTaskDialog: BottomSheetDialog? = null
@@ -69,7 +68,6 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
         binding = FragmentTasksBinding.inflate(inflater, container, false)
 
         initAdapter()
-        mRealm = Realm.getDefaultInstance()
         touchCallback = SimpleSwipeDragCallback(
             this,
             this,
@@ -111,9 +109,6 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
     }
 
     private fun initAdapter() {
-        itemAdapter.itemFilter.filterPredicate = { item: TaskBinding, constraint: CharSequence? ->
-            item.taskTitle.text.contains(constraint.toString(), true)
-        }
         fastAdapter.onClickListener = object : ClickListener<TaskBinding> {
             override fun invoke(
                 v: View?,
@@ -135,7 +130,10 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
 
         }
         viewModel.getTasks().observe(viewLifecycleOwner) {
-            itemAdapter.setNewList(it)
+            binding.tasksRecycler.post { itemAdapter.setNewList(it)
+                binding.tasksPlaceholder.visibility = if (itemAdapter.adapterItemCount > 0)  View.GONE else View.VISIBLE
+
+            }
         }
     }
 
@@ -229,23 +227,12 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
     }
 
     private fun update() {
-
-
-    }
-
-
-
-    override fun onResume() {
-        super.onResume()
-        update()
-    }
-
-    override fun onPause() {
-        if (searchView != null && searchTextWatcher != null) {
-            searchView!!.removeTextChangedListener(searchTextWatcher)
+        itemAdapter.itemFilter.filterPredicate = { item: TaskBinding, constraint: CharSequence? ->
+            item.taskTitle.text.contains(constraint.toString(), true)
         }
-        super.onPause()
+        itemAdapter.filter("")
     }
+
 
     override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
 
@@ -278,15 +265,23 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
     }
 
 
-    override fun filterCategories(categoryName: String) {
-       viewModel.filterCategory(categoryName)
+    override fun filterCategories(categoryId : Int) {
+        itemAdapter.itemFilter.filterPredicate = { item: TaskBinding, constraint: CharSequence? ->
+            item.categoriesGroup.findViewById<Chip>(Integer.parseInt(constraint.toString())) != null
+        }
+        itemAdapter.filter(categoryId.toString())
     }
+
+
 
     override fun refresh() {
         update()
     }
 
     override fun filterItem(string: String) {
+        itemAdapter.itemFilter.filterPredicate = { item: TaskBinding, constraint: CharSequence? ->
+            item.taskTitle.text.contains(constraint.toString(), true)
+        }
         itemAdapter.filter(string)
     }
 }

@@ -13,7 +13,7 @@ open class BaseFragment : Fragment() {
         exitTransition = MaterialFadeThrough()
     }
 
-    open fun filterCategories(categoryName : String){}
+    open fun filterCategories(categoryId : Int){}
     open fun refresh(){}
     open fun filterItem(string:String){}
 }

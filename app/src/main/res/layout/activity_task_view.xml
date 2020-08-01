@@ -63,30 +63,77 @@
                 app:closeIconEnabled="false" />
         </com.google.android.material.chip.ChipGroup>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="68dp"
-            android:background="@color/background"
-            android:id="@+id/task_title_edittext"
-            android:hint="Title"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:textStyle="bold"
-            android:fontFamily="@font/roboto_bold"
-            android:transitionName="task_title"/>
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background"
-            android:id="@+id/task_desc_edittext"
-            android:minHeight="68dp"
-            android:hint="Descreption"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:textStyle="bold"
-            android:fontFamily="@font/roboto_bold"
-            android:transitionName="task_desc"/>
+            app:boxBackgroundMode="outline"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusBottomEnd="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxBackgroundColor="@color/background"
+            app:boxStrokeColor="@color/primary_light">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:id="@+id/task_title_edittext"
+                android:inputType="textCapSentences"
+                android:lines="1"
+                android:hint="Title"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_bold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="outline"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusBottomEnd="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxBackgroundColor="@color/background"
+            app:boxStrokeColor="@color/primary_light">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="48dp"
+                android:paddingBottom="48dp"
+                android:id="@+id/task_desc_edittext"
+                android:inputType="textCapSentences"
+                android:minHeight="68dp"
+                android:hint="Descreption"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto_bold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
 
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/accent"
+        android:text="Mark as done"
+        android:id="@+id/task_extended_fab"
+        android:textColor="@color/text_primary"
+        android:fontFamily="@font/roboto_medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

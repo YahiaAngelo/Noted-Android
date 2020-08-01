@@ -16,17 +16,21 @@ class TaskRepo {
         return realm.where(Task::class.java).sort( "checked", Sort.ASCENDING, "date", Sort.DESCENDING).findAllAsync().asLiveData()
     }
 
-    fun filterTasksCategories(title: String):LiveRealmData<Task>{
-        realm = Realm.getDefaultInstance()
-        return realm.where(Task::class.java).equalTo("noteCategories.title", title)
-            .sort( "checked", Sort.ASCENDING, "date", Sort.DESCENDING).findAllAsync().asLiveData()
-    }
 
     fun addTask(task: Task){
         realm = Realm.getDefaultInstance()
         realm.use {
             it.beginTransaction()
             it.copyToRealm(task)
+            it.commitTransaction()
+        }
+    }
+
+    fun updateTask(task: Task){
+        realm = Realm.getDefaultInstance()
+        realm.use {
+            it.beginTransaction()
+            it.copyToRealmOrUpdate(task)
             it.commitTransaction()
         }
     }
