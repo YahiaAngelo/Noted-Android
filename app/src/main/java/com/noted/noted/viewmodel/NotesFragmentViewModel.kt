@@ -27,8 +27,6 @@ class NotesFragmentViewModel(private val noteRepo: NoteRepo) : ViewModel(){
        val notesList = noteRepo.getNotes()
         mNotesResult = Transformations.map(notesList,
             Function<RealmResults<Note>, List<NoteBinding>> {
-                Log.e("Noted", "New data!")
-
                 return@Function it.toBinding()
             })
 
@@ -44,7 +42,6 @@ class NotesFragmentViewModel(private val noteRepo: NoteRepo) : ViewModel(){
     }
 
     override fun onCleared() {
-        Log.e("Noted", "I'm cleared")
         noteRepo.realm.close()
         super.onCleared()
     }

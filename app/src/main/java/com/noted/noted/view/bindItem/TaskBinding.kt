@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.preference.PreferenceManager
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.chip.Chip
@@ -61,7 +62,9 @@ class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindi
                 }
                 chip.chipIconTint = context.resources.getColorStateList(R.color.text_primary, context.theme)
                 chip.setTextColor(context.resources.getColorStateList(R.color.text_primary, context.theme))
-                val date = SimpleDateFormat("d MMM HH:mm aaa", Locale.getDefault()).format(Date(task.reminder!!.date))
+                val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+                val datePattern = if (sharedPref.getBoolean("hour_format", false)) "d MMM HH:mm aaa" else "d MMM hh:mm aaa"
+                val date = SimpleDateFormat(datePattern, Locale.getDefault()).format(Date(task.reminder!!.date))
                 chip.text = date
                 chip.id = R.id.task_item_reminder_chip
                 binding.taskChipGroup.addView(chip)

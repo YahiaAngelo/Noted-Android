@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import androidx.preference.PreferenceManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
@@ -129,8 +130,9 @@ class TaskViewActivity : AppCompatActivity() {
 
     private fun checkReminder(){
         if (reminder != null){
-
-            val date = SimpleDateFormat("d MMM HH:mm aaa", Locale.getDefault()).format(Date(task.reminder!!.date))
+            val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+            val datePattern = if (sharedPref.getBoolean("hour_format", false)) "d MMM HH:mm aaa" else "d MMM hh:mm aaa"
+            val date = SimpleDateFormat(datePattern, Locale.getDefault()).format(Date(task.reminder!!.date))
             binding.taskViewReminderChip.text = date
             if (task.reminder!!.repeat){
                 binding.taskViewReminderChip.chipIcon = resources.getDrawable(R.drawable.ic_repeat, theme)

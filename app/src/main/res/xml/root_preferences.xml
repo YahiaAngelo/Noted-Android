@@ -18,6 +18,11 @@
             app:title="Notes Style"
             app:useSimpleSummaryProvider="true"/>
 
+        <SwitchPreference
+            app:title="24-Hour Time"
+            app:defaultValue="false"
+            app:key="hour_format" />
+
 
     </PreferenceCategory>
 

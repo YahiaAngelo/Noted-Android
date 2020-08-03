@@ -40,8 +40,6 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
         animateDx: Float,
         animateDy: Float
     ): Long {
-        Log.e("Noted", "$animateDx $animateDy")
-
         return super.getAnimationDuration(recyclerView, animationType, animateDx, animateDy)
     }
 

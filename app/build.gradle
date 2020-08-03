@@ -3,10 +3,11 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
-    id 'com.apollographql.apollo'
     id 'realm-android'
     id "androidx.navigation.safeargs.kotlin"
     id 'kotlinx-serialization'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -39,44 +40,37 @@ android {
     viewBinding {
         enabled = true
     }
-
-    apollo {
-        generateKotlinModels.set(true) // or false for Java models
-    }
 }
 
 dependencies {
+    def nav_version = "2.3.0"
+    def koin_version = "2.1.5"
+    def lifecycle_version = "2.2.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // or "kotlin-stdlib-jdk8"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
     implementation 'androidx.preference:preference:1.1.1'// JVM dependency
-    def nav_version = "2.3.0"
-    def koin_version = "2.1.5"
-    def lifecycle_version = "2.2.0"
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.4'
+    implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta8'
-    // Koin for Android
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
     implementation "org.koin:koin-android:$koin_version"
-    // or Koin for Lifecycle scoping
     implementation "org.koin:koin-androidx-scope:$koin_version"
-    // or Koin for Android Architecture ViewModel
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
     implementation "androidx.fragment:fragment-ktx:1.2.5"
     implementation 'org.parceler:parceler-api:1.1.13'
     kapt 'org.parceler:parceler:1.1.13'
     implementation "io.noties.markwon:core:4.3.1"
-    implementation "io.noties.markwon:editor:4.3.1"
     implementation "io.noties.markwon:ext-strikethrough:4.3.1"
     implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.0.0'
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC2'
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation("com.apollographql.apollo:apollo-runtime:1.4.4")
     implementation("com.squareup.okhttp3:okhttp:4.5.0")
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "com.andkulikov:transitionseverywhere:2.1.0"
