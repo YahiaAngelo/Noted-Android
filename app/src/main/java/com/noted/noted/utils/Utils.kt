@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.ListView
@@ -68,12 +69,14 @@ class Utils {
                                     val noteCategory =
                                         NoteCategory(UUID.randomUUID().mostSignificantBits, text)
                                     saveCategory(noteCategory)
-                                    categoriesBottomSheet.dismiss()
-                                    showCategories(context, layoutInflater, object:OnSelectedCategory{
-                                        override fun onSelected(noteCategory: NoteCategory) {
-                                        }
 
-                                    } )
+                                    itemListTitles.add(text)
+                                    itemListImages.add(R.drawable.ic_label)
+                                    val hashMap =  HashMap<String, String>()
+                                    hashMap["listview_title"] = text
+                                    hashMap["listview_image"] = itemListImages[itemsList.size].toString()
+                                    itemsList.add(itemsList.size, hashMap)
+                                    simpleAdapter.notifyDataSetChanged()
                                     dialog.dismiss()
                                 }
 

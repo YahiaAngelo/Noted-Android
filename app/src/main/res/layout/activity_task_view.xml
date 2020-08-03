@@ -110,12 +110,11 @@
                 android:paddingTop="48dp"
                 android:paddingBottom="48dp"
                 android:id="@+id/task_desc_edittext"
-                android:inputType="textCapSentences"
+                android:inputType="textMultiLine"
                 android:minHeight="68dp"
                 android:hint="Descreption"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                android:textStyle="bold"
                 android:fontFamily="@font/roboto_bold" />
         </com.google.android.material.textfield.TextInputLayout>
 

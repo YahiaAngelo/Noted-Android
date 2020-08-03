@@ -49,7 +49,7 @@ class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindi
 
 
         if (task.reminder != null){
-            if(binding.taskChipGroup.findViewById<Chip>(task.reminder!!.id.toInt()) == null){
+            if(binding.taskChipGroup.findViewById<Chip>(R.id.task_item_reminder_chip) == null){
                 val chip = Chip(context)
                 chip.chipBackgroundColor = context.resources.getColorStateList(R.color.background, context.theme)
                 chip.chipStrokeWidth = 6F
@@ -63,7 +63,7 @@ class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindi
                 chip.setTextColor(context.resources.getColorStateList(R.color.text_primary, context.theme))
                 val date = SimpleDateFormat("d MMM HH:mm aaa", Locale.getDefault()).format(Date(task.reminder!!.date))
                 chip.text = date
-                chip.id = task.reminder!!.id.toInt()
+                chip.id = R.id.task_item_reminder_chip
                 binding.taskChipGroup.addView(chip)
             }
         }

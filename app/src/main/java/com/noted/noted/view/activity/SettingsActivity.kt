@@ -1,7 +1,13 @@
 package com.noted.noted.view.activity
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import com.noted.noted.R
 
@@ -20,6 +26,28 @@ class SettingsActivity : AppCompatActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+            val themePreference = findPreference<ListPreference>("theme")
+            val notesStylePreference = findPreference<ListPreference>("notes_grid")
+            themePreference!!.setOnPreferenceChangeListener { _, newValue ->
+                when(newValue){
+                    "system" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+
+                true
+            }
+            notesStylePreference!!.setOnPreferenceChangeListener { _, newValue ->
+                val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+                with(sharedPref!!.edit()){
+                   putString("notes_grid", newValue.toString())
+                    commit()
+                }
+                Toast.makeText(context, "Please restart the app to take effect", Toast.LENGTH_SHORT).show()
+
+                true
+            }
         }
+
     }
 }

@@ -13,6 +13,7 @@
     android:transitionName="note_shared_element_container"
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp"
+    android:minHeight="148dp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
@@ -43,7 +44,7 @@
             android:fontFamily="@font/roboto_regular"
             android:gravity="start"
             android:textColor="@color/text_primary"
-            android:maxLines="10"
+            android:maxLines="8"
             android:textSize="14sp"
             tools:text="Test note" />
 

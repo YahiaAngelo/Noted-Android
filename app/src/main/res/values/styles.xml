@@ -40,7 +40,7 @@
     </style>
     <style name="Theme.Dialog"
         parent="android:Theme.Material.Light.Dialog">
-        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorAccent">@color/primary_light</item>
         <item name="android:colorPrimary">@color/primary</item>
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
     </style>

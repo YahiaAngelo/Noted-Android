@@ -12,6 +12,7 @@ import com.noted.noted.utils.Extensions
 import com.noted.noted.viewmodel.NotesFragmentViewModel
 import com.noted.noted.viewmodel.TasksFragmentViewModel
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidFileProperties
 import org.koin.android.ext.koin.androidLogger
@@ -46,11 +47,19 @@ class AppController : Application(){
             modules(listOf(extensionsModule))
         }
 
-
-        Realm.init(this)
+        initRealm()
 
         createNotificationChannel()
 
+    }
+
+    private fun initRealm(){
+        Realm.init(this)
+        val realmConfig = RealmConfiguration.Builder()
+            .name("noted.realm")
+            .schemaVersion(1)
+            .build()
+        Realm.setDefaultConfiguration(realmConfig)
     }
 
     private fun createNotificationChannel() {
@@ -58,8 +67,8 @@ class AppController : Application(){
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notiChannelIds.forEach {
-                val name = "Noted notification"
-                val descriptionText = "Noted notification"
+                val name = "Reminder notification"
+                val descriptionText = "Reminder notification"
                 val importance = NotificationManager.IMPORTANCE_DEFAULT
                 val channel = NotificationChannel(it, name, importance).apply {
                     description = descriptionText

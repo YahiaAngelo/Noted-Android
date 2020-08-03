@@ -130,7 +130,8 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
 
         }
         viewModel.getTasks().observe(viewLifecycleOwner) {
-            binding.tasksRecycler.post { itemAdapter.setNewList(it)
+            binding.tasksRecycler.post {
+                itemAdapter.setNewList(it)
                 binding.tasksPlaceholder.visibility = if (itemAdapter.adapterItemCount > 0)  View.GONE else View.VISIBLE
 
             }

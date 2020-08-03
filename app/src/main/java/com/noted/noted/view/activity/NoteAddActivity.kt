@@ -38,7 +38,7 @@ class NoteAddActivity : AppCompatActivity() {
     private lateinit var bottomSheet: BottomSheetDialog
     private lateinit var categoriesBottomSheet: BottomSheetDialog
     private lateinit var categoriesList: RealmList<NoteCategory>
-    lateinit var note: Note
+    private var note: Note? = null
     private var newColor by Delegates.notNull<Int>()
     private var noteId by Delegates.notNull<Long>()
     private val noteRepo: NoteRepo by inject()
@@ -65,19 +65,19 @@ class NoteAddActivity : AppCompatActivity() {
         newColor = R.color.background
         if (intent.getParcelableExtra<Parcelable>("note") != null) {
             note = Parcels.unwrap(intent.getParcelableExtra("note"))
-            noteId = note.id
-            newColor = note.color
+            noteId = note!!.id
+            newColor = note!!.color
             binding.activityNoteAddContainer.setBackgroundColor(resources.getColor(newColor, theme))
-            binding.noteTitleEditText.setText(note.title)
-            binding.noteBodyEditText.renderMD(note.body)
+            binding.noteTitleEditText.setText(note!!.title)
+            binding.noteBodyEditText.renderMD(note!!.body)
             val date =
-                SimpleDateFormat("d MMM HH:mm aaa", Locale.getDefault()).format(Date(note.date))
+                SimpleDateFormat("d MMM HH:mm aaa", Locale.getDefault()).format(Date(note!!.date))
             binding.noteDate.text = "Edited $date"
             window.statusBarColor = resources.getColor(newColor, theme)
             window.navigationBarColor = resources.getColor(newColor, theme)
             binding.noteAddCategoryChip.chipBackgroundColor =
                 resources.getColorStateList(newColor, theme).withAlpha(200)
-            categoriesList = note.categories
+            categoriesList = note!!.categories
 
         }
         setSupportActionBar(binding.activityNoteAddToolbar)
@@ -156,10 +156,12 @@ class NoteAddActivity : AppCompatActivity() {
             SimpleAdapter(this, itemsList, R.layout.simple_list_layout, from, to.toIntArray())
         listView.adapter = simpleAdapter
         listView.setOnItemClickListener { _, _, position, _ ->
-            when (position) {
-                0 -> deleteNote()
-                1 -> Utils.copyToClipboard(this,"${binding.noteTitleEditText.text.toString()}\n\n${binding.noteBodyEditText.text.toString()}")
-                2 -> Utils.shareText(this, "${binding.noteTitleEditText.text.toString()}\n\n${binding.noteBodyEditText.text.toString()}")
+            if (note != null){
+                when (position) {
+                    0 -> deleteNote()
+                    1 -> Utils.copyToClipboard(this,"${binding.noteTitleEditText.text.toString()}\n\n${binding.noteBodyEditText.text.toString()}")
+                    2 -> Utils.shareText(this, "${binding.noteTitleEditText.text.toString()}\n\n${binding.noteBodyEditText.text.toString()}")
+                }
             }
             bottomSheet.dismiss()
         }
@@ -277,7 +279,7 @@ class NoteAddActivity : AppCompatActivity() {
     }
 
     private fun deleteNote() {
-        noteRepo.deleteNote(note)
+        noteRepo.deleteNote(noteId)
         bottomSheet.dismiss()
         finish()
     }

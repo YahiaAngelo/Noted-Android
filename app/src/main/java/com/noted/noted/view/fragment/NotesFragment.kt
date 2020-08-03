@@ -1,11 +1,14 @@
 package com.noted.noted.view.fragment
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.observe
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.chip.Chip
@@ -48,7 +51,9 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         val dragCallback = SimpleDragCallback()
         val touchHelper = ItemTouchHelper(dragCallback)
         touchHelper.attachToRecyclerView(binding.notesRecyclerView)
-        val layoutManager = StaggeredGridLayoutManager(2, 1)
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
+        val gridValue = if (sharedPref!!.getString("notes_grid", "grid") == "grid" )  2 else 1
+        val layoutManager = StaggeredGridLayoutManager(gridValue, 1)
         binding.notesRecyclerView.layoutManager = layoutManager
         binding.notesRecyclerView.adapter = fastAdapter
 

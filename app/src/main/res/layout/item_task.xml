@@ -13,32 +13,31 @@
     app:cardCornerRadius="8dp"
     android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:minHeight="64dp">
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:id="@+id/task_checkbox"
             android:layout_marginStart="12dp"
             app:buttonTint="@color/checkbox_color"
             />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:layout_marginStart="12dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/task_checkbox"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/task_checkbox"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/task_title"
@@ -52,14 +51,14 @@
 
             <TextView
                 android:id="@+id/task_desc"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_light"
                 android:visibility="gone"
                 android:lines="1"
                 android:transitionName="task_desc"
                 android:textColor="@color/text_secondary"
-                tools:text="This is task desc text" />
+                tools:text="This is task desc textThis is task desc textThis is task desc text" />
 
             <com.google.android.material.chip.ChipGroup
                 android:layout_width="wrap_content"
@@ -68,6 +67,6 @@
             </com.google.android.material.chip.ChipGroup>
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>

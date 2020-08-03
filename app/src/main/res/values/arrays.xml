@@ -1,12 +1,22 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="theme_entries">
+        <item>System default</item>
+        <item>Dark</item>
+        <item>Light</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>dark</item>
+        <item>light</item>
+    </string-array>
+
+    <string-array name="notes_grid_entries">
+        <item>Grid</item>
+        <item>List</item>
+    </string-array>
+    <string-array name="notes_grid_values">
+        <item>grid</item>
+        <item>list</item>
     </string-array>
 </resources>

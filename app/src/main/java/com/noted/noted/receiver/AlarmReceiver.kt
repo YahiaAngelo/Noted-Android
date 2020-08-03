@@ -19,7 +19,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 action = "action_done"
                 putExtra("task_id", intent.getLongExtra("task_id", 0))
             }
-            val donePendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 0, doneIntent, 0)
+            val donePendingIntent: PendingIntent = PendingIntent.getBroadcast(context, 1234, doneIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
             val manager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val builder = NotificationCompat.Builder(context, channelId)

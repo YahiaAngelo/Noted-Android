@@ -95,7 +95,7 @@ class MainActivity : BaseActivity() {
         for (category in categoriesList){
             categoriesSubMenu.add(R.id.categories_group, category.id.toInt(), Menu.NONE, category.title).setIcon(R.drawable.ic_label).isCheckable = true
         }
-        categoriesSubMenu.add(R.id.categories_group, R.id.all_categories_item, Menu.NONE, "Add category").setIcon(R.drawable.ic_add).isCheckable = false
+        categoriesSubMenu.add(R.id.categories_group, R.id.add_category_item, Menu.NONE, "Add category").setIcon(R.drawable.ic_add).isCheckable = false
 
         menu.add(R.id.others_group, R.id.settings_item, Menu.NONE, "Settings").setIcon(R.drawable.ic_settings).isCheckable = false
 
