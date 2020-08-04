@@ -5,7 +5,6 @@
 ### Noted is a Notes and Tasks app built with Kotlin, MVVM, Material design components And Realm database.
 ----
 ## Features:
-----
 - #### Write Notes with text styles
 - #### Add categories 
 - #### Add Tasks with reminders
@@ -13,11 +12,9 @@
 - #### Colorize Notes cards
 
 ## Contributing:
-----
 #### Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 #### Please make sure to update tests as appropriate.
 ## Libraries:
-----
 ##### [Koin](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjew5TLzoDrAhUKTBUIHf4fC00QFjAAegQIARAB&url=https%3A%2F%2Fgithub.com%2FInsertKoinIO%2Fkoin&usg=AOvVaw1s3Qoji50zT-ljqY3ZujWp)
 ##### [Markwon](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwie8PPhzYDrAhX-SBUIHWuKC9gQFjAAegQIBxAB&url=https%3A%2F%2Fgithub.com%2Fnoties%2FMarkwon&usg=AOvVaw3WGU1V5UI1ayfsV538PEGN)
 ##### [MarkdownEditText](https://github.com/YahiaAngelo/MarkdownEditText)
@@ -28,7 +25,6 @@
 ##### [Parceler](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwizkJTBzYDrAhWrShUIHcTzBGoQFjAAegQIARAB&url=https%3A%2F%2Fgithub.com%2Fjohncarl81%2Fparceler&usg=AOvVaw2D9MCHst-nzAYbIQe0tCNQ)
 
 ## License: 
-----
 ```
   Copyright 2020 YahiaAngelo
 
