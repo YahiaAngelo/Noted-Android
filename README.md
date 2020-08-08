@@ -1,4 +1,6 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+<a href="https://play.google.com/store/apps/details?id=com.noted.noted"><img src="https://raw.githubusercontent.com/steverichey/google-play-badge-svg/master/img/en_get.svg" width="30%" alt="Available on Samsung Galaxy Store" style="max-width: 100%; height: auto;"></a>
 # Noted - Notes and Tasks
 ![](https://i.imgur.com/iXeyxbj.png)
 
