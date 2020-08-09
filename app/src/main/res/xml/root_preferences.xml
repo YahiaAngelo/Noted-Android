@@ -23,7 +23,18 @@
             app:defaultValue="false"
             app:key="hour_format" />
 
+    </PreferenceCategory>
 
+    <PreferenceCategory app:title="Notifications">
+        <Preference
+            app:selectable="false"
+            app:persistent="false"
+            app:icon="@drawable/ic_info_black"
+            app:summary="Sometimes, Reminder notification might not trigger due to the aggressive battery optimization by your phone manufacturer." />
+        <Preference
+            app:key="batt_opt"
+            app:title="Learn more"
+            />
     </PreferenceCategory>
 
 

@@ -89,27 +89,28 @@ class Utils {
                 }
             }
             listView.setOnItemLongClickListener { _, _, position, _ ->
-                val noteCategory = dbCategories[position - 1]!!
-                MaterialAlertDialogBuilder(context)
-                    .setTitle("Delete category")
-                    .setMessage("Do you want to delete ${noteCategory.title} category ?")
-                    .setNeutralButton("Delete"
-                    ) { dialog, _ ->
-                        itemsList.removeAt(position)
-                        realm = Realm.getDefaultInstance()
-                        realm.use {
-                            it.beginTransaction()
-                            noteCategory.deleteFromRealm()
-                            it.commitTransaction()
+                if (position > 0){
+                    val noteCategory = dbCategories[position - 1]!!
+                    MaterialAlertDialogBuilder(context)
+                        .setTitle("Delete category")
+                        .setMessage("Do you want to delete ${noteCategory.title} category ?")
+                        .setNeutralButton("Delete"
+                        ) { dialog, _ ->
+                            itemsList.removeAt(position)
+                            realm = Realm.getDefaultInstance()
+                            realm.use {
+                                it.beginTransaction()
+                                noteCategory.deleteFromRealm()
+                                it.commitTransaction()
+                            }
+                            simpleAdapter.notifyDataSetChanged()
+                            dialog.dismiss()
                         }
-                        simpleAdapter.notifyDataSetChanged()
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton(context.resources.getString(android.R.string.cancel)) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
-
+                        .setNegativeButton(context.resources.getString(android.R.string.cancel)) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+                }
                 true
             }
             categoriesBottomSheet.show()

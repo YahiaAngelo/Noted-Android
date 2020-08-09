@@ -8,9 +8,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.ListPreference
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import com.noted.noted.R
+import dev.doubledot.doki.ui.DokiActivity
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -32,6 +34,7 @@ class SettingsActivity : AppCompatActivity() {
             val themePreference = findPreference<ListPreference>("theme")
             val notesStylePreference = findPreference<ListPreference>("notes_grid")
             val timeFormatPreference = findPreference<SwitchPreference>("hour_format")
+            val batteryOptimizationPreference = findPreference<Preference>("batt_opt")
             themePreference!!.setOnPreferenceChangeListener { _, newValue ->
                 when(newValue){
                     "system" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
@@ -54,6 +57,12 @@ class SettingsActivity : AppCompatActivity() {
                     putBoolean("hour_format", newValue as Boolean)
                     commit()
                 }
+            }
+
+            batteryOptimizationPreference!!.setOnPreferenceClickListener {
+                DokiActivity.start(requireContext())
+
+                true
             }
         }
 
