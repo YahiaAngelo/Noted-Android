@@ -4,7 +4,6 @@ import android.app.ActivityOptions
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,15 +32,13 @@ import com.noted.noted.model.NoteCategory
 import com.noted.noted.model.Reminder
 import com.noted.noted.model.Task
 import com.noted.noted.repositories.TaskRepo
-import com.noted.noted.utils.AlarmUtils
+import com.noted.noted.utils.ReminderWorker
 import com.noted.noted.utils.Utils
 import com.noted.noted.view.activity.TaskViewActivity
 import com.noted.noted.view.bindItem.TaskBinding
 import com.noted.noted.view.customView.SimpleSwipeCallback
 import com.noted.noted.view.customView.SimpleSwipeDragCallback
 import com.noted.noted.viewmodel.TasksFragmentViewModel
-import io.realm.Realm
-import io.realm.Sort
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.parceler.Parcels.*
@@ -57,7 +54,6 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
     private lateinit var touchCallback: SimpleDragCallback
     private lateinit var touchHelper: ItemTouchHelper
     private var addTaskDialog: BottomSheetDialog? = null
-    private val alarmUtils: AlarmUtils by inject()
     private val viewModel: TasksFragmentViewModel by viewModel()
     private val taskRepo: TaskRepo by inject()
 
@@ -207,7 +203,8 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
                         selectedCalendar!!.time.time, repeatButton.isChecked
                     )
                     task.reminder = reminder
-                    alarmUtils.setAlarm(task, requireContext())
+                    ReminderWorker.setReminder(task.title, task.reminder!!.id, task.id, task.reminder!!.date, task.reminder!!.repeat, requireContext())
+                    //alarmUtils.setAlarm(task, requireContext())
                 }
 
                 taskRepo.addTask(task)
@@ -249,7 +246,7 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
             val task = itemAdapter.getAdapterItem(position).task
             itemAdapter.remove(position)
             if (task.reminder != null) {
-                alarmUtils.cancelAlarm(task.reminder!!, requireContext())
+                ReminderWorker.cancel(task.reminder!!.id, requireContext())
             }
             taskRepo.deleteTask(task)
 

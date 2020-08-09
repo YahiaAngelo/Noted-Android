@@ -1,11 +1,7 @@
 package com.noted.noted.utils
 
 import android.app.TimePickerDialog
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
-import android.util.Log
+import android.content.*
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.ListView
@@ -28,7 +24,7 @@ class Utils {
     companion object{
 
         fun showCategories(context: Context, layoutInflater: LayoutInflater, onSelectedCategory: OnSelectedCategory){
-            val realm = Realm.getDefaultInstance()
+            var realm = Realm.getDefaultInstance()
             val dbCategories = realm.where(NoteCategory::class.java).findAll()
             val view = layoutInflater.inflate(R.layout.simple_listview_layout, null)
             val categoriesBottomSheet = BottomSheetDialog(context, R.style.BottomSheetMenuTheme)
@@ -91,6 +87,30 @@ class Utils {
                         categoriesBottomSheet.dismiss()
                     }
                 }
+            }
+            listView.setOnItemLongClickListener { _, _, position, _ ->
+                val noteCategory = dbCategories[position - 1]!!
+                MaterialAlertDialogBuilder(context)
+                    .setTitle("Delete category")
+                    .setMessage("Do you want to delete ${noteCategory.title} category ?")
+                    .setNeutralButton("Delete"
+                    ) { dialog, _ ->
+                        itemsList.removeAt(position)
+                        realm = Realm.getDefaultInstance()
+                        realm.use {
+                            it.beginTransaction()
+                            noteCategory.deleteFromRealm()
+                            it.commitTransaction()
+                        }
+                        simpleAdapter.notifyDataSetChanged()
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(context.resources.getString(android.R.string.cancel)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+
+                true
             }
             categoriesBottomSheet.show()
 

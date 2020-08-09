@@ -16,7 +16,7 @@ import com.noted.noted.model.NoteCategory
 import com.noted.noted.model.Reminder
 import com.noted.noted.model.Task
 import com.noted.noted.repositories.TaskRepo
-import com.noted.noted.utils.AlarmUtils
+import com.noted.noted.utils.ReminderWorker
 import com.noted.noted.utils.Utils
 import io.realm.RealmList
 import org.koin.android.ext.android.inject
@@ -30,7 +30,6 @@ class TaskViewActivity : AppCompatActivity() {
     private val taskRepo: TaskRepo by inject()
     private lateinit var categoriesList: RealmList<NoteCategory>
     private var reminder: Reminder? = null
-    private val alarmUtils: AlarmUtils by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).transitionName = "task_shared_element_container"
         setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
@@ -74,7 +73,7 @@ class TaskViewActivity : AppCompatActivity() {
                             calendar.time.time, false
                         )
                         task.reminder = reminder
-                        alarmUtils.setAlarm(task, this@TaskViewActivity)
+                        ReminderWorker.setReminder(task.title, task.reminder!!.id, task.id, task.reminder!!.date, task.reminder!!.repeat, this@TaskViewActivity)
                         checkReminder()
                     }
 
@@ -142,7 +141,7 @@ class TaskViewActivity : AppCompatActivity() {
                 binding.taskViewReminderChip.text = "Add Reminder"
                 binding.taskViewReminderChip.chipIcon = resources.getDrawable(R.drawable.ic_access_alarms, theme)
                 binding.taskViewReminderChip.isCloseIconVisible = false
-                alarmUtils.cancelAlarm(reminder!!, this)
+                ReminderWorker.cancel(reminder!!.id, this)
                 reminder = null
             }
         }

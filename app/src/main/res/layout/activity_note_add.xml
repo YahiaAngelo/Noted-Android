@@ -80,7 +80,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="18dp"
                 android:background="@android:color/transparent"
-                android:fontFamily="@font/roboto_bold"
+                android:fontFamily="@font/roboto_medium"
                 android:lineSpacingExtra="4dp"
                 android:gravity="top"
                 android:hint="Note"
@@ -110,10 +110,12 @@
     <com.yahiaangelo.markdownedittext.MarkdownStylesBar
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        app:buttonColor="@color/style_button_color"
         android:clipToPadding="false"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        tools:visibility="visible"
         android:id="@+id/note_styles_bar"
         android:visibility="gone"
-        android:paddingStart="8dp"
-        android:backgroundTint="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/note_date" />
 </androidx.constraintlayout.widget.ConstraintLayout>

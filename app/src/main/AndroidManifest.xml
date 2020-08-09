@@ -12,8 +12,8 @@
         android:theme="@style/Theme.App">
         <activity
             android:name=".view.activity.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
-        <activity android:name=".view.activity.TaskViewActivity"></activity>
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".view.activity.TaskViewActivity" />
 
         <receiver android:name=".receiver.ReminderActionReceiver" />
 
@@ -32,10 +32,6 @@
         <activity android:name=".view.activity.LoginActivity" />
         <activity android:name=".MainActivity" />
 
-        <receiver
-            android:name=".receiver.AlarmReceiver"
-            android:enabled="true"
-            android:exported="false" />
     </application>
 
 </manifest>

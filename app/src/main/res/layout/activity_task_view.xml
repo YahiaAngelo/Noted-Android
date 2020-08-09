@@ -112,7 +112,7 @@
                 android:id="@+id/task_desc_edittext"
                 android:inputType="textMultiLine"
                 android:minHeight="68dp"
-                android:hint="Descreption"
+                android:hint="Description"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:fontFamily="@font/roboto_bold" />

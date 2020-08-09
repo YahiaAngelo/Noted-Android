@@ -285,7 +285,7 @@ class NoteAddActivity : AppCompatActivity() {
     }
 
     private fun setupMarkwon() {
-        binding.noteStylesBar.markdownEditText = binding.noteBodyEditText
+        binding.noteBodyEditText.setStylesBar(binding.noteStylesBar)
         KeyboardVisibilityEvent.setEventListener(this, object : KeyboardVisibilityEventListener {
             override fun onVisibilityChanged(isOpen: Boolean) {
                 val set: TransitionSet = TransitionSet()

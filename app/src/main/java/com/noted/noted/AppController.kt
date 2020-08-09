@@ -7,7 +7,6 @@ import android.content.Context
 import android.os.Build
 import com.noted.noted.repositories.NoteRepo
 import com.noted.noted.repositories.TaskRepo
-import com.noted.noted.utils.AlarmUtils
 import com.noted.noted.utils.Extensions
 import com.noted.noted.viewmodel.NotesFragmentViewModel
 import com.noted.noted.viewmodel.TasksFragmentViewModel
@@ -27,7 +26,6 @@ class AppController : Application(){
         super.onCreate()
         val extensionsModule = module {
             single { Extensions() }
-            single { AlarmUtils() }
             viewModel { TasksFragmentViewModel(get())}
             viewModel { NotesFragmentViewModel(get()) }
             single { TaskRepo() }

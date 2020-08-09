@@ -21,7 +21,7 @@ import com.noted.noted.R
 import com.noted.noted.databinding.ItemTaskBinding
 import com.noted.noted.model.Task
 import com.noted.noted.repositories.TaskRepo
-import com.noted.noted.utils.AlarmUtils
+import com.noted.noted.utils.ReminderWorker
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -98,7 +98,6 @@ class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindi
             binding.taskTitle.text = spannableStringBuilder
         }
         binding.taskCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            val alarmUtils = AlarmUtils()
             if (isChecked){
                 binding.taskTitle.startStrikeThroughAnimation()
                 if (task.desc.isNotEmpty()){
@@ -106,7 +105,7 @@ class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindi
                 }
                 binding.root.setCardForegroundColor(context.resources.getColorStateList(R.color.card_stroke_color, context.theme).withAlpha(60))
                 if (task.reminder != null){
-                    alarmUtils.cancelAlarm(task.reminder!!, context)
+                    ReminderWorker.cancel(task.reminder!!.id, context)
                 }
             }else{
                 binding.root.setCardForegroundColor(context.resources.getColorStateList(android.R.color.transparent, context.theme))
@@ -115,7 +114,7 @@ class TaskBinding(val task: Task,private val taskRepo: TaskRepo) : AbstractBindi
                     binding.taskDesc.reverseStrikeThroughAnimation()
                 }
                 if (task.reminder != null){
-                    alarmUtils.setAlarm(task, context)
+                    ReminderWorker.setReminder(task.title, task.reminder!!.id,task.id, task.reminder!!.date, task.reminder!!.repeat, context)
                 }
             }
             taskRepo.checkTask(task, isChecked)

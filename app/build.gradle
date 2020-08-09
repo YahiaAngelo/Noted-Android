@@ -49,6 +49,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // or "kotlin-stdlib-jdk8"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
+    implementation "androidx.work:work-runtime-ktx:2.4.0"
     implementation 'androidx.preference:preference:1.1.1'// JVM dependency
     implementation 'com.google.firebase:firebase-analytics-ktx:17.4.4'
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
@@ -67,7 +68,7 @@ dependencies {
     kapt 'org.parceler:parceler:1.1.13'
     implementation "io.noties.markwon:core:4.3.1"
     implementation "io.noties.markwon:ext-strikethrough:4.3.1"
-    implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.0.0'
+    implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.0.1'
     implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC2'
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.google.code.gson:gson:2.8.6'

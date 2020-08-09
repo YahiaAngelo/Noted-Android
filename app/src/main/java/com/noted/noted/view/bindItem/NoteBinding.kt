@@ -53,6 +53,9 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
         }
         binding.noteTitle.text = note.title
         markwon.setMarkdown(noteBody, note.body)
+        noteBody.setOnClickListener {
+            noteCard.performClick()
+        }
         binding.noteChipGroup.removeAllViews()
         for (category in note.categories!!){
             val chip = Chip(context)
