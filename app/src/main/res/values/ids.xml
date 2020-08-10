@@ -11,5 +11,6 @@
     <item name="all_categories_item" type="id"/>
     <item name="add_category_item" type="id"/>
     <item name="settings_item" type="id"/>
+    <item name="about_item" type="id"/>
     <item name="task_item_reminder_chip" type="id"/>
 </resources>

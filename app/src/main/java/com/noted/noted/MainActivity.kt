@@ -19,6 +19,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.noted.noted.databinding.ActivityMainBinding
 import com.noted.noted.model.NoteCategory
 import com.noted.noted.utils.Utils
+import com.noted.noted.view.activity.AboutActivity
 import com.noted.noted.view.activity.BaseActivity
 import com.noted.noted.view.activity.NoteAddActivity
 import com.noted.noted.view.activity.SettingsActivity
@@ -98,6 +99,7 @@ class MainActivity : BaseActivity() {
         categoriesSubMenu.add(R.id.categories_group, R.id.add_category_item, Menu.NONE, "Add category").setIcon(R.drawable.ic_add).isCheckable = false
 
         menu.add(R.id.others_group, R.id.settings_item, Menu.NONE, "Settings").setIcon(R.drawable.ic_settings).isCheckable = false
+        menu.add(R.id.others_group, R.id.about_item, Menu.NONE, "About").setIcon(R.drawable.ic_info_black).isCheckable = false
 
         binding.navView.setNavigationItemSelectedListener { item ->
             val currentFragment = supportFragmentManager.currentNavigationFragment as BaseFragment
@@ -109,6 +111,10 @@ class MainActivity : BaseActivity() {
                 R.id.settings_item ->{
                     val settingsIntent = Intent(this, SettingsActivity::class.java)
                     startActivity(settingsIntent)
+                }
+                R.id.about_item ->{
+                    val aboutIntent = Intent(this, AboutActivity::class.java)
+                    startActivity(aboutIntent)
                 }
                 else -> currentFragment.filterCategories(item.itemId)
             }

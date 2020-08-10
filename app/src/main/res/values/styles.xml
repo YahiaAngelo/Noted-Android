@@ -33,6 +33,13 @@
         <item name="background">@color/icon</item>
     </style>
 
+    <style name="Theme.App.AboutActivity" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="colorSecondary">@color/primary_light</item>
+        <item name="android:navigationBarColor">@color/icon</item>
+    </style>
     <style name="Theme.App.Intro" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>

@@ -129,6 +129,8 @@ class NoteAddActivity : AppCompatActivity() {
                 noteRepo.addNote(note)
                 onBackPressed()
 
+        }else{
+            Toast.makeText(this, "Please add a title to your note", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -247,6 +249,27 @@ class NoteAddActivity : AppCompatActivity() {
                     categoriesBottomSheet.dismiss()
                 }
             }
+        }
+
+        listView.setOnItemLongClickListener { _, _, position, _ ->
+            if (position > 0){
+                val noteCategory = dbCategories[position - 1]!!
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("Delete category")
+                    .setMessage("Do you want to delete ${noteCategory.title} category ?")
+                    .setNeutralButton("Delete"
+                    ) { dialog, _ ->
+                        itemsList.removeAt(position)
+                        noteRepo.deleteCategory(noteCategory)
+                        simpleAdapter.notifyDataSetChanged()
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(this.resources.getString(android.R.string.cancel)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
+            true
         }
 
     }

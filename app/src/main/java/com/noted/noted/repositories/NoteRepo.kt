@@ -61,4 +61,14 @@ class NoteRepo {
         }
     }
 
+    fun deleteCategory(noteCategory: NoteCategory) {
+        realm = Realm.getDefaultInstance()
+        realm.use { realm ->
+            realm.beginTransaction()
+            noteCategory.deleteFromRealm()
+            realm.commitTransaction()
+            realm.close()
+        }
+    }
+
 }    private fun <T: RealmModel> RealmResults<T>.asLiveData() = LiveRealmData<T>(this)

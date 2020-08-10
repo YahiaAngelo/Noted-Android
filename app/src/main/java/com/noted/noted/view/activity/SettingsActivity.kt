@@ -43,20 +43,9 @@ class SettingsActivity : AppCompatActivity() {
                 }
                 true
             }
-            notesStylePreference!!.setOnPreferenceChangeListener { _, newValue ->
-                with(sharedPref!!.edit()){
-                   putString("notes_grid", newValue.toString())
-                    commit()
-                }
+            notesStylePreference!!.setOnPreferenceChangeListener { _, _ ->
                 Toast.makeText(context, "Please restart the app to take effect", Toast.LENGTH_SHORT).show()
                 true
-            }
-
-            timeFormatPreference!!.setOnPreferenceChangeListener { _, newValue ->
-                with(sharedPref!!.edit()){
-                    putBoolean("hour_format", newValue as Boolean)
-                    commit()
-                }
             }
 
             batteryOptimizationPreference!!.setOnPreferenceClickListener {

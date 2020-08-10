@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App">
         <activity
+            android:name=".view.activity.AboutActivity"
+            android:theme="@style/Theme.App.AboutActivity" />
+        <activity
             android:name=".view.activity.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity android:name=".view.activity.TaskViewActivity" />
@@ -31,7 +34,6 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".view.activity.LoginActivity" />
         <activity android:name=".MainActivity" />
-
     </application>
 
 </manifest>

@@ -11,8 +11,6 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add">Add</string>
     <string name="search_your_notes">Search</string>
     <string name="options">Options</string>
@@ -21,18 +19,15 @@
     <string name="title">Title</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="app_changelog">### v1.0.2:\n
+- Added About screen\n
+- Fixed category deletion in Note add screen\n
+- Fixed force dark mode issues\n
+### v1.0.1:\n
+- Improved Reminders alarms\n
+- Added Categories deletion option (Long press on category to delete)\n
+- Improved Notes styling (Styling selected text)\n
+- UI improvements\n
+### v1.0.0:\n
+- First Release</string>
 </resources>
