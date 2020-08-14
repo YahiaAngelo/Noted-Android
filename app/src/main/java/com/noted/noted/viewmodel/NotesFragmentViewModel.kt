@@ -33,6 +33,7 @@ class NotesFragmentViewModel(private val noteRepo: NoteRepo) : ViewModel(){
     }
 
 
+
     private fun RealmResults<Note>.toBinding():List<NoteBinding>{
         val noteBindingList : MutableList<NoteBinding> = mutableListOf()
         for (note in this){

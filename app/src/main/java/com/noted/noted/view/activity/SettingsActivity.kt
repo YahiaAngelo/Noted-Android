@@ -29,11 +29,9 @@ class SettingsActivity : AppCompatActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
-            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
 
             val themePreference = findPreference<ListPreference>("theme")
             val notesStylePreference = findPreference<ListPreference>("notes_grid")
-            val timeFormatPreference = findPreference<SwitchPreference>("hour_format")
             val batteryOptimizationPreference = findPreference<Preference>("batt_opt")
             themePreference!!.setOnPreferenceChangeListener { _, newValue ->
                 when(newValue){

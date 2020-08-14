@@ -201,6 +201,11 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         update()
     }
 
+    override fun onResume() {
+        NoteRepo.NotesWorker.downloadNotes()
+        super.onResume()
+    }
+
     override fun filterCategories(categoryId : Int) {
         itemAdapter.itemFilter.filterPredicate = {
                 item: NoteBinding, constraint: CharSequence? ->

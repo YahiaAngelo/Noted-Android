@@ -1,8 +1,11 @@
 package com.noted.noted.view.activity
 
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -42,6 +45,7 @@ class NoteAddActivity : AppCompatActivity() {
     private var newColor by Delegates.notNull<Int>()
     private var noteId by Delegates.notNull<Long>()
     private val noteRepo: NoteRepo by inject()
+    private var isTextChanged = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).transitionName = "note_shared_element_container"
@@ -127,7 +131,7 @@ class NoteAddActivity : AppCompatActivity() {
                     categoriesList
                 )
                 noteRepo.addNote(note)
-                onBackPressed()
+                finish()
 
         }else{
             Toast.makeText(this, "Please add a title to your note", Toast.LENGTH_SHORT).show()
@@ -322,6 +326,41 @@ class NoteAddActivity : AppCompatActivity() {
 
         })
 
+        val textWatcher = object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+                isTextChanged = true
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+        }
+        binding.noteBodyEditText.addTextChangedListener(textWatcher)
+
     }
 
+    private fun showSaveConfirmDialog(){
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Discard changes")
+            .setMessage("Do you want to exit without saving ?")
+            .setPositiveButton("Save"
+            ) { _, _ -> saveNote() }
+            .setNegativeButton("Discard") { _, _ -> finish() }
+            .show()
+    }
+
+    override fun onBackPressed() {
+        if (isTextChanged){
+            showSaveConfirmDialog()
+        }else{
+            super.onBackPressed()
+        }
+
+
+    }
 }

@@ -18,6 +18,7 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import timber.log.Timber
 
 class AppController : Application(){
 
@@ -43,6 +44,10 @@ class AppController : Application(){
 
             // module list
             modules(listOf(extensionsModule))
+        }
+
+        if(BuildConfig.DEBUG){
+            Timber.plant(Timber.DebugTree())
         }
 
         initRealm()

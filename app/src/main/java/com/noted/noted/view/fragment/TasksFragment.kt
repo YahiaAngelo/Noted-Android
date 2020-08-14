@@ -7,11 +7,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
@@ -140,6 +143,13 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
         val view = layoutInflater.inflate(R.layout.task_add_bottom_sheet, null)
         addTaskDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetMenuTheme)
         addTaskDialog!!.setContentView(view)
+        addTaskDialog!!.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        addTaskDialog!!.setOnShowListener {
+            val bottomSheetDialog = addTaskDialog as BottomSheetDialog
+            val bottomSheet = bottomSheetDialog.findViewById<View>(R.id.design_bottom_sheet) as FrameLayout?
+            BottomSheetBehavior.from(bottomSheet!!).state = BottomSheetBehavior.STATE_EXPANDED
+
+        }
         val titleEditText: TextInputEditText = view.findViewById(R.id.task_add_editText)
         val descEditText: TextInputEditText = view.findViewById(R.id.task_add_desc_editText)
         val descButton: MaterialButton = view.findViewById(R.id.task_add_desc)

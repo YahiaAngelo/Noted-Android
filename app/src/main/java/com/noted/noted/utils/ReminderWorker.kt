@@ -44,7 +44,6 @@ class ReminderWorker(appContext: Context, workerParameters: WorkerParameters): C
 
     }
     override suspend fun doWork(): Result  = coroutineScope {
-        val worker = this
         val context = applicationContext
 
         val taskTitle = inputData.getString("taskTitle")
@@ -81,7 +80,7 @@ class ReminderWorker(appContext: Context, workerParameters: WorkerParameters): C
             if (runAttemptCount > 3) {
                 return@coroutineScope Result.success()
             }
-            Result.failure()
+            Result.retry()
         }finally {
 
             if (repeat){

@@ -10,6 +10,7 @@
         <item name="android:statusBarColor">@color/background</item>
         <item name="android:textColorLink">@color/primary</item>
         <item name="android:textColorHighlight">@color/accent</item>
+        <item name="android:windowIsFloating">false</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowActivityTransitions">true</item>

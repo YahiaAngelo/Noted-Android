@@ -33,7 +33,8 @@
             android:name=".view.activity.NoteAddActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".view.activity.LoginActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

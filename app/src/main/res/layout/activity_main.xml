@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
+    tools:openDrawer="start"
     android:id="@+id/main_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -77,6 +78,7 @@
         android:backgroundTint="@color/icon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        app:headerLayout="@layout/main_nav_header_layout"
         app:itemStyle="rounded_rectangle"
         app:menu="@menu/main_nav_drawer"/>
 </androidx.drawerlayout.widget.DrawerLayout>
