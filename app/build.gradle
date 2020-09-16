@@ -18,8 +18,8 @@ android {
         applicationId "com.noted.noted"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 6
-        versionName "1.1.0"
+        versionCode 7
+        versionName "1.1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,17 +49,17 @@ android {
 
 dependencies {
     def nav_version = "2.3.0"
-    def koin_version = "2.1.5"
+    def koin_version = "2.2.0-alpha-1"
     def lifecycle_version = "2.2.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // or "kotlin-stdlib-jdk8"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
     implementation "androidx.work:work-runtime-ktx:2.4.0"
     implementation 'androidx.preference:preference:1.1.1'// JVM dependency
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.4.4'
-    implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
-    implementation 'com.google.firebase:firebase-auth-ktx:19.3.2'
-    implementation 'com.google.firebase:firebase-firestore-ktx:21.5.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
+    implementation 'com.google.firebase:firebase-auth-ktx:19.4.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:21.6.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.google.android.play:core:1.8.0'
@@ -70,7 +70,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-rc1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
@@ -82,7 +82,7 @@ dependencies {
     kapt 'org.parceler:parceler:1.1.13'
     implementation "io.noties.markwon:core:4.3.1"
     implementation "io.noties.markwon:ext-strikethrough:4.3.1"
-    implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.0.1'
+    implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.0.2'
     implementation('dev.doubledot.doki:library:0.0.1@aar') {
         transitive = true
     }
@@ -101,7 +101,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.3.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0-alpha02'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

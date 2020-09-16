@@ -1,6 +1,5 @@
 package com.noted.noted.view.activity
 
-import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
@@ -312,7 +311,6 @@ class NoteAddActivity : AppCompatActivity() {
     }
 
     private fun setupMarkwon() {
-        binding.noteBodyEditText.setStylesBar(binding.noteStylesBar)
         KeyboardVisibilityEvent.setEventListener(this, object : KeyboardVisibilityEventListener {
             override fun onVisibilityChanged(isOpen: Boolean) {
                 val set: TransitionSet = TransitionSet()
@@ -320,8 +318,15 @@ class NoteAddActivity : AppCompatActivity() {
                     .setInterpolator(FastOutLinearInInterpolator())
 
                 TransitionManager.beginDelayedTransition(binding.noteStylesBar, set)
-                binding.noteStylesBar.visibility = if (isOpen) View.VISIBLE else View.GONE
-                binding.noteDate.visibility = if (isOpen) View.GONE else View.VISIBLE
+                if(isOpen){
+                    binding.noteStylesBar.visibility = View.VISIBLE
+                    binding.noteDate.visibility = View.GONE
+                    binding.noteBodyEditText.setStylesBar(binding.noteStylesBar)
+
+                }else{
+                    binding.noteStylesBar.visibility = View.GONE
+                    binding.noteDate.visibility = View.VISIBLE
+                }
             }
 
         })

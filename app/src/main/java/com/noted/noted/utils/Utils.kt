@@ -15,8 +15,11 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.noted.noted.R
+import com.noted.noted.model.Note
 import com.noted.noted.model.NoteCategory
+import com.noted.noted.repositories.NoteRepo
 import io.realm.Realm
+import timber.log.Timber
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -98,10 +101,17 @@ class Utils {
                         ) { dialog, _ ->
                             itemsList.removeAt(position)
                             realm = Realm.getDefaultInstance()
-                            realm.use {
-                                it.beginTransaction()
+                            val notesWithCategory = realm.where(Note::class.java).equalTo("categories.id", noteCategory.id).findAll()
+                            Timber.e("Notes with this category count is ${notesWithCategory.size}")
+                            realm.use { realm ->
+                                realm.beginTransaction()
+                                for (note in notesWithCategory){
+                                    note.categories.remove(noteCategory)
+                                    NoteRepo.NotesWorker.uploadNote(note)
+                                }
                                 noteCategory.deleteFromRealm()
-                                it.commitTransaction()
+                                realm.commitTransaction()
+                                realm.close()
                             }
                             simpleAdapter.notifyDataSetChanged()
                             dialog.dismiss()

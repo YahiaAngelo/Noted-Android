@@ -201,7 +201,7 @@ class NoteRepo {
                 return array
             }
 
-            fun QuerySnapshot.toNote():List<Note>{
+            private fun QuerySnapshot.toNote():List<Note>{
                 val notesList: MutableList<Note> = mutableListOf()
                 for(query in this){
                     val id = query.getLong("id")
