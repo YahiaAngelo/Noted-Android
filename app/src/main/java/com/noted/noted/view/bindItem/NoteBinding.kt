@@ -4,6 +4,7 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -15,6 +16,7 @@ import io.noties.markwon.AbstractMarkwonPlugin
 import io.noties.markwon.Markwon
 import io.noties.markwon.MarkwonVisitor
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
+import io.noties.markwon.ext.tasklist.TaskListPlugin
 import org.commonmark.node.SoftLineBreak
 
 class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
@@ -37,6 +39,7 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
         categoriesChipGroup = binding.noteChipGroup
         val markwon = Markwon.builder(context)
             .usePlugin(StrikethroughPlugin.create())
+            .usePlugin(TaskListPlugin.create(ResourcesCompat.getColor(context.resources, R.color.primary, context.theme), ResourcesCompat.getColor(context.resources, R.color.primary, context.theme), ResourcesCompat.getColor(context.resources, R.color.background, context.theme)))
             .usePlugin(object : AbstractMarkwonPlugin() {
                 override fun configureVisitor(builder: MarkwonVisitor.Builder) {
                     super.configureVisitor(builder)

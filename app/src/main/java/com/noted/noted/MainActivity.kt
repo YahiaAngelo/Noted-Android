@@ -29,8 +29,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.nonzeroapps.whatisnewdialog.NewItemDialog
-import com.nonzeroapps.whatisnewdialog.`object`.NewFeatureItem
 import com.noted.noted.databinding.ActivityMainBinding
 import com.noted.noted.model.NoteCategory
 import com.noted.noted.repositories.NoteRepo
@@ -80,7 +78,6 @@ class MainActivity : BaseActivity() {
             }
 
         }
-        showNewFeatures()
 
     }
 
@@ -225,6 +222,7 @@ class MainActivity : BaseActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     headerView.findViewById<MaterialButton>(R.id.google_login).visibility = View.GONE
                     headerView.findViewById<LinearLayout>(R.id.main_user_info).visibility = View.VISIBLE
+                    Snackbar.make(binding.navView, "Your notes are now synced !", Snackbar.LENGTH_SHORT).show()
                     binding.mainDrawerLayout.closeDrawer(binding.navView)
                     NoteRepo.NotesWorker.uploadNotes()
 
@@ -251,17 +249,6 @@ class MainActivity : BaseActivity() {
             .into(profileImage)
     }
 
-    private fun showNewFeatures(){
-        val backupFeature = NewFeatureItem()
-        backupFeature.featureTitle = "Introducing Notes backups"
-        backupFeature.featureDesc = "Now you can sync your Notes with cloud by logging in with your Google account from left side menu"
-        backupFeature.setImageResource(R.drawable.backup_ss)
-        NewItemDialog.init(this)
-            .setVersionName(BuildConfig.VERSION_NAME)
-            .setDialogTitle("New features in ${BuildConfig.VERSION_NAME} version!")
-            .setItems(arrayListOf(backupFeature))
-            .showDialogIfConditionsSuitable(this)
-    }
     private val FragmentManager.currentNavigationFragment: Fragment?
         get() = primaryNavigationFragment?.childFragmentManager?.fragments?.first()
 

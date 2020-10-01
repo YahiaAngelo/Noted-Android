@@ -8,10 +8,7 @@ import android.text.TextWatcher
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator
-import androidx.transition.Fade
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -25,8 +22,6 @@ import com.noted.noted.model.NoteCategory
 import com.noted.noted.repositories.NoteRepo
 import com.noted.noted.utils.Utils
 import io.realm.RealmList
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener
 import org.koin.android.ext.android.inject
 import org.parceler.Parcels
 import java.text.SimpleDateFormat
@@ -311,25 +306,18 @@ class NoteAddActivity : AppCompatActivity() {
     }
 
     private fun setupMarkwon() {
-        KeyboardVisibilityEvent.setEventListener(this, object : KeyboardVisibilityEventListener {
-            override fun onVisibilityChanged(isOpen: Boolean) {
-                val set: TransitionSet = TransitionSet()
-                    .addTransition(Fade())
-                    .setInterpolator(FastOutLinearInInterpolator())
 
-                TransitionManager.beginDelayedTransition(binding.noteStylesBar, set)
-                if(isOpen){
-                    binding.noteStylesBar.visibility = View.VISIBLE
-                    binding.noteDate.visibility = View.GONE
-                    binding.noteBodyEditText.setStylesBar(binding.noteStylesBar)
+        binding.noteBodyEditText.setOnFocusChangeListener { v, hasFocus ->
+            if(hasFocus){
+                binding.noteStylesBar.visibility = View.VISIBLE
+                binding.noteDate.visibility = View.GONE
+                binding.noteBodyEditText.setStylesBar(binding.noteStylesBar)
 
-                }else{
-                    binding.noteStylesBar.visibility = View.GONE
-                    binding.noteDate.visibility = View.VISIBLE
-                }
+            }else{
+                binding.noteStylesBar.visibility = View.GONE
+                binding.noteDate.visibility = View.VISIBLE
             }
-
-        })
+        }
 
         val textWatcher = object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
@@ -346,7 +334,8 @@ class NoteAddActivity : AppCompatActivity() {
 
         }
         binding.noteBodyEditText.addTextChangedListener(textWatcher)
-
+        binding.noteBodyEditText.taskBoxBackgroundColor = ResourcesCompat.getColor(resources, R.color.background, theme)
+        binding.noteBodyEditText.taskBoxColor = ResourcesCompat.getColor(resources, R.color.primary, theme)
     }
 
     private fun showSaveConfirmDialog(){

@@ -61,9 +61,10 @@
     </LinearLayout>
 
     <View
+        android:layout_marginTop="18dp"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="18dp"
-        android:background="@color/divider"/>
+        android:alpha="0.5"
+        android:background="@color/text_secondary"/>
 
 </LinearLayout>

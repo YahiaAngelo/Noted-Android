@@ -5,6 +5,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.util.Base64
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.noted.noted.repositories.NoteRepo
 import com.noted.noted.repositories.TaskRepo
 import com.noted.noted.utils.Extensions
@@ -19,6 +22,8 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import timber.log.Timber
+import java.io.File
+import java.security.SecureRandom
 
 class AppController : Application(){
 
@@ -56,13 +61,48 @@ class AppController : Application(){
 
     }
 
+
+
     private fun initRealm(){
         Realm.init(this)
-        val realmConfig = RealmConfiguration.Builder()
-            .name("noted.realm")
+
+        val newRealmConfig = RealmConfiguration.Builder()
+            .name("encryptedNoted.realm")
             .schemaVersion(1)
+            .encryptionKey(loadKey())
             .build()
-        Realm.setDefaultConfiguration(realmConfig)
+
+        val newRealmFile = File(newRealmConfig.path)
+        if (!newRealmFile.exists()){
+            val oldConfig = RealmConfiguration.Builder().name("noted.realm").schemaVersion(1).build()
+             val realm = Realm.getInstance(oldConfig)
+            realm.writeEncryptedCopyTo(newRealmFile, loadKey())
+            realm.close()
+            Realm.deleteRealm(oldConfig)
+            Realm.setDefaultConfiguration(newRealmConfig)
+        }else{
+            Realm.setDefaultConfiguration(newRealmConfig)
+        }
+
+    }
+
+    private fun loadKey(): ByteArray{
+        val sharedPrefs = EncryptedSharedPreferences.create(
+            "secret_preferences",
+            MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
+            this ,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+        val key = sharedPrefs.getString("realmdb", "")
+        return if (key!!.isNotEmpty()){
+            Base64.decode(key, Base64.NO_WRAP)
+        }else{
+            val newKey = ByteArray(64)
+            SecureRandom().nextBytes(newKey)
+            sharedPrefs.edit().putString("realmdb", Base64.encodeToString(newKey, Base64.NO_WRAP)).apply()
+            newKey
+        }
     }
 
     private fun createNotificationChannel() {

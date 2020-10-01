@@ -18,8 +18,8 @@ android {
         applicationId "com.noted.noted"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 7
-        versionName "1.1.1"
+        versionCode 8
+        versionName "1.1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,7 +49,7 @@ android {
 
 dependencies {
     def nav_version = "2.3.0"
-    def koin_version = "2.2.0-alpha-1"
+    def koin_version = "2.2.0-beta-1"
     def lifecycle_version = "2.2.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // or "kotlin-stdlib-jdk8"
@@ -71,6 +71,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation "androidx.security:security-crypto:1.1.0-alpha02"
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
@@ -78,11 +79,11 @@ dependencies {
     implementation 'org.parceler:parceler-api:1.1.13'
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.jakewharton.timber:timber:4.7.1'
-    implementation 'com.github.nonzeroapps:whatisnewdialog:1.0.7'
     kapt 'org.parceler:parceler:1.1.13'
-    implementation "io.noties.markwon:core:4.3.1"
-    implementation "io.noties.markwon:ext-strikethrough:4.3.1"
-    implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.0.2'
+    implementation "io.noties.markwon:core:4.6.0"
+    implementation "io.noties.markwon:ext-strikethrough:4.6.0"
+    implementation "io.noties.markwon:ext-tasklist:4.6.0"
+    implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.1.0'
     implementation('dev.doubledot.doki:library:0.0.1@aar') {
         transitive = true
     }

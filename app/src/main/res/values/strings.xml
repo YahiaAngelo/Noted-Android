@@ -1,11 +1,7 @@
 <resources>
     <string name="app_name">Noted</string>
     <string name="title_activity_login">LoginActivity</string>
-    <!--
-    This string is used for square devices and overridden by hello_world in
-    values-round/strings.xml for round devices.
-    -->
-    <string name="hello_world">Hello Square World!</string>
+
     <string name="login_welcome">Welcome..</string>
     <string name="email">Email</string>
     <string name="username">Username</string>
@@ -19,7 +15,21 @@
     <string name="title">Title</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
-    <string name="app_changelog">### v1.0.2:\n
+    <string name="app_changelog">### v1.1.2:\n
+        - Fixed styles bar not showing for emulators\n
+- Updated notes styles (fixed styles in lists and added tasks lists)\n
+- Add encryption to local database\n
+- Layout improvements\n
+        ### v1.1.1:\n
+        - Fixed stylesbar crash\n
+        - Replaced in app rate with playstore link\n
+        - Fixed categories deleting\n
+        - Layout improvements\n
+        ### v1.1.0:\n
+        - Added Notes sync with Firestore\n
+        - Added Note save confirmation\n
+        - Fixed keyboard showing above task add sheet\n
+        ### v1.0.2:\n
 - Added About screen\n
 - Fixed category deletion in Note add screen\n
 - Fixed force dark mode issues\n
