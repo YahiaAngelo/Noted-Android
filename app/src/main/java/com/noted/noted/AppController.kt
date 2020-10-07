@@ -3,11 +3,17 @@ package com.noted.noted
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.Base64
+import androidx.annotation.RequiresApi
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.noted.noted.receiver.NotesWidgetProvider
 import com.noted.noted.repositories.NoteRepo
 import com.noted.noted.repositories.TaskRepo
 import com.noted.noted.utils.Extensions
@@ -28,6 +34,7 @@ import java.security.SecureRandom
 class AppController : Application(){
 
     private  val notiChannelIds = arrayListOf("alarm")
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
         val extensionsModule = module {
@@ -56,7 +63,6 @@ class AppController : Application(){
         }
 
         initRealm()
-
         createNotificationChannel()
 
     }
@@ -125,5 +131,27 @@ class AppController : Application(){
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun initWidgetPin(){
+        val appWidgetManager: AppWidgetManager = getSystemService(AppWidgetManager::class.java)
+        val myProvider = ComponentName(this, NotesWidgetProvider::class.java)
+
+        val successCallback: PendingIntent? = if (appWidgetManager.isRequestPinAppWidgetSupported) {
+            Intent().let { intent ->
+                // Configure the intent so that your app's broadcast receiver gets
+                // the callback successfully. This callback receives the ID of the
+                // newly-pinned widget (EXTRA_APPWIDGET_ID).
+                PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            }
+
+        } else {
+            null
+        }
+
+        successCallback?.also { pendingIntent ->
+            appWidgetManager.requestPinAppWidget(myProvider, null, pendingIntent)
+        }
+
+    }
 
 }
