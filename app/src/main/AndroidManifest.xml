@@ -10,20 +10,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.App">
-        <receiver
-            android:name=".receiver.NotesWidgetProvider"
-            android:enabled="true"
-            android:exported="false">
+        <service
+            android:name=".service.NotesWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver android:name=".receiver.NotesWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/notes_widget_info" />
 
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/notes_widget_info" />
         </receiver>
+
         <activity android:name=".view.activity.NotesWidgetConfigureActivity">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
@@ -31,7 +34,7 @@
             android:name=".service.NoteTileService"
             android:enabled="true"
             android:icon="@drawable/ic_sticky_note"
-            android:label="Add Note"
+            android:label="Add note"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
