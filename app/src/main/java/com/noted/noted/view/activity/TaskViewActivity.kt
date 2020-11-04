@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.transition.platform.MaterialContainerTransform
@@ -134,12 +135,12 @@ class TaskViewActivity : AppCompatActivity() {
             val date = SimpleDateFormat(datePattern, Locale.getDefault()).format(Date(task.reminder!!.date))
             binding.taskViewReminderChip.text = date
             if (task.reminder!!.repeat){
-                binding.taskViewReminderChip.chipIcon = resources.getDrawable(R.drawable.ic_repeat, theme)
+                binding.taskViewReminderChip.chipIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_repeat, theme)
             }
             binding.taskViewReminderChip.isCloseIconVisible = true
             binding.taskViewReminderChip.setOnCloseIconClickListener {
-                binding.taskViewReminderChip.text = "Add Reminder"
-                binding.taskViewReminderChip.chipIcon = resources.getDrawable(R.drawable.ic_access_alarms, theme)
+                binding.taskViewReminderChip.text = resources.getString(R.string.add_reminder)
+                binding.taskViewReminderChip.chipIcon =  ResourcesCompat.getDrawable(resources,R.drawable.ic_access_alarms, theme)
                 binding.taskViewReminderChip.isCloseIconVisible = false
                 ReminderWorker.cancel(reminder!!.id, this)
                 reminder = null
@@ -155,7 +156,7 @@ class TaskViewActivity : AppCompatActivity() {
             chip.chipStrokeColor = resources.getColorStateList(R.color.text_primary, theme)
             chip.text = noteCategory.title
             chip.setTextColor(resources.getColor(R.color.text_primary, theme))
-            chip.closeIcon = resources.getDrawable(R.drawable.ic_close, theme)
+            chip.closeIcon =  ResourcesCompat.getDrawable(resources, R.drawable.ic_close, theme)
             chip.closeIconTint = resources.getColorStateList(R.color.text_secondary, theme)
             chip.isCloseIconVisible = true
             chip.setOnCloseIconClickListener {

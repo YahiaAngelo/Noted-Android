@@ -1,5 +1,8 @@
 package com.noted.noted.view.activity
 
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.Color.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
@@ -9,12 +12,15 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
+import androidx.preference.PreferenceManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
+import com.jaredrummler.android.colorpicker.ColorPickerDialog
+import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import com.noted.noted.R
 import com.noted.noted.databinding.ActivityNoteAddBinding
 import com.noted.noted.model.Note
@@ -24,6 +30,7 @@ import com.noted.noted.utils.Utils
 import io.realm.RealmList
 import org.koin.android.ext.android.inject
 import org.parceler.Parcels
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -35,8 +42,10 @@ class NoteAddActivity : AppCompatActivity() {
     private lateinit var bottomSheet: BottomSheetDialog
     private lateinit var categoriesBottomSheet: BottomSheetDialog
     private lateinit var categoriesList: RealmList<NoteCategory>
+    private var autoSave by Delegates.notNull<Boolean>()
     private var note: Note? = null
     private var newColor by Delegates.notNull<Int>()
+    private var hexColor : String? = null
     private var noteId by Delegates.notNull<Long>()
     private val noteRepo: NoteRepo by inject()
     private var isTextChanged = false
@@ -65,17 +74,20 @@ class NoteAddActivity : AppCompatActivity() {
             note = Parcels.unwrap(intent.getParcelableExtra("note"))
             noteId = note!!.id
             newColor = note!!.color
-            binding.activityNoteAddContainer.setBackgroundColor(resources.getColor(newColor, theme))
+
             binding.noteTitleEditText.setText(note!!.title)
             binding.noteBodyEditText.renderMD(note!!.body)
             val date =
                 SimpleDateFormat("d MMM HH:mm aaa", Locale.getDefault()).format(Date(note!!.date))
-            binding.noteDate.text = "Edited $date"
-            window.statusBarColor = resources.getColor(newColor, theme)
-            window.navigationBarColor = resources.getColor(newColor, theme)
-            binding.noteAddCategoryChip.chipBackgroundColor =
-                resources.getColorStateList(newColor, theme).withAlpha(200)
+            val editedString = "${resources.getString(R.string.edited)} $date"
+            binding.noteDate.text = editedString
             categoriesList = note!!.categories
+            if (!note!!.colorHex.isNullOrEmpty()){
+                hexColor = note?.colorHex
+                updateColorsFromHex(null)
+            }else{
+                updateColors(null)
+            }
 
         }
         setSupportActionBar(binding.activityNoteAddToolbar)
@@ -101,6 +113,9 @@ class NoteAddActivity : AppCompatActivity() {
 
             true
         }
+
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+        autoSave = sharedPref.getBoolean("notes_auto_save", false)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -124,6 +139,9 @@ class NoteAddActivity : AppCompatActivity() {
                     newColor,
                     categoriesList
                 )
+            if (hexColor!= null){
+                note.setColorHex(hexColor)
+            }
                 noteRepo.addNote(note)
                 finish()
 
@@ -134,7 +152,11 @@ class NoteAddActivity : AppCompatActivity() {
 
     private fun initBottomSheet() {
         val view = layoutInflater.inflate(R.layout.note_add_bottom_sheet, null)
-        view.setBackgroundColor(resources.getColor(newColor, theme))
+        if (!hexColor.isNullOrEmpty()){
+            view.setBackgroundColor(parseColor(hexColor))
+        }else{
+            view.setBackgroundColor(resources.getColor(newColor, theme))
+        }
         bottomSheet = BottomSheetDialog(this, R.style.BottomSheetMenuTheme)
         bottomSheet.setContentView(view)
         val listView: ListView = view.findViewById(R.id.bottom_sheet_listView)
@@ -175,14 +197,33 @@ class NoteAddActivity : AppCompatActivity() {
                 R.id.chip_red -> newColor = R.color.card_red
                 R.id.chip_violet -> newColor = R.color.card_violet
                 R.id.chip_yellow -> newColor = R.color.card_yellow
+                R.id.chip_colorize ->{
+                    val colorPickerDialog = ColorPickerDialog.newBuilder()
+                        .setColor(if (hexColor.isNullOrEmpty()) resources.getColor(note!!.color, theme) else parseColor(hexColor))
+                        .setShowAlphaSlider(true)
+                        .create()
+                    colorPickerDialog.setColorPickerDialogListener(object: ColorPickerDialogListener{
+                        override fun onColorSelected(dialogId: Int, color: Int) {
+                            hexColor = "#${Integer.toHexString(color)}"
+                            
+                            updateColorsFromHex(view)
+                        }
+
+                        override fun onDialogDismissed(dialogId: Int) {
+
+                        }
+
+                    })
+
+                    colorPickerDialog.showNow(supportFragmentManager, "colorPicker")
+
+
+                }
             }
-            binding.activityNoteAddContainer.setBackgroundColor(resources.getColor(newColor, theme))
-            window.statusBarColor = resources.getColor(newColor, theme)
-            window.navigationBarColor = resources.getColor(newColor, theme)
-            binding.noteAddCategoryChip.chipBackgroundColor =
-                resources.getColorStateList(newColor, theme)
-            view.setBackgroundColor(resources.getColor(newColor, theme))
+            isTextChanged = true
+            updateColors(view)
         }
+
 
 
     }
@@ -281,8 +322,8 @@ class NoteAddActivity : AppCompatActivity() {
             chip.chipStrokeWidth = 2F
             chip.chipStrokeColor = resources.getColorStateList(R.color.text_primary, theme)
             chip.text = noteCategory.title
-            chip.setTextColor(resources.getColor(R.color.text_primary, theme))
-            chip.closeIcon = resources.getDrawable(R.drawable.ic_close, theme)
+            chip.setTextColor(ResourcesCompat.getColor(resources, R.color.text_primary, theme))
+            chip.closeIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_close, theme)
             chip.closeIconTint = resources.getColorStateList(R.color.text_secondary, theme)
             chip.isCloseIconVisible = true
             chip.setOnCloseIconClickListener {
@@ -293,6 +334,23 @@ class NoteAddActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    private fun updateColors(view: View?){
+        binding.activityNoteAddContainer.setBackgroundColor(resources.getColor(newColor, theme))
+        window.statusBarColor = resources.getColor(newColor, theme)
+        window.navigationBarColor = resources.getColor(newColor, theme)
+        binding.noteAddCategoryChip.chipBackgroundColor =
+            resources.getColorStateList(newColor, theme)
+        view?.setBackgroundColor(resources.getColor(newColor, theme))
+    }
+    private fun updateColorsFromHex(view: View?){
+        binding.activityNoteAddContainer.setBackgroundColor(parseColor(hexColor))
+        window.statusBarColor = parseColor(hexColor)
+        window.navigationBarColor = parseColor(hexColor)
+        binding.noteAddCategoryChip.chipBackgroundColor =
+            ColorStateList.valueOf(parseColor(hexColor))
+        view?.setBackgroundColor(parseColor(hexColor))
     }
 
     private fun saveCategory(noteCategory: NoteCategory) {
@@ -350,7 +408,11 @@ class NoteAddActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         if (isTextChanged){
-            showSaveConfirmDialog()
+            if (autoSave){
+                saveNote()
+            }else{
+                showSaveConfirmDialog()
+            }
         }else{
             super.onBackPressed()
         }

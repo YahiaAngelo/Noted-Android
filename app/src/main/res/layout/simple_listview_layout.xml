@@ -46,6 +46,6 @@
             android:fontFamily="@font/roboto_light"
             android:layout_marginStart="24dp"
             android:textSize="14sp"
-            android:text="Long press on category to delete"/>
+            android:text="@string/long_press_on_category_to_delete"/>
     </LinearLayout>
 </LinearLayout>

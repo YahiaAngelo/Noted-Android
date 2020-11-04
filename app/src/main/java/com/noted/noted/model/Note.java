@@ -20,6 +20,7 @@ public class Note extends RealmObject {
     public String body = "";
     public long date = 0;
     public int color = R.color.background;
+    public String colorHex = "";
     public RealmList<NoteCategory> categories = new RealmList<>();
 
     public Note(){}
@@ -72,6 +73,10 @@ public class Note extends RealmObject {
     public void setColor(int color) {
         this.color = color;
     }
+
+    public String getColorHex() { return colorHex; }
+
+    public void setColorHex(String colorHex) { this.colorHex = colorHex; }
 
     public RealmList<NoteCategory> getCategories() {
         return categories;

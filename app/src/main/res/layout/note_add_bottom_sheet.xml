@@ -29,7 +29,9 @@
             android:layout_height="48dp"
             app:singleSelection="true"
             app:selectionRequired="true"
+            app:singleLine="true"
             android:id="@+id/bottom_sheet_chipGroup"
+            app:chipSpacingHorizontal="4dp"
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp">
 
@@ -103,6 +105,19 @@
                 android:id="@+id/chip_yellow"
                 app:chipStrokeWidth="1dp"
                 app:chipBackgroundColor="@color/card_yellow"/>
+            <com.google.android.material.chip.Chip
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                app:chipCornerRadius="25dp"
+                app:chipIconSize="18dp"
+                app:iconEndPadding="0dp"
+                app:iconStartPadding="0dp"
+                app:chipStrokeColor="@color/text_primary"
+                android:checkable="true"
+                android:id="@+id/chip_colorize"
+                app:chipIcon="@drawable/ic_colorize"
+                app:chipStrokeWidth="1dp"
+                app:chipBackgroundColor="@color/accent"/>
 
 
         </com.google.android.material.chip.ChipGroup>

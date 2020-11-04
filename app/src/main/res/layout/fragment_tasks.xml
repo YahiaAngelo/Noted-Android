@@ -35,7 +35,7 @@
             android:layout_marginTop="28dp"
             android:textColor="@color/text_primary"
             android:fontFamily="@font/roboto_bold"
-            android:text="Add some Tasks !"/>
+            android:text="@string/add_some_tasks"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

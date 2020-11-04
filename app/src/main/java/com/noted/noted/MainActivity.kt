@@ -47,7 +47,7 @@ import io.realm.Realm
 class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private var realm = Realm.getDefaultInstance()
-    private val RC_SIGN_IN = 4586
+    private val RCSIGNIN = 4586
     private lateinit var auth: FirebaseAuth
     private lateinit var sharedPreference: SharedPreferences
     private lateinit var headerView: View
@@ -187,7 +187,7 @@ class MainActivity : BaseActivity() {
         val mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         val signInIntent = mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        startActivityForResult(signInIntent, RCSIGNIN)
 
     }
 
@@ -195,7 +195,7 @@ class MainActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
+        if (requestCode == RCSIGNIN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign In was successful, authenticate with Firebase

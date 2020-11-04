@@ -25,5 +25,5 @@
             android:fontFamily="@font/roboto_regular"
             android:textColor="@color/text_primary"
             android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>«
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

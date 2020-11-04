@@ -35,7 +35,7 @@
             android:layout_marginTop="28dp"
             android:textColor="@color/text_primary"
             android:fontFamily="@font/roboto_bold"
-            android:text="Start writing Notes !"/>
+            android:text="@string/start_writing_notes"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView

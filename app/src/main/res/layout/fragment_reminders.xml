@@ -34,7 +34,7 @@
             android:layout_marginTop="18dp"
             android:textColor="@color/text_primary"
             android:fontFamily="@font/roboto_bold"
-            android:text="Set new Reminders !"/>
+            android:text="@string/set_new_reminders"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

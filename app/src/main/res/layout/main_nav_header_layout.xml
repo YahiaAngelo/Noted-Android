@@ -28,7 +28,7 @@
         android:layout_marginStart="18dp"
         app:icon="@drawable/ic_logo_google"
         android:id="@+id/google_login"
-        android:text="Sign In"
+        android:text="@string/sign_in"
         />
 
     <LinearLayout
@@ -54,7 +54,7 @@
             android:fontFamily="@font/roboto_bold"
             android:textSize="18sp"
             android:textColor="@color/primary"
-            android:text="Sign out"
+            android:text="@string/sign_out"
             android:paddingTop="8dp"
             android:id="@+id/main_user_logout"/>
 

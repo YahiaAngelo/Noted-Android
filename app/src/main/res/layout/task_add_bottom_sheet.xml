@@ -12,7 +12,7 @@
         android:layout_margin="24dp"
         android:background="@android:color/transparent"
         android:inputType="textCapSentences"
-        android:hint="Task Title"
+        android:hint="@string/task_title"
         android:textSize="18sp"
         android:maxLines="1"
         android:imeOptions="actionDone"
@@ -30,7 +30,7 @@
         android:imeOptions="actionDone"
         android:visibility="gone"
         android:background="@android:color/transparent"
-        android:hint="Details"
+        android:hint="@string/details"
         android:textSize="16sp"
         android:fontFamily="@font/roboto_regular"
         android:textColor="@color/text_primary"
@@ -78,12 +78,12 @@
             app:iconTint="@color/checkable_button_color"/>
 
         <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_bold"
             android:layout_alignParentEnd="true"
             android:id="@+id/task_add_save"
-            android:text="Save"
+            android:text="@string/save"
             style="@style/Widget.MaterialComponents.Button.TextButton" />
 
     </RelativeLayout>

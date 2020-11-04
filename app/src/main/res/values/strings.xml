@@ -40,4 +40,23 @@
 - UI improvements\n
 ### v1.0.0:\n
 - First Release</string>
+    <string name="note">Note</string>
+    <string name="add_reminder">Add Reminder</string>
+    <string name="description">Description</string>
+    <string name="mark_as_done">Mark as done</string>
+    <string name="start_writing_notes">Start writing Notes !</string>
+    <string name="set_new_reminders">Set new Reminders !</string>
+    <string name="add_some_tasks">Add some Tasks !</string>
+    <string name="notes">Notes</string>
+    <string name="tasks">Tasks</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_out">Sign out</string>
+    <string name="search">Search</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
+    <string name="no_notes_available">No notes available</string>
+    <string name="long_press_on_category_to_delete">Long press on category to delete</string>
+    <string name="task_title">Task Title</string>
+    <string name="details">Details</string>
+    <string name="edited">Edited</string>
 </resources>

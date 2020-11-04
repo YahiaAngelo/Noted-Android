@@ -17,6 +17,7 @@ import com.noted.noted.receiver.NotesWidgetProvider
 import com.noted.noted.repositories.NoteRepo
 import com.noted.noted.repositories.TaskRepo
 import com.noted.noted.utils.Extensions
+import com.noted.noted.utils.NotedMigration
 import com.noted.noted.viewmodel.NotesFragmentViewModel
 import com.noted.noted.viewmodel.TasksFragmentViewModel
 import io.realm.Realm
@@ -74,8 +75,9 @@ class AppController : Application(){
 
         val newRealmConfig = RealmConfiguration.Builder()
             .name("encryptedNoted.realm")
-            .schemaVersion(1)
+            .schemaVersion(2)
             .encryptionKey(loadKey())
+            .migration(NotedMigration())
             .build()
 
         val newRealmFile = File(newRealmConfig.path)

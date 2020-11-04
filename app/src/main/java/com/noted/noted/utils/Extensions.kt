@@ -50,13 +50,9 @@ class Extensions(){
             // This version added Doze
             setExactAndAllowWhileIdle(alarmType, timeMillis, pendingIntent)
 
-        } else if (VERSION.SDK_INT >= VERSION_CODES.KITKAT) {
+        } else
             // This version changed set() to be inexact
             setExact(alarmType, timeMillis, pendingIntent)
-
-        } else {
-            set(alarmType, timeMillis, pendingIntent)
-        }
     }
 
     /**
@@ -95,17 +91,13 @@ class Extensions(){
 
     // Helps to set status bar color with api version check
     fun Activity.setStatusBarColor(@ColorRes colorRes: Int): Unit {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, colorRes)
-        }
+        window.statusBarColor = ContextCompat.getColor(this, colorRes)
     }
 
     // Adds flags to make window fullscreen
     fun Activity.setFullscreenLayoutFlags() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        }
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
 
     // Adds window insets to the view while entire activity is fullscreen.

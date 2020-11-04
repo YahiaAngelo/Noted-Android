@@ -18,8 +18,8 @@ android {
         applicationId "com.noted.noted"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 8
-        versionName "1.1.2"
+        versionCode 9
+        versionName "1.1.3-Beta"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -48,21 +48,21 @@ android {
 }
 
 dependencies {
-    def nav_version = "2.3.0"
+    def nav_version = "2.3.1"
     def koin_version = "2.2.0-beta-1"
     def lifecycle_version = "2.2.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // or "kotlin-stdlib-jdk8"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
     implementation "androidx.work:work-runtime-ktx:2.4.0"
-    implementation 'androidx.preference:preference:1.1.1'// JVM dependency
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
-    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
-    implementation 'com.google.firebase:firebase-auth-ktx:19.4.0'
-    implementation 'com.google.firebase:firebase-firestore-ktx:21.6.0'
+    implementation 'androidx.preference:preference-ktx:1.1.1'// JVM dependency
+    implementation 'com.google.firebase:firebase-analytics-ktx:18.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
+    implementation 'com.google.firebase:firebase-auth-ktx:20.0.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:22.0.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
-    implementation 'com.google.android.play:core:1.8.0'
+    implementation 'com.google.android.play:core:1.8.3'
     implementation 'com.google.android.play:core-ktx:1.8.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
@@ -70,7 +70,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.3'
     implementation "androidx.security:security-crypto:1.1.0-alpha02"
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
@@ -79,11 +79,12 @@ dependencies {
     implementation 'org.parceler:parceler-api:1.1.13'
     implementation 'com.squareup.picasso:picasso:2.8'
     implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'com.jaredrummler:colorpicker:1.1.0'
     kapt 'org.parceler:parceler:1.1.13'
     implementation "io.noties.markwon:core:4.6.0"
     implementation "io.noties.markwon:ext-strikethrough:4.6.0"
     implementation "io.noties.markwon:ext-tasklist:4.6.0"
-    implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.1.0'
+    implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.1.1'
     implementation('dev.doubledot.doki:library:0.0.1@aar') {
         transitive = true
     }
@@ -91,7 +92,7 @@ dependencies {
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.github.daniel-stoneuk:material-about-library:3.1.2'
     implementation 'com.google.code.gson:gson:2.8.6'
-    implementation("com.squareup.okhttp3:okhttp:4.5.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.shreyaspatil:MaterialNavigationView:1.2'
     implementation "com.mikepenz:fastadapter:5.2.0"
@@ -99,13 +100,13 @@ dependencies {
     implementation "com.mikepenz:fastadapter-extensions-diff:5.2.0" // diff util helpers
     implementation "com.mikepenz:fastadapter-extensions-drag:5.2.0"
     implementation "com.mikepenz:fastadapter-extensions-utils:5.2.0"
-    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0-alpha02'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'com.google.android.material:material:1.3.0-alpha03'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.3'
     testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     compileOnly("org.jetbrains:annotations:13.0")
     testCompileOnly("org.jetbrains:annotations:13.0")
 }

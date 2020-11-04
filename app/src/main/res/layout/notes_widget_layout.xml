@@ -24,7 +24,7 @@
         android:background="@color/background"
         android:textColor="#ffffff"
         android:textStyle="bold"
-        android:text="No notes available"
+        android:text="@string/no_notes_available"
         android:textSize="20sp" />
 
 </FrameLayout>

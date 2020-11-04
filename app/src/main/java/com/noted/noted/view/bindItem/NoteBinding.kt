@@ -1,5 +1,7 @@
 package com.noted.noted.view.bindItem
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -49,11 +51,20 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
                 }
             })
             .build()
-        binding.noteCard.setCardBackgroundColor(context.resources.getColorStateList(note.color, context.theme))
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
-            binding.noteCard.outlineAmbientShadowColor = context.resources.getColor(note.color, context.theme)
-            binding.noteCard.outlineSpotShadowColor = context.resources.getColor(note.color, context.theme)
+        if (!note.colorHex.isNullOrEmpty()){
+            binding.noteCard.setCardBackgroundColor(Color.parseColor(note.colorHex))
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
+                binding.noteCard.outlineAmbientShadowColor = Color.parseColor(note.colorHex)
+                binding.noteCard.outlineSpotShadowColor = Color.parseColor(note.colorHex)
+            }
+        }else{
+            binding.noteCard.setCardBackgroundColor(context.resources.getColorStateList(note.color, context.theme))
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
+                binding.noteCard.outlineAmbientShadowColor = context.resources.getColor(note.color, context.theme)
+                binding.noteCard.outlineSpotShadowColor = context.resources.getColor(note.color, context.theme)
+            }
         }
+
         binding.noteTitle.text = note.title
         markwon.setMarkdown(noteBody, note.body)
         noteBody.setOnClickListener {
@@ -62,7 +73,11 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
         binding.noteChipGroup.removeAllViews()
         for (category in note.categories!!){
             val chip = Chip(context)
-            chip.chipBackgroundColor = context.resources.getColorStateList(note.color, context.theme)
+            if (!note.colorHex.isNullOrEmpty()){
+                chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor(note.colorHex))
+            }else{
+                chip.chipBackgroundColor = context.resources.getColorStateList(note.color, context.theme)
+            }
             chip.chipStrokeWidth = 2F
             chip.chipStrokeColor = context.resources.getColorStateList(R.color.text_primary, context.theme)
             chip.text = category.title

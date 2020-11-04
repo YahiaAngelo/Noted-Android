@@ -183,6 +183,7 @@ class NoteRepo {
                     "body" to this.body,
                     "date" to this.date,
                     "color" to this.color,
+                    "colorHex" to this.colorHex,
                     "categories" to categories.toHashMapArray()
 
                 )
@@ -215,7 +216,13 @@ class NoteRepo {
                         for(category in categoriesList){
                             categories.add(NoteCategory(category["id"] as Long, category["title"].toString()))
                         }
-                        notesList.add(Note(id, title, body, date!!, color, categories))
+
+                        val note = Note(id, title, body, date!!, color, categories)
+                        val colorHex = query.getString("colorHex")
+                        if (colorHex != null){
+                            note.colorHex = colorHex
+                        }
+                        notesList.add(note)
                     }
                 }
 

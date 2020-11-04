@@ -25,6 +25,14 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="Notes">
+        <SwitchPreference
+            app:title="Enable Auto Save"
+            app:defaultValue="false"
+            app:summary="If disabled will show confirm save dialog instead"
+            app:key="notes_auto_save" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="Notifications">
         <Preference
             app:selectable="false"
