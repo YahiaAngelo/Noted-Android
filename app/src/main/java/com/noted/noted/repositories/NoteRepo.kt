@@ -43,7 +43,7 @@ class NoteRepo {
 
     fun getNotes(): LiveRealmData<Note> {
         realm = Realm.getDefaultInstance()
-        return realm.where(Note::class.java).sort("date", Sort.DESCENDING).findAllAsync()
+        return realm.where(Note::class.java).sort(arrayOf("isFavorite", "date"), arrayOf(Sort.DESCENDING, Sort.DESCENDING)).findAllAsync()
             .asLiveData()
     }
 
@@ -184,6 +184,7 @@ class NoteRepo {
                     "date" to this.date,
                     "color" to this.color,
                     "colorHex" to this.colorHex,
+                    "isFavorite" to this.isFavorite,
                     "categories" to categories.toHashMapArray()
 
                 )
@@ -221,6 +222,10 @@ class NoteRepo {
                         val colorHex = query.getString("colorHex")
                         if (colorHex != null){
                             note.colorHex = colorHex
+                        }
+                        val isFavorite = query.getBoolean("isFavorite")
+                        if (isFavorite != null){
+                            note.isFavorite = isFavorite
                         }
                         notesList.add(note)
                     }

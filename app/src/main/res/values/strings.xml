@@ -59,4 +59,5 @@
     <string name="task_title">Task Title</string>
     <string name="details">Details</string>
     <string name="edited">Edited</string>
+    <string name="favorite">Favorite</string>
 </resources>

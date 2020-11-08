@@ -50,6 +50,7 @@ class NoteAddActivity : AppCompatActivity() {
     private var noteId by Delegates.notNull<Long>()
     private val noteRepo: NoteRepo by inject()
     private var isTextChanged = false
+    private var isFavorite = false
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +77,7 @@ class NoteAddActivity : AppCompatActivity() {
             note = Parcels.unwrap(intent.getParcelableExtra("note"))
             noteId = note!!.id
             newColor = note!!.color
-
+            isFavorite = note!!.isFavorite
             binding.noteTitleEditText.setText(note!!.title)
             binding.noteBodyEditText.renderMD(note!!.body)
             val date =
@@ -111,6 +112,11 @@ class NoteAddActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.note_add_more -> bottomSheet.show()
                 R.id.note_add_save -> saveNote()
+                R.id.note_add_favorite -> {
+                    isFavorite = !isFavorite
+                    isTextChanged = true
+                    it.icon = if (isFavorite) ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite, theme) else ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite_border, theme)
+                }
             }
 
             true
@@ -121,6 +127,9 @@ class NoteAddActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.note_add_menu, menu);
+        if (isFavorite){
+            menu!!.findItem(R.id.note_add_favorite).icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite, theme)
+        }
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -143,6 +152,7 @@ class NoteAddActivity : AppCompatActivity() {
             if (hexColor!= null){
                 note.setColorHex(hexColor)
             }
+                note.isFavorite = isFavorite
                 noteRepo.addNote(note)
                 finish()
 

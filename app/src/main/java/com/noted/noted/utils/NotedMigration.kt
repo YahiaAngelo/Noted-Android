@@ -12,10 +12,18 @@ class NotedMigration : RealmMigration {
             if (!schema.get("Note")!!.hasField("colorHex")){
                 schema.get("Note")!!
                     .addField("colorHex", String::class.java)
+                    .addField("isFavorite", Boolean::class.java)
             }
-
             oldVersion++
         }
+        if (oldVersion == 2L){
+            if (!schema.get("Note")!!.hasField("isFavorite")){
+                schema.get("Note")!!
+                    .addField("isFavorite", Boolean::class.java)
+            }
+            oldVersion++
+        }
+
     }
 
 

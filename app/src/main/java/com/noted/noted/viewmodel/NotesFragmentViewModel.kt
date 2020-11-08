@@ -1,6 +1,5 @@
 package com.noted.noted.viewmodel
 
-import android.util.Log
 import androidx.arch.core.util.Function
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations

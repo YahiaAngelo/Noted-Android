@@ -8,6 +8,7 @@ import org.parceler.ParcelPropertyConverter;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 @Parcel(
         implementations = {io.realm.com_noted_noted_model_NoteRealmProxy.class},
@@ -21,6 +22,8 @@ public class Note extends RealmObject {
     public long date = 0;
     public int color = R.color.background;
     public String colorHex = "";
+    @Required
+    public Boolean isFavorite = false;
     public RealmList<NoteCategory> categories = new RealmList<>();
 
     public Note(){}
@@ -81,6 +84,10 @@ public class Note extends RealmObject {
     public RealmList<NoteCategory> getCategories() {
         return categories;
     }
+
+    public Boolean getFavorite() { return isFavorite; }
+
+    public void setFavorite(Boolean favorite) { isFavorite = favorite; }
 
     @ParcelPropertyConverter(CategoryListParcelConverter.class)
     public void setCategories(RealmList<NoteCategory> categories) {
