@@ -381,21 +381,6 @@ class NoteAddActivity : AppCompatActivity() {
             }
         }
 
-        val textWatcher = object : TextWatcher{
-            override fun afterTextChanged(s: Editable?) {
-                isTextChanged = true
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-        }
-        binding.noteBodyEditText.addTextChangedListener(textWatcher)
         binding.noteBodyEditText.taskBoxBackgroundColor = ResourcesCompat.getColor(resources, R.color.background, theme)
         binding.noteBodyEditText.taskBoxColor = ResourcesCompat.getColor(resources, R.color.primary, theme)
     }
@@ -409,8 +394,14 @@ class NoteAddActivity : AppCompatActivity() {
             .setNegativeButton("Discard") { _, _ -> finish() }
             .show()
     }
+    private fun checkTextChanged(){
+        if (note != null && note!!.body != binding.noteBodyEditText.text.toString()){
+            isTextChanged = true
+        }
+    }
 
     override fun onBackPressed() {
+        checkTextChanged()
         if (isTextChanged){
             if (autoSave){
                 saveNote()
