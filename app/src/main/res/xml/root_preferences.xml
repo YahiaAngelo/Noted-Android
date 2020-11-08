@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="Appearance">
 
@@ -31,6 +32,11 @@
             app:defaultValue="false"
             app:summary="If disabled will show confirm save dialog instead"
             app:key="notes_auto_save" />
+        <SwitchPreference
+            app:title="Adaptive Notes Text Colors"
+            app:summary="Enabling this will change Notes text colors to adapt with background color"
+            android:defaultValue="false"
+            app:key="notes_adaptive_text"/>
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Notifications">

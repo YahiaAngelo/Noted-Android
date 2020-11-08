@@ -1,5 +1,6 @@
 package com.noted.noted.view.activity
 
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Color.*
@@ -49,6 +50,7 @@ class NoteAddActivity : AppCompatActivity() {
     private var noteId by Delegates.notNull<Long>()
     private val noteRepo: NoteRepo by inject()
     private var isTextChanged = false
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).transitionName = "note_shared_element_container"
@@ -66,7 +68,7 @@ class NoteAddActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
         noteId = UUID.randomUUID().mostSignificantBits
         categoriesList = RealmList()
         newColor = R.color.background
@@ -114,7 +116,6 @@ class NoteAddActivity : AppCompatActivity() {
             true
         }
 
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
         autoSave = sharedPref.getBoolean("notes_auto_save", false)
     }
 
@@ -351,6 +352,9 @@ class NoteAddActivity : AppCompatActivity() {
         binding.noteAddCategoryChip.chipBackgroundColor =
             ColorStateList.valueOf(parseColor(hexColor))
         view?.setBackgroundColor(parseColor(hexColor))
+        val invertedColor = Utils.invertColor(hexColor!!.substring(1,hexColor!!.length))
+        binding.noteTitleEditText.setTextColor(invertedColor)
+        binding.noteBodyEditText.setTextColor(invertedColor)
     }
 
     private fun saveCategory(noteCategory: NoteCategory) {

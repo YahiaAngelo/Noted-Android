@@ -1,7 +1,11 @@
 package com.noted.noted.utils
 
 import android.app.TimePickerDialog
-import android.content.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.ListView
@@ -26,7 +30,11 @@ import kotlin.collections.HashMap
 class Utils {
     companion object{
 
-        fun showCategories(context: Context, layoutInflater: LayoutInflater, onSelectedCategory: OnSelectedCategory){
+        fun showCategories(
+            context: Context,
+            layoutInflater: LayoutInflater,
+            onSelectedCategory: OnSelectedCategory
+        ){
             var realm = Realm.getDefaultInstance()
             val dbCategories = realm.where(NoteCategory::class.java).findAll()
             val view = layoutInflater.inflate(R.layout.simple_listview_layout, null)
@@ -52,7 +60,13 @@ class Utils {
             val from = arrayOf("listview_title", "listview_image")
             val to = arrayOf(R.id.list_text, R.id.list_image)
             val simpleAdapter =
-                SimpleAdapter(context, itemsList, R.layout.simple_list_layout, from, to.toIntArray())
+                SimpleAdapter(
+                    context,
+                    itemsList,
+                    R.layout.simple_list_layout,
+                    from,
+                    to.toIntArray()
+                )
             listView.adapter = simpleAdapter
 
             listView.setOnItemClickListener { _, _, position, _ ->
@@ -71,15 +85,17 @@ class Utils {
 
                                     itemListTitles.add(text)
                                     itemListImages.add(R.drawable.ic_label)
-                                    val hashMap =  HashMap<String, String>()
+                                    val hashMap = HashMap<String, String>()
                                     hashMap["listview_title"] = text
-                                    hashMap["listview_image"] = itemListImages[itemsList.size].toString()
+                                    hashMap["listview_image"] =
+                                        itemListImages[itemsList.size].toString()
                                     itemsList.add(itemsList.size, hashMap)
                                     simpleAdapter.notifyDataSetChanged()
                                     dialog.dismiss()
                                 }
 
-                            }.setNegativeButton(context.resources.getString(android.R.string.cancel)) { dialog, _ ->
+                            }
+                            .setNegativeButton(context.resources.getString(android.R.string.cancel)) { dialog, _ ->
                                 dialog.dismiss()
                             }
                             .show()
@@ -97,11 +113,15 @@ class Utils {
                     MaterialAlertDialogBuilder(context)
                         .setTitle("Delete category")
                         .setMessage("Do you want to delete ${noteCategory.title} category ?")
-                        .setNeutralButton("Delete"
+                        .setNeutralButton(
+                            "Delete"
                         ) { dialog, _ ->
                             itemsList.removeAt(position)
                             realm = Realm.getDefaultInstance()
-                            val notesWithCategory = realm.where(Note::class.java).equalTo("categories.id", noteCategory.id).findAll()
+                            val notesWithCategory = realm.where(Note::class.java).equalTo(
+                                "categories.id",
+                                noteCategory.id
+                            ).findAll()
                             Timber.e("Notes with this category count is ${notesWithCategory.size}")
                             realm.use { realm ->
                                 realm.beginTransaction()
@@ -128,7 +148,11 @@ class Utils {
 
         }
 
-        fun showCalendar(context: Context, fragmentManager: FragmentManager, onSelectedCalendar: OnSelectedCalendar){
+        fun showCalendar(
+            context: Context,
+            fragmentManager: FragmentManager,
+            onSelectedCalendar: OnSelectedCalendar
+        ){
             val currentCalendar = Calendar.getInstance()
             var selectedCalendar: Calendar? = null
             val materialDatePickerBuilder = MaterialDatePicker.Builder.datePicker()
@@ -175,6 +199,18 @@ class Utils {
             val clip: ClipData = ClipData.newPlainText("My Note", string)
             clipBoard.setPrimaryClip(clip)
             Toast.makeText(context, "Copied this note to clipboard.", Toast.LENGTH_SHORT).show()
+        }
+
+        fun invertColor(myColorString: String): Int {
+            val color = myColorString.toLong(16).toInt()
+            val r = color shr 16 and 0xFF
+            val g = color shr 8 and 0xFF
+            val b = color shr 0 and 0xFF
+            val invertedRed = 255 - r
+            val invertedGreen = 255 - g
+            val invertedBlue = 255 - b
+            val invertedColor: Int = Color.rgb(invertedRed, invertedGreen, invertedBlue)
+            return invertedColor
         }
 
         private fun saveCategory(noteCategory: NoteCategory) {
