@@ -1,6 +1,8 @@
 package com.noted.noted.view.fragment
 
 import android.app.ActivityOptions
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -22,6 +24,7 @@ import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.noted.noted.MainActivity
 import com.noted.noted.R
 import com.noted.noted.databinding.FragmentNotesBinding
+import com.noted.noted.receiver.NotesWidgetProvider
 import com.noted.noted.repositories.NoteRepo
 import com.noted.noted.utils.Utils
 import com.noted.noted.view.activity.NoteAddActivity
@@ -171,8 +174,15 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
         viewModel.getNotes().observe(viewLifecycleOwner){
             itemAdapter.setNewList(it)
             binding.notesPlaceholder.visibility = if (itemAdapter.adapterItemCount > 0)  View.GONE else View.VISIBLE
-
+            updateNotesWidget()
         }
+    }
+
+    private fun updateNotesWidget(){
+        val appWidgetManager = AppWidgetManager.getInstance(requireContext())
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(requireContext(), NotesWidgetProvider::class.java))
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.notes_widget_grid)
+
     }
 
 

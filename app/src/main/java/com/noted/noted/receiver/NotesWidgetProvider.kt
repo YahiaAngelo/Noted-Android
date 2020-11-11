@@ -1,6 +1,5 @@
 package com.noted.noted.receiver
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
@@ -10,7 +9,6 @@ import android.os.Bundle
 import android.widget.RemoteViews
 import com.noted.noted.R
 import com.noted.noted.service.NotesWidgetService
-import com.noted.noted.view.activity.NotesWidgetConfigureActivity
 
 
 class NotesWidgetProvider : AppWidgetProvider() {

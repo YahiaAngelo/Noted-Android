@@ -13,6 +13,7 @@ import io.noties.markwon.MarkwonVisitor
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.ext.tasklist.TaskListPlugin
 import io.realm.Realm
+import io.realm.Sort
 import org.commonmark.node.SoftLineBreak
 
 class NotesWidgetService : RemoteViewsService() {
@@ -33,7 +34,8 @@ class GridViewFactory(
 
     override fun onCreate() {
         val realm = Realm.getDefaultInstance()
-        val realmResults = realm.where(Note::class.java).findAll()
+        val realmResults = realm.where(Note::class.java).sort(arrayOf("isFavorite", "date"), arrayOf(
+            Sort.DESCENDING, Sort.DESCENDING)).findAll()
         notesList = realm.copyFromRealm(realmResults)
 
 
@@ -55,6 +57,7 @@ class GridViewFactory(
 
     }
 
+
     override fun getCount(): Int {
        return notesList.size
     }
@@ -66,6 +69,9 @@ class GridViewFactory(
         return RemoteViews(context.packageName, R.layout.notes_widget_item).apply {
             setTextViewText(R.id.widget_note_title, note.title)
             setTextViewText(R.id.widget_note_body, body)
+            if (note.isFavorite){
+                setImageViewResource(R.id.widget_note_favorite, R.drawable.ic_favorite)
+            }
 
         }
     }
@@ -83,7 +89,10 @@ class GridViewFactory(
     }
 
     override fun onDataSetChanged() {
-
+        val realm = Realm.getDefaultInstance()
+        val realmResults = realm.where(Note::class.java).sort(arrayOf("isFavorite", "date"), arrayOf(
+            Sort.DESCENDING, Sort.DESCENDING)).findAll()
+        notesList = realm.copyFromRealm(realmResults)
     }
 
     override fun getItemId(position: Int): Long {
