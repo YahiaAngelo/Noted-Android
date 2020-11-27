@@ -18,8 +18,8 @@ android {
         applicationId "com.noted.noted"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 9
-        versionName "1.1.3-Beta"
+        versionCode 10
+        versionName "1.1.3-Beta2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
