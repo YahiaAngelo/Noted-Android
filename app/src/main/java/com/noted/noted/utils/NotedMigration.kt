@@ -23,6 +23,14 @@ class NotedMigration : RealmMigration {
             }
             oldVersion++
         }
+        if (oldVersion == 3L){
+            schema.get("Note")!!
+                .setRequired("title", true)
+                .setRequired("body", true)
+                .setRequired("colorHex", true)
+
+            oldVersion++
+        }
 
     }
 

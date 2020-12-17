@@ -75,7 +75,7 @@ class AppController : Application(){
 
         val newRealmConfig = RealmConfiguration.Builder()
             .name("encryptedNoted.realm")
-            .schemaVersion(3)
+            .schemaVersion(4)
             .encryptionKey(loadKey())
             .migration(NotedMigration())
             .build()

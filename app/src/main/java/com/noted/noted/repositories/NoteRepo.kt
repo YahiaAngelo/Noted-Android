@@ -218,7 +218,7 @@ class NoteRepo {
                             categories.add(NoteCategory(category["id"] as Long, category["title"].toString()))
                         }
 
-                        val note = Note(id, title, body, date!!, color, categories)
+                        val note = Note(id, title!!, body!!, date!!, color, categories)
                         val colorHex = query.getString("colorHex")
                         if (colorHex != null){
                             note.colorHex = colorHex

@@ -150,7 +150,7 @@ class NoteAddActivity : AppCompatActivity() {
                     categoriesList
                 )
             if (hexColor!= null){
-                note.setColorHex(hexColor)
+                note.colorHex = hexColor as String
             }
                 note.isFavorite = isFavorite
                 noteRepo.addNote(note)
