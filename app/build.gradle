@@ -48,7 +48,7 @@ android {
 }
 
 dependencies {
-    def nav_version = "2.3.1"
+    def nav_version = "2.3.2"
     def koin_version = "2.2.0-beta-1"
     def lifecycle_version = "2.2.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -62,7 +62,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx:22.0.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
-    implementation 'com.google.android.play:core:1.8.3'
+    implementation 'com.google.android.play:core:1.9.0'
     implementation 'com.google.android.play:core-ktx:1.8.1'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
@@ -71,7 +71,7 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation "androidx.security:security-crypto:1.1.0-alpha02"
+    implementation "androidx.security:security-crypto:1.1.0-alpha03"
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
@@ -84,7 +84,7 @@ dependencies {
     implementation "io.noties.markwon:core:4.6.0"
     implementation "io.noties.markwon:ext-strikethrough:4.6.0"
     implementation "io.noties.markwon:ext-tasklist:4.6.0"
-    implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.1.2'
+    implementation 'com.yahiaangelo.markdownedittext:markdownedittext:1.1.3'
     implementation('dev.doubledot.doki:library:0.0.1@aar') {
         transitive = true
     }
