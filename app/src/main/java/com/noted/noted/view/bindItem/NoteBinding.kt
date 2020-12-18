@@ -71,6 +71,9 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
         noteBody.setOnClickListener {
             noteCard.performClick()
         }
+        noteBody.setOnLongClickListener {
+            noteCard.performLongClick()
+        }
         binding.noteChipGroup.removeAllViews()
         for (category in note.categories!!){
             val chip = Chip(context)
