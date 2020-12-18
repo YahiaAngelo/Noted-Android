@@ -24,11 +24,13 @@ class NotedMigration : RealmMigration {
             oldVersion++
         }
         if (oldVersion == 3L){
-            schema.get("Note")!!
-                .setRequired("title", true)
-                .setRequired("body", true)
-                .setRequired("colorHex", true)
-
+            if (!schema.get("Note")!!.hasField("priority")) {
+                schema.get("Note")!!
+                    .setRequired("title", true)
+                    .setRequired("body", true)
+                    .setRequired("colorHex", true)
+                    .addField("priority", Int::class.java)
+            }
             oldVersion++
         }
 

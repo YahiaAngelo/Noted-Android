@@ -3,15 +3,14 @@ package com.noted.noted.view.fragment
 import android.app.ActivityOptions
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.view.ActionMode
 import androidx.lifecycle.observe
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.chip.Chip
 import com.mikepenz.fastadapter.*
@@ -30,11 +29,12 @@ import com.noted.noted.utils.Utils
 import com.noted.noted.view.activity.NoteAddActivity
 import com.noted.noted.view.bindItem.NoteBinding
 import com.noted.noted.viewmodel.NotesFragmentViewModel
+import io.realm.Realm
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.parceler.Parcels
 
-class NotesFragment : BaseFragment(), ItemTouchCallback {
+class NotesFragment : BaseFragment(){
     var actionMode: ActionMode? = null
     private lateinit var binding: FragmentNotesBinding
     private val itemAdapter = ItemAdapter<NoteBinding>()
@@ -51,9 +51,6 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
 
         initAdapter()
 
-        val dragCallback = SimpleDragCallback()
-        val touchHelper = ItemTouchHelper(dragCallback)
-        touchHelper.attachToRecyclerView(binding.notesRecyclerView)
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)
         val gridValue = if (sharedPref!!.getString("notes_grid", "grid") == "grid" )  2 else 1
         val layoutManager = StaggeredGridLayoutManager(gridValue, 1)
@@ -195,16 +192,6 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
     }
 
 
-    override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
-        itemAdapter.getAdapterItem(newPosition).noteCard.isDragged = false
-
-    }
-
-    override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
-        DragDropUtil.onMove(itemAdapter, oldPosition, newPosition)
-        itemAdapter.getAdapterItem(oldPosition).noteCard.isDragged = true
-        return true
-    }
 
 
     override fun refresh() {
@@ -212,8 +199,8 @@ class NotesFragment : BaseFragment(), ItemTouchCallback {
     }
 
     override fun onResume() {
-        NoteRepo.NotesWorker.downloadNotes()
         super.onResume()
+        NoteRepo.NotesWorker.downloadNotes()
     }
 
     override fun filterCategories(categoryId : Int) {

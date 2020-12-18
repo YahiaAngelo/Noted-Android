@@ -19,6 +19,7 @@ open class Note : RealmObject{
     var color = R.color.background
     var colorHex = ""
     var isFavorite = false
+    var priority = 0
     open var categories: RealmList<NoteCategory> = RealmList()
         @ParcelPropertyConverter(CategoryListParcelConverter::class)
         set
