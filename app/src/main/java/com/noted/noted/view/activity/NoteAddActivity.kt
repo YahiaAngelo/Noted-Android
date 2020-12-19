@@ -2,13 +2,10 @@ package com.noted.noted.view.activity
 
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.Color.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -31,7 +28,6 @@ import com.noted.noted.utils.Utils
 import io.realm.RealmList
 import org.koin.android.ext.android.inject
 import org.parceler.Parcels
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -362,9 +358,12 @@ class NoteAddActivity : AppCompatActivity() {
         binding.noteAddCategoryChip.chipBackgroundColor =
             ColorStateList.valueOf(parseColor(hexColor))
         view?.setBackgroundColor(parseColor(hexColor))
-        val invertedColor = Utils.invertColor(hexColor!!.substring(1,hexColor!!.length))
-        binding.noteTitleEditText.setTextColor(invertedColor)
-        binding.noteBodyEditText.setTextColor(invertedColor)
+        val isInvertColor = sharedPref.getBoolean("notes_adaptive_text", false)
+        if (isInvertColor){
+            val invertedColor = Utils.invertColor(hexColor!!.substring(1,hexColor!!.length))
+            binding.noteTitleEditText.setTextColor(invertedColor)
+            binding.noteBodyEditText.setTextColor(invertedColor)
+        }
     }
 
     private fun saveCategory(noteCategory: NoteCategory) {
