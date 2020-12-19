@@ -28,6 +28,7 @@ import com.noted.noted.utils.Utils
 import io.realm.RealmList
 import org.koin.android.ext.android.inject
 import org.parceler.Parcels
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -404,7 +405,7 @@ class NoteAddActivity : AppCompatActivity() {
             .show()
     }
     private fun checkTextChanged(){
-        if (note != null && note!!.body != binding.noteBodyEditText.text.toString()){
+        if (note != null && note!!.body != binding.noteBodyEditText.getMD()){
             isTextChanged = true
         }
     }
