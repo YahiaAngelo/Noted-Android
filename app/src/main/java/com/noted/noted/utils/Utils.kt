@@ -5,36 +5,49 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.SimpleAdapter
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.FileProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.noted.noted.BuildConfig
 import com.noted.noted.R
 import com.noted.noted.model.Note
 import com.noted.noted.model.NoteCategory
 import com.noted.noted.repositories.NoteRepo
+import com.noted.noted.view.bindItem.NoteBinding
+import com.noted.noted.view.customView.ListedBottomSheetDialog
+import io.noties.markwon.Markwon
 import io.realm.Realm
 import timber.log.Timber
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.*
 import kotlin.collections.HashMap
 
 class Utils {
-    companion object{
+    companion object {
 
         fun showCategories(
             context: Context,
             layoutInflater: LayoutInflater,
             onSelectedCategory: OnSelectedCategory
-        ){
+        ) {
             var realm = Realm.getDefaultInstance()
             val dbCategories = realm.where(NoteCategory::class.java).findAll()
             val view = layoutInflater.inflate(R.layout.simple_listview_layout, null)
@@ -108,7 +121,7 @@ class Utils {
                 }
             }
             listView.setOnItemLongClickListener { _, _, position, _ ->
-                if (position > 0){
+                if (position > 0) {
                     val noteCategory = dbCategories[position - 1]!!
                     MaterialAlertDialogBuilder(context)
                         .setTitle("Delete category")
@@ -125,7 +138,7 @@ class Utils {
                             Timber.e("Notes with this category count is ${notesWithCategory.size}")
                             realm.use { realm ->
                                 realm.beginTransaction()
-                                for (note in notesWithCategory){
+                                for (note in notesWithCategory) {
                                     note.categories.remove(noteCategory)
                                     NoteRepo.NotesWorker.uploadNote(note)
                                 }
@@ -152,7 +165,7 @@ class Utils {
             context: Context,
             fragmentManager: FragmentManager,
             onSelectedCalendar: OnSelectedCalendar
-        ){
+        ) {
             val currentCalendar = Calendar.getInstance()
             var selectedCalendar: Calendar? = null
             val materialDatePickerBuilder = MaterialDatePicker.Builder.datePicker()
@@ -183,7 +196,7 @@ class Utils {
             materialDatePicker.showNow(fragmentManager, materialDatePicker.tag)
         }
 
-        fun shareText(context: Context, string: String){
+        fun shareText(context: Context, string: String) {
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_TEXT, string)
@@ -194,7 +207,90 @@ class Utils {
             context.startActivity(shareIntent)
 
         }
-        fun copyToClipboard(context: Context, string: String){
+
+        private fun shareNoteImage(
+            note: Note,
+            context: Context,
+            layoutInflater: LayoutInflater
+        ) {
+            val view = layoutInflater.inflate(R.layout.note_share_image_layout, null)
+            val recyclerView = view.findViewById<RecyclerView>(R.id.note_share_rv)
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            val itemAdapter = ItemAdapter<NoteBinding>()
+            val fastAdapter = FastAdapter.Companion.with(itemAdapter)
+            recyclerView.adapter = fastAdapter
+            itemAdapter.add(NoteBinding(note))
+
+            val bitmap = getBitmapFromView(view)
+            try {
+                val cachePath = File(context.cacheDir, "images")
+                cachePath.mkdir()
+                val stream = FileOutputStream("${cachePath.absolutePath}/image.png")
+                bitmap?.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                stream.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+
+            val imagePath = File(context.cacheDir, "images")
+            val newFile = File(imagePath, "image.png")
+            val contentUri = FileProvider.getUriForFile(
+                context,
+                BuildConfig.APPLICATION_ID + ".fileprovider",
+                newFile
+            )
+            if (contentUri != null) {
+                val shareIntent = Intent()
+                shareIntent.action = Intent.ACTION_SEND
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                shareIntent.setDataAndType(contentUri, context.contentResolver.getType(contentUri))
+                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
+                context.startActivity(Intent.createChooser(shareIntent, "Choose an app"))
+            }
+
+
+        }
+
+        fun shareNote(
+            note: Note,
+            context: Context,
+            layoutInflater: LayoutInflater
+        ) {
+            val markwon = Markwon.builder(context)
+                .build()
+            val bottomSheetTitles = listOf(
+                context.resources.getString(R.string.share_as_text),
+                context.resources.getString(R.string.share_as_image),
+                context.resources.getString(R.string.share_as_markdown)
+            )
+            val bottomSheetImages =
+                listOf(R.drawable.ic_title, R.drawable.ic_image, R.drawable.ic_markdown)
+            val shareNoteBottomSheet = ListedBottomSheetDialog(
+                bottomSheetTitles,
+                bottomSheetImages,
+                context,
+                layoutInflater
+            )
+            shareNoteBottomSheet.bottomSheetTitle = context.resources.getString(R.string.share_as)
+            shareNoteBottomSheet.bottomSheetTitleIcon =
+                ResourcesCompat.getDrawable(context.resources, R.drawable.ic_share, context.theme)
+            shareNoteBottomSheet.onItemClickListener =
+                AdapterView.OnItemClickListener { _, _, position, _ ->
+                    when (position) {
+                        0 -> shareText(context, "${note.title}\n\n${markwon.toMarkdown(note.body)}")
+                        1 -> shareNoteImage(
+                            note,
+                            context,
+                            layoutInflater
+                        )
+                        2 -> shareText(context, "#${note.title}\n${note.body}")
+                    }
+                }
+            shareNoteBottomSheet.show()
+        }
+
+        fun copyToClipboard(context: Context, string: String) {
             val clipBoard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip: ClipData = ClipData.newPlainText("My Note", string)
             clipBoard.setPrimaryClip(clip)
@@ -214,19 +310,36 @@ class Utils {
         }
 
         private fun saveCategory(noteCategory: NoteCategory) {
-           val realm = Realm.getDefaultInstance()
+            val realm = Realm.getDefaultInstance()
             realm.use {
                 it.beginTransaction()
                 it.copyToRealm(noteCategory)
                 it.commitTransaction()
             }
         }
-        interface OnSelectedCategory{
-           fun onSelected(noteCategory: NoteCategory)
+
+        interface OnSelectedCategory {
+            fun onSelected(noteCategory: NoteCategory)
         }
-        interface OnSelectedCalendar{
+
+        interface OnSelectedCalendar {
             fun onSelected(calendar: Calendar)
         }
+
+        fun getBitmapFromView(view: View): Bitmap? {
+            if (view.height <= 0) {
+                val specWidth = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                view.measure(specWidth, specWidth)
+                view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+            }
+            val bitmap =
+                Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            view.draw(canvas)
+            return bitmap
+        }
+
+
     }
 
 

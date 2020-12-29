@@ -60,4 +60,8 @@
     <string name="details">Details</string>
     <string name="edited">Edited</string>
     <string name="favorite">Favorite</string>
+    <string name="share_as">Share as</string>
+    <string name="share_as_text">Text</string>
+    <string name="share_as_image">Image</string>
+    <string name="share_as_markdown">Markdown</string>
 </resources>

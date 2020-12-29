@@ -28,7 +28,6 @@ import com.noted.noted.utils.Utils
 import io.realm.RealmList
 import org.koin.android.ext.android.inject
 import org.parceler.Parcels
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -190,7 +189,7 @@ class NoteAddActivity : AppCompatActivity() {
                 when (position) {
                     0 -> deleteNote()
                     1 -> Utils.copyToClipboard(this,"${binding.noteTitleEditText.text.toString()}\n\n${binding.noteBodyEditText.text.toString()}")
-                    2 -> Utils.shareText(this, "${binding.noteTitleEditText.text.toString()}\n\n${binding.noteBodyEditText.text.toString()}")
+                    2 -> if(note != null){Utils.shareNote(note!!, this, layoutInflater)}
                 }
             }
             bottomSheet.dismiss()
