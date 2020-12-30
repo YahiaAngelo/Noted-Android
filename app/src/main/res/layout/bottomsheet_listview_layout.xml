@@ -22,7 +22,7 @@
         android:textColor="@color/text_primary"
         android:layout_marginStart="12dp"
         android:id="@+id/bottomsheet_title"
-        android:drawablePadding="12dp"
+        android:drawablePadding="22dp"
         android:visibility="gone" />
     <ListView
         android:layout_marginTop="18dp"
