@@ -25,7 +25,7 @@ import io.noties.markwon.Markwon
 class AboutActivity : MaterialAboutActivity() {
 
     override fun getActivityTitle(): CharSequence? {
-        return "About"
+        return getString(R.string.about)
     }
 
     override fun getMaterialAboutList(context: Context): MaterialAboutList {
@@ -36,19 +36,19 @@ class AboutActivity : MaterialAboutActivity() {
                 .icon(R.mipmap.ic_launcher_round)
                 .build())
             .addItem(MaterialAboutActionItem.Builder()
-                .text("Version")
+                .text(getString(R.string.version))
                 .subText(BuildConfig.VERSION_NAME)
                 .icon(R.drawable.ic_info_black)
                 .build())
             .addItem(MaterialAboutActionItem.Builder()
-                .text("Changelog")
+                .text(getString(R.string.changelog))
                 .icon(R.drawable.ic_restore)
                 .setOnClickAction {
                     showChangelogWindow()
                 }
                 .build())
             .addItem(MaterialAboutActionItem.Builder()
-                .text("License")
+                .text(getString(R.string.license))
                 .icon(R.drawable.ic_class)
                 .setOnClickAction {
                     startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://github.com/YahiaAngelo/Noted-Android/blob/master/LICENSE")))
@@ -57,7 +57,7 @@ class AboutActivity : MaterialAboutActivity() {
             .build()
 
         val authorCard = MaterialAboutCard.Builder()
-            .title("Author")
+            .title(getString(R.string.author))
             .addItem(MaterialAboutActionItem.Builder()
                 .text("Yahia Mostafa")
                 .subText("@YahiaAngelo")
@@ -76,7 +76,7 @@ class AboutActivity : MaterialAboutActivity() {
             .build()
 
         val appInfoCard = MaterialAboutCard.Builder()
-            .title("About")
+            .title(getString(R.string.about))
             .addItem(MaterialAboutActionItem.Builder()
                 .text("Version")
                 .subText(BuildConfig.VERSION_NAME)
@@ -90,7 +90,7 @@ class AboutActivity : MaterialAboutActivity() {
                 }
                 .build())
             .addItem(MaterialAboutActionItem.Builder()
-                .text("Rate this app")
+                .text(getString(R.string.rate_app))
                 .icon(R.drawable.ic_star_rate)
                 .setOnClickAction {
                     val uri: Uri = Uri.parse("market://details?id=$packageName")
@@ -109,14 +109,14 @@ class AboutActivity : MaterialAboutActivity() {
                 }
                 .build())
             .addItem(MaterialAboutActionItem.Builder()
-                .text("Sponsor this project")
+                .text(getString(R.string.support_project))
                 .icon(R.drawable.ic_logo_paypal)
                 .setOnClickAction {
                     startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://paypal.me/YahiaMostafa")))
                 }
                 .build())
             .addItem(MaterialAboutActionItem.Builder()
-                .text("Contact us")
+                .text(getString(R.string.contact_us))
                 .icon(R.drawable.ic_email)
                 .setOnClickAction {
                         val intent = Intent(Intent.ACTION_SENDTO).apply {

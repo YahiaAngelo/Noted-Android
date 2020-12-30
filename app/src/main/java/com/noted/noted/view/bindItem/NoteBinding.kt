@@ -52,7 +52,7 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
                 }
             })
             .build()
-        if (!note.colorHex.isNullOrEmpty()){
+        if (!note.colorHex.isEmpty()){
             binding.noteCard.setCardBackgroundColor(Color.parseColor(note.colorHex))
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P){
                 binding.noteCard.outlineAmbientShadowColor = Color.parseColor(note.colorHex)
@@ -77,7 +77,7 @@ class NoteBinding(var note: Note) : AbstractBindingItem<ItemNoteBinding>() {
         binding.noteChipGroup.removeAllViews()
         for (category in note.categories!!){
             val chip = Chip(context)
-            if (!note.colorHex.isNullOrEmpty()){
+            if (!note.colorHex.isEmpty()){
                 chip.chipBackgroundColor = ColorStateList.valueOf(Color.parseColor(note.colorHex))
             }else{
                 chip.chipBackgroundColor = context.resources.getColorStateList(note.color, context.theme)

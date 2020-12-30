@@ -87,7 +87,7 @@ class MainActivity : BaseActivity() {
         menuInflater.inflate(R.menu.main_toolbar, menu)
         val searchItem = menu!!.findItem(R.id.main_search)
         val searchView = searchItem.actionView as SearchView
-        searchView.queryHint = "Search"
+        searchView.queryHint = getString(R.string.search)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -139,17 +139,18 @@ class MainActivity : BaseActivity() {
 
         val categoriesList = realm.where(NoteCategory::class.java).findAll()
         val menu = binding.navView.menu
-        val categoriesSubMenu = menu.addSubMenu(R.id.categories_group, 123, Menu.NONE, "Categories")
+        val categoriesSubMenu = menu.addSubMenu(R.id.categories_group, 123, Menu.NONE, getString(R.string.categories))
 
-        categoriesSubMenu.add(R.id.categories_group, R.id.all_categories_item, Menu.NONE, "All categories").setIcon(R.drawable.ic_label).isCheckable = true
+        categoriesSubMenu.add(R.id.categories_group, R.id.all_categories_item, Menu.NONE, getString(
+                    R.string.all_categories)).setIcon(R.drawable.ic_label).isCheckable = true
 
         for (category in categoriesList){
             categoriesSubMenu.add(R.id.categories_group, category.id.toInt(), Menu.NONE, category.title).setIcon(R.drawable.ic_label).isCheckable = true
         }
-        categoriesSubMenu.add(R.id.categories_group, R.id.add_category_item, Menu.NONE, "Add category").setIcon(R.drawable.ic_add).isCheckable = false
+        categoriesSubMenu.add(R.id.categories_group, R.id.add_category_item, Menu.NONE, getString(R.string.add_category)).setIcon(R.drawable.ic_add).isCheckable = false
 
-        menu.add(R.id.others_group, R.id.settings_item, Menu.NONE, "Settings").setIcon(R.drawable.ic_settings).isCheckable = false
-        menu.add(R.id.others_group, R.id.about_item, Menu.NONE, "About").setIcon(R.drawable.ic_info_black).isCheckable = false
+        menu.add(R.id.others_group, R.id.settings_item, Menu.NONE, getString(R.string.settings)).setIcon(R.drawable.ic_settings).isCheckable = false
+        menu.add(R.id.others_group, R.id.about_item, Menu.NONE, getString(R.string.about)).setIcon(R.drawable.ic_info_black).isCheckable = false
 
         binding.navView.setNavigationItemSelectedListener { item ->
             val currentFragment = supportFragmentManager.currentNavigationFragment as BaseFragment
@@ -222,14 +223,14 @@ class MainActivity : BaseActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     headerView.findViewById<MaterialButton>(R.id.google_login).visibility = View.GONE
                     headerView.findViewById<LinearLayout>(R.id.main_user_info).visibility = View.VISIBLE
-                    Snackbar.make(binding.navView, "Your notes are now synced !", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.navView, getString(R.string.noets_synced), Snackbar.LENGTH_SHORT).show()
                     binding.mainDrawerLayout.closeDrawer(binding.navView)
                     NoteRepo.NotesWorker.uploadNotes()
 
                 } else {
                     // If sign in fails, display a message to the user.
                     // ...
-                    Snackbar.make(binding.navView, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.navView, getString(R.string.auth_failed), Snackbar.LENGTH_SHORT).show()
 
                 }
 

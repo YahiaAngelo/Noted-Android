@@ -162,7 +162,7 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
         }
 
         val materialDatePickerBuilder = MaterialDatePicker.Builder.datePicker()
-        materialDatePickerBuilder.setTitleText("Reminder Date")
+        materialDatePickerBuilder.setTitleText(getString(R.string.reminder_date))
         val calendarConstraints = CalendarConstraints.Builder()
         calendarConstraints.setStart(MaterialDatePicker.todayInUtcMilliseconds())
         calendarConstraints.setValidator(DateValidatorPointForward.now())

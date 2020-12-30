@@ -128,9 +128,9 @@ class NotesFragment : BaseFragment(){
                                         actionMode = null
                                     }
                                 })
-                            actionMode!!.title = "$itemsSize Items selected"
+                            actionMode!!.title = itemsSize.toString() + getString(R.string.items_selected)
                         }else{
-                            actionMode!!.title = "$itemsSize Items selected"
+                            actionMode!!.title = itemsSize.toString() + getString(R.string.items_selected)
                         }
 
                     } else {

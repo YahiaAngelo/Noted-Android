@@ -1,14 +1,14 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="Appearance">
+    <PreferenceCategory app:title="@string/appearance">
 
         <ListPreference
             app:defaultValue="system"
             app:entries="@array/theme_entries"
             app:entryValues="@array/theme_values"
             app:key="theme"
-            app:title="App Theme"
+            app:title="@string/app_theme"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
@@ -16,11 +16,11 @@
             app:entries="@array/notes_grid_entries"
             app:entryValues="@array/notes_grid_values"
             app:key="notes_grid"
-            app:title="Notes Style"
+            app:title="@string/notes_style"
             app:useSimpleSummaryProvider="true"/>
 
         <SwitchPreference
-            app:title="24-Hour Time"
+            app:title="@string/hour_format"
             app:defaultValue="false"
             app:key="hour_format" />
 
@@ -28,23 +28,23 @@
 
     <PreferenceCategory app:title="Notes">
         <SwitchPreference
-            app:title="Enable Auto Save"
+            app:title="@string/enable_auto_save"
             app:defaultValue="false"
-            app:summary="If disabled will show confirm save dialog instead"
+            app:summary="@string/enable_auto_save_desc"
             app:key="notes_auto_save" />
         <SwitchPreference
-            app:title="Adaptive Notes Text Colors"
-            app:summary="Enabling this will change Notes text colors to adapt with background color"
+            app:title="@string/adaptive_notes"
+            app:summary="@string/adaptive_notes_desc"
             android:defaultValue="false"
             app:key="notes_adaptive_text"/>
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Notifications">
+    <PreferenceCategory app:title="@string/notifications">
         <Preference
             app:selectable="false"
             app:persistent="false"
             app:icon="@drawable/ic_info_black"
-            app:summary="Sometimes, Reminder notification might not trigger due to the aggressive battery optimization by your phone manufacturer." />
+            app:summary="@string/notifications_desc" />
         <Preference
             app:key="batt_opt"
             app:title="Learn more"

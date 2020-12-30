@@ -81,7 +81,7 @@ class NoteAddActivity : AppCompatActivity() {
             val editedString = "${resources.getString(R.string.edited)} $date"
             binding.noteDate.text = editedString
             categoriesList = note!!.categories
-            if (!note!!.colorHex.isNullOrEmpty()){
+            if (!note!!.colorHex.isEmpty()){
                 hexColor = note?.colorHex
                 updateColorsFromHex(null)
             }else{
@@ -153,7 +153,7 @@ class NoteAddActivity : AppCompatActivity() {
                 finish()
 
         }else{
-            Toast.makeText(this, "Please add a title to your note", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.add_title_warning), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -170,7 +170,8 @@ class NoteAddActivity : AppCompatActivity() {
         val chipGroup: ChipGroup = view.findViewById(R.id.bottom_sheet_chipGroup)
         val itemsList: MutableList<HashMap<String, String>> =
             emptyList<HashMap<String, String>>().toMutableList()
-        val itemListTitles = arrayOf("Delete", "Copy", "Share")
+        val itemListTitles = arrayOf(getString(R.string.delete), getString(R.string.copy), getString(
+                    R.string.share))
         val itemListImages =
             arrayOf(R.drawable.ic_delete, R.drawable.ic_file_copy, R.drawable.ic_share)
         for ((position, item) in itemListTitles.withIndex()) {
@@ -244,7 +245,7 @@ class NoteAddActivity : AppCompatActivity() {
         val listView: ListView = view.findViewById(R.id.simple_listView)
         val itemsList: MutableList<HashMap<String, String>> =
             emptyList<HashMap<String, String>>().toMutableList()
-        val itemListTitles = arrayOf("Add category").toMutableList()
+        val itemListTitles = arrayOf(getString(R.string.add_category)).toMutableList()
         val itemListImages = arrayOf(R.drawable.ic_add).toMutableList()
         for (category in dbCategories) {
 
@@ -268,9 +269,9 @@ class NoteAddActivity : AppCompatActivity() {
             when (position) {
                 0 -> {
                     MaterialAlertDialogBuilder(this)
-                        .setTitle("Add category")
+                        .setTitle(getString(R.string.add_category))
                         .setView(R.layout.dialog_edittext_layout)
-                        .setPositiveButton("Add") { dialog, _ ->
+                        .setPositiveButton(getString(R.string.add)) { dialog, _ ->
                             val text =
                                 (dialog as? AlertDialog)?.findViewById<EditText>(R.id.dialog_editText)?.text?.toString()
                             if (text != null) {
@@ -301,9 +302,9 @@ class NoteAddActivity : AppCompatActivity() {
             if (position > 0){
                 val noteCategory = dbCategories[position - 1]!!
                 MaterialAlertDialogBuilder(this)
-                    .setTitle("Delete category")
-                    .setMessage("Do you want to delete ${noteCategory.title} category ?")
-                    .setNeutralButton("Delete"
+                    .setTitle(getString(R.string.delete_category))
+                    .setMessage(getString(R.string.delete_confirm) + noteCategory.title + " category ?")
+                    .setNeutralButton(getString(R.string.delete)
                     ) { dialog, _ ->
                         itemsList.removeAt(position)
                         noteRepo.deleteCategory(noteCategory)
@@ -396,11 +397,11 @@ class NoteAddActivity : AppCompatActivity() {
 
     private fun showSaveConfirmDialog(){
         MaterialAlertDialogBuilder(this)
-            .setTitle("Discard changes")
-            .setMessage("Do you want to exit without saving ?")
-            .setPositiveButton("Save"
+            .setTitle(getString(R.string.discard_changes))
+            .setMessage(getString(R.string.exit_without_save_confirm))
+            .setPositiveButton(getString(R.string.save)
             ) { _, _ -> saveNote() }
-            .setNegativeButton("Discard") { _, _ -> finish() }
+            .setNegativeButton(getString(R.string.discard)) { _, _ -> finish() }
             .show()
     }
     private fun checkTextChanged(){

@@ -56,7 +56,7 @@ class Utils {
             val listView: ListView = view.findViewById(R.id.simple_listView)
             val itemsList: MutableList<HashMap<String, String>> =
                 emptyList<HashMap<String, String>>().toMutableList()
-            val itemListTitles = arrayOf("Add category").toMutableList()
+            val itemListTitles = arrayOf(context.getString(R.string.add_category)).toMutableList()
             val itemListImages = arrayOf(R.drawable.ic_add).toMutableList()
             for (category in dbCategories) {
 
@@ -86,9 +86,9 @@ class Utils {
                 when (position) {
                     0 -> {
                         MaterialAlertDialogBuilder(context)
-                            .setTitle("Add category")
+                            .setTitle(context.getString(R.string.add_category))
                             .setView(R.layout.dialog_edittext_layout)
-                            .setPositiveButton("Add") { dialog, _ ->
+                            .setPositiveButton(context.getString(R.string.add)) { dialog, _ ->
                                 val text =
                                     (dialog as? AlertDialog)?.findViewById<EditText>(R.id.dialog_editText)?.text?.toString()
                                 if (text != null) {
@@ -124,10 +124,10 @@ class Utils {
                 if (position > 0) {
                     val noteCategory = dbCategories[position - 1]!!
                     MaterialAlertDialogBuilder(context)
-                        .setTitle("Delete category")
-                        .setMessage("Do you want to delete ${noteCategory.title} category ?")
+                        .setTitle(context.getString(R.string.delete_category))
+                        .setMessage(context.getString(R.string.delete_confirm) + "${noteCategory.title} category ?")
                         .setNeutralButton(
-                            "Delete"
+                            context.getString(R.string.delete)
                         ) { dialog, _ ->
                             itemsList.removeAt(position)
                             realm = Realm.getDefaultInstance()
@@ -169,7 +169,7 @@ class Utils {
             val currentCalendar = Calendar.getInstance()
             var selectedCalendar: Calendar? = null
             val materialDatePickerBuilder = MaterialDatePicker.Builder.datePicker()
-            materialDatePickerBuilder.setTitleText("Reminder Date")
+            materialDatePickerBuilder.setTitleText(context.getString(R.string.reminder_date))
             val calendarConstraints = CalendarConstraints.Builder()
             calendarConstraints.setStart(MaterialDatePicker.todayInUtcMilliseconds())
             calendarConstraints.setValidator(DateValidatorPointForward.now())
@@ -246,7 +246,7 @@ class Utils {
                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 shareIntent.setDataAndType(contentUri, context.contentResolver.getType(contentUri))
                 shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
-                context.startActivity(Intent.createChooser(shareIntent, "Choose an app"))
+                context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.choose_an_app)))
             }
 
 
@@ -294,7 +294,7 @@ class Utils {
             val clipBoard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip: ClipData = ClipData.newPlainText("My Note", string)
             clipBoard.setPrimaryClip(clip)
-            Toast.makeText(context, "Copied this note to clipboard.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.copied_note), Toast.LENGTH_SHORT).show()
         }
 
         fun invertColor(myColorString: String): Int {
