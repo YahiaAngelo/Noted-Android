@@ -81,7 +81,7 @@ class NoteAddActivity : AppCompatActivity() {
             val editedString = "${resources.getString(R.string.edited)} $date"
             binding.noteDate.text = editedString
             categoriesList = note!!.categories
-            if (!note!!.colorHex.isEmpty()){
+            if (note!!.colorHex.isNotEmpty()){
                 hexColor = note?.colorHex
                 updateColorsFromHex(null)
             }else{
@@ -213,7 +213,6 @@ class NoteAddActivity : AppCompatActivity() {
                     colorPickerDialog.setColorPickerDialogListener(object: ColorPickerDialogListener{
                         override fun onColorSelected(dialogId: Int, color: Int) {
                             hexColor = "#${Integer.toHexString(color)}"
-                            
                             updateColorsFromHex(view)
                         }
 
@@ -229,7 +228,10 @@ class NoteAddActivity : AppCompatActivity() {
                 }
             }
             isTextChanged = true
-            updateColors(view)
+            if(checkedId != R.id.chip_colorize){
+                updateColors(view)
+            }
+
         }
 
 
@@ -239,7 +241,7 @@ class NoteAddActivity : AppCompatActivity() {
     private fun initCategories() {
         val dbCategories = noteRepo.getCategories()
         val view = layoutInflater.inflate(R.layout.simple_listview_layout, null)
-        view.setBackgroundColor(resources.getColor(newColor, theme))
+        view.setBackgroundColor(binding.root.backgroundTintList!!.defaultColor)
         categoriesBottomSheet = BottomSheetDialog(this, R.style.BottomSheetMenuTheme)
         categoriesBottomSheet.setContentView(view)
         val listView: ListView = view.findViewById(R.id.simple_listView)
@@ -326,7 +328,7 @@ class NoteAddActivity : AppCompatActivity() {
         if (binding.chipGroup.findViewById<Chip>(noteCategory.id.toInt()) == null) {
             val chip = Chip(this)
             chip.id = noteCategory.id.toInt()
-            chip.chipBackgroundColor = resources.getColorStateList(newColor, theme).withAlpha(200)
+            chip.chipBackgroundColor = binding.root.backgroundTintList?.withAlpha(200)
             chip.chipStrokeWidth = 2F
             chip.chipStrokeColor = resources.getColorStateList(R.color.text_primary, theme)
             chip.text = noteCategory.title
@@ -337,6 +339,7 @@ class NoteAddActivity : AppCompatActivity() {
             chip.setOnCloseIconClickListener {
                 categoriesList.remove(noteCategory)
                 binding.chipGroup.removeView(chip)
+                isTextChanged = true
             }
             binding.chipGroup.addView(chip)
         }
@@ -345,15 +348,17 @@ class NoteAddActivity : AppCompatActivity() {
     }
 
     private fun updateColors(view: View?){
-        binding.activityNoteAddContainer.setBackgroundColor(resources.getColor(newColor, theme))
+        binding.root.backgroundTintList = resources.getColorStateList(newColor, theme)
         window.statusBarColor = resources.getColor(newColor, theme)
         window.navigationBarColor = resources.getColor(newColor, theme)
         binding.noteAddCategoryChip.chipBackgroundColor =
             resources.getColorStateList(newColor, theme)
         view?.setBackgroundColor(resources.getColor(newColor, theme))
+        hexColor = ""
     }
     private fun updateColorsFromHex(view: View?){
-        binding.activityNoteAddContainer.setBackgroundColor(parseColor(hexColor))
+        binding.root.backgroundTintList = ColorStateList.valueOf(parseColor(hexColor))
+        binding.root.setBackgroundColor(parseColor(hexColor))
         window.statusBarColor = parseColor(hexColor)
         window.navigationBarColor = parseColor(hexColor)
         binding.noteAddCategoryChip.chipBackgroundColor =
