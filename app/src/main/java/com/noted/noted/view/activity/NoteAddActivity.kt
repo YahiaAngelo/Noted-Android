@@ -349,6 +349,7 @@ class NoteAddActivity : AppCompatActivity() {
 
     private fun updateColors(view: View?){
         binding.root.backgroundTintList = resources.getColorStateList(newColor, theme)
+        binding.root.setBackgroundColor(resources.getColor(newColor, theme))
         window.statusBarColor = resources.getColor(newColor, theme)
         window.navigationBarColor = resources.getColor(newColor, theme)
         binding.noteAddCategoryChip.chipBackgroundColor =
@@ -384,7 +385,7 @@ class NoteAddActivity : AppCompatActivity() {
 
     private fun setupMarkwon() {
 
-        binding.noteBodyEditText.setOnFocusChangeListener { v, hasFocus ->
+        binding.noteBodyEditText.setOnFocusChangeListener { _, hasFocus ->
             if(hasFocus){
                 binding.noteStylesBar.visibility = View.VISIBLE
                 binding.noteDate.visibility = View.GONE

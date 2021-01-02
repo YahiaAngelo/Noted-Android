@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:backgroundTint="@color/background"
     android:id="@+id/activity_note_add_container"
     tools:context=".view.activity.NoteAddActivity">
 
