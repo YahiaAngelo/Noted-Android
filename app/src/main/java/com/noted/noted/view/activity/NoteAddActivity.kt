@@ -10,6 +10,7 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
@@ -111,7 +112,11 @@ class NoteAddActivity : AppCompatActivity() {
                 R.id.note_add_favorite -> {
                     isFavorite = !isFavorite
                     isTextChanged = true
-                    it.icon = if (isFavorite) ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite, theme) else ResourcesCompat.getDrawable(resources, R.drawable.ic_favorite_border, theme)
+                    it.icon = ResourcesCompat.getDrawable(
+                        resources,
+                        if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border,
+                        theme
+                    )
                 }
             }
 
@@ -326,25 +331,24 @@ class NoteAddActivity : AppCompatActivity() {
 
     private fun addCategoryChip(noteCategory: NoteCategory) {
         if (binding.chipGroup.findViewById<Chip>(noteCategory.id.toInt()) == null) {
-            val chip = Chip(this)
-            chip.id = noteCategory.id.toInt()
-            chip.chipBackgroundColor = binding.root.backgroundTintList?.withAlpha(200)
-            chip.chipStrokeWidth = 2F
-            chip.chipStrokeColor = resources.getColorStateList(R.color.text_primary, theme)
-            chip.text = noteCategory.title
-            chip.setTextColor(ResourcesCompat.getColor(resources, R.color.text_primary, theme))
-            chip.closeIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_close, theme)
-            chip.closeIconTint = resources.getColorStateList(R.color.text_secondary, theme)
-            chip.isCloseIconVisible = true
-            chip.setOnCloseIconClickListener {
-                categoriesList.remove(noteCategory)
-                binding.chipGroup.removeView(chip)
-                isTextChanged = true
+            with(Chip(this)) {
+                id = noteCategory.id.toInt()
+                chipBackgroundColor = binding.root.backgroundTintList?.withAlpha(200)
+                chipStrokeWidth = 2F
+                chipStrokeColor = resources.getColorStateList(R.color.text_primary, theme)
+                text = noteCategory.title
+                setTextColor(ResourcesCompat.getColor(resources, R.color.text_primary, theme))
+                closeIcon = ResourcesCompat.getDrawable(resources, R.drawable.ic_close, theme)
+                closeIconTint = resources.getColorStateList(R.color.text_secondary, theme)
+                isCloseIconVisible = true
+                setOnCloseIconClickListener {
+                    categoriesList.remove(noteCategory)
+                    binding.chipGroup.removeView(this)
+                    isTextChanged = true
+                }
+                binding.chipGroup.addView(this)
             }
-            binding.chipGroup.addView(chip)
         }
-
-
     }
 
     private fun updateColors(view: View?){
@@ -386,48 +390,35 @@ class NoteAddActivity : AppCompatActivity() {
     private fun setupMarkwon() {
 
         binding.noteBodyEditText.setOnFocusChangeListener { _, hasFocus ->
-            if(hasFocus){
-                binding.noteStylesBar.visibility = View.VISIBLE
-                binding.noteDate.visibility = View.GONE
-                binding.noteBodyEditText.setStylesBar(binding.noteStylesBar)
-
-            }else{
-                binding.noteStylesBar.visibility = View.GONE
-                binding.noteDate.visibility = View.VISIBLE
-            }
+            binding.noteStylesBar.isVisible = hasFocus
+            binding.noteDate.isVisible = !hasFocus
+            if (hasFocus) binding.noteBodyEditText.setStylesBar(binding.noteStylesBar)
         }
 
         binding.noteBodyEditText.taskBoxBackgroundColor = ResourcesCompat.getColor(resources, R.color.background, theme)
         binding.noteBodyEditText.taskBoxColor = ResourcesCompat.getColor(resources, R.color.primary, theme)
     }
 
-    private fun showSaveConfirmDialog(){
+    private fun showSaveConfirmDialog() {
         MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.discard_changes))
             .setMessage(getString(R.string.exit_without_save_confirm))
-            .setPositiveButton(getString(R.string.save)
-            ) { _, _ -> saveNote() }
+            .setPositiveButton(getString(R.string.save)) { _, _ -> saveNote() }
             .setNegativeButton(getString(R.string.discard)) { _, _ -> finish() }
             .show()
     }
-    private fun checkTextChanged(){
-        if (note != null && note!!.body != binding.noteBodyEditText.getMD()){
+
+    private fun checkTextChanged() {
+        if (note != null && note!!.body != binding.noteBodyEditText.getMD()) {
             isTextChanged = true
         }
     }
 
     override fun onBackPressed() {
         checkTextChanged()
-        if (isTextChanged){
-            if (autoSave){
-                saveNote()
-            }else{
-                showSaveConfirmDialog()
-            }
-        }else{
-            super.onBackPressed()
+        when (isTextChanged) {
+            true -> if (autoSave) saveNote() else showSaveConfirmDialog()
+            false -> super.onBackPressed()
         }
-
-
     }
 }
