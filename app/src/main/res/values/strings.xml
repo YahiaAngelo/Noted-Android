@@ -15,7 +15,20 @@
     <string name="title">Title</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
-    <string name="app_changelog">### v1.1.2:\n
+    <string name="app_changelog">### v1.1.3:\n
+         - Fixed contact us email\n
+- Added Notes Widgets\n
+- Added Note QS tile\n
+- Auto save option for Notes\n
+- new color picker for Notes\n
+- Add adaptive notes text colors option\n
+- Improve Notes auto save\'s changes detection\n
+- Improve Notes add bottom sheet layout\n
+- Add Favorite to Notes\n
+- Update Notes sharing\n
+- Add more translations\n
+- Bugs fixes and Layout improvements\n
+        ### v1.1.2:\n
         - Fixed styles bar not showing for emulators\n
 - Updated notes styles (fixed styles in lists and added tasks lists)\n
 - Add encryption to local database\n
