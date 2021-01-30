@@ -24,6 +24,7 @@ import io.noties.markwon.Markwon
 
 class AboutActivity : MaterialAboutActivity() {
 
+    var popupWindow: PopupWindow? = null
     override fun getActivityTitle(): CharSequence? {
         return getString(R.string.about)
     }
@@ -142,27 +143,40 @@ class AboutActivity : MaterialAboutActivity() {
     private fun showChangelogWindow(){
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view = inflater.inflate(R.layout.changelog_view,null)
-        val popupWindow = PopupWindow(
+        popupWindow = PopupWindow(
             view, // Custom view to show in popup window
             LinearLayout.LayoutParams.WRAP_CONTENT, // Width of popup window
             LinearLayout.LayoutParams.WRAP_CONTENT // Window height
-        )
-        popupWindow.enterTransition = android.transition.Fade()
-        popupWindow.exitTransition = android.transition.Fade()
-        popupWindow.setBackgroundDrawable(ColorDrawable())
-        popupWindow.isOutsideTouchable = true
-        popupWindow.elevation = 10.0F
+        ).apply {
+            enterTransition = android.transition.Fade()
+            exitTransition = android.transition.Fade()
+            setBackgroundDrawable(ColorDrawable())
+            isOutsideTouchable = true
+            elevation = 10.0F
+        }
 
         val markwon = Markwon.create(this)
         val changelogTextView = view.findViewById<TextView>(R.id.changelog_text)
         markwon.setMarkdown(changelogTextView, resources.getString(R.string.app_changelog))
         TransitionManager.beginDelayedTransition(this.recyclerView)
-        popupWindow.showAtLocation(
+        popupWindow!!.showAtLocation(
             this.recyclerView, // Location to display popup window
             Gravity.CENTER, // Exact position of layout to display popup
             0, // X offset
             0 // Y offset
         )
 
+    }
+
+    override fun onBackPressed() {
+        if (popupWindow != null){
+            if (popupWindow!!.isShowing){
+                popupWindow!!.dismiss()
+            }else{
+                super.onBackPressed()
+            }
+        }else{
+            super.onBackPressed()
+        }
     }
 }
