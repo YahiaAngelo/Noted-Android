@@ -77,6 +77,8 @@ class AppController : Application(){
             .name("encryptedNoted.realm")
             .schemaVersion(4)
             .encryptionKey(loadKey())
+            .allowWritesOnUiThread(true)
+            .allowQueriesOnUiThread(true)
             .migration(NotedMigration())
             .build()
 
