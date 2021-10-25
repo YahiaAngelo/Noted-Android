@@ -28,7 +28,6 @@ import com.noted.noted.repositories.NoteRepo
 import com.noted.noted.utils.Utils
 import io.realm.RealmList
 import org.koin.android.ext.android.inject
-import org.parceler.Parcels
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
@@ -71,7 +70,7 @@ class NoteAddActivity : AppCompatActivity() {
         categoriesList = RealmList()
         newColor = R.color.background
         if (intent.getParcelableExtra<Parcelable>("note") != null) {
-            note = Parcels.unwrap(intent.getParcelableExtra("note"))
+            note = intent.getParcelableExtra("note")
             noteId = note!!.id
             newColor = note!!.color
             isFavorite = note!!.isFavorite
@@ -143,12 +142,12 @@ class NoteAddActivity : AppCompatActivity() {
         if (binding.noteTitleEditText.text!!.isNotEmpty()) {
             binding.noteStylesBar.visibility = View.GONE
                 val note = Note(
-                    noteId,
-                    binding.noteTitleEditText.text.toString(),
-                    binding.noteBodyEditText.getMD(),
-                    System.currentTimeMillis(),
-                    newColor,
-                    categoriesList
+                    id = noteId,
+                    title = binding.noteTitleEditText.text.toString(),
+                    body = binding.noteBodyEditText.getMD(),
+                    date = System.currentTimeMillis(),
+                    color = newColor,
+                    categories = categoriesList
                 )
             if (hexColor!= null){
                 note.colorHex = hexColor as String

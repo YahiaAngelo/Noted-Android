@@ -21,7 +21,6 @@ import com.noted.noted.utils.ReminderWorker
 import com.noted.noted.utils.Utils
 import io.realm.RealmList
 import org.koin.android.ext.android.inject
-import org.parceler.Parcels
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -52,7 +51,7 @@ class TaskViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        task = Parcels.unwrap(intent.getParcelableExtra("task"))
+        task = intent.getParcelableExtra("task")!!
 
         binding.taskExtendedFab.visibility = if (task.checked) View.GONE else View.VISIBLE
         binding.taskTitleEdittext.setText(task.title)
@@ -119,7 +118,7 @@ class TaskViewActivity : AppCompatActivity() {
     }
 
     private fun saveTask(){
-        val newTask = Task(task.id, binding.taskTitleEdittext.text.toString(), binding.taskDescEdittext.text.toString(), task.checked, task.date)
+        val newTask = Task(id = task.id, title = binding.taskTitleEdittext.text.toString(), desc = binding.taskDescEdittext.text.toString(),checked =  task.checked, date = task.date)
         newTask.noteCategories = categoriesList
         if (reminder != null){
             newTask.reminder = reminder

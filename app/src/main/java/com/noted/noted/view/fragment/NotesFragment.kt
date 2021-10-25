@@ -29,10 +29,8 @@ import com.noted.noted.utils.Utils
 import com.noted.noted.view.activity.NoteAddActivity
 import com.noted.noted.view.bindItem.NoteBinding
 import com.noted.noted.viewmodel.NotesFragmentViewModel
-import io.realm.Realm
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.parceler.Parcels
 
 class NotesFragment : BaseFragment(){
     var actionMode: ActionMode? = null
@@ -160,7 +158,7 @@ class NotesFragment : BaseFragment(){
                         "note_shared_element_container" // The transition name to be matched in Activity B.
                     )
 
-                    intent.putExtra("note", Parcels.wrap(item.note))
+                    intent.putExtra("note", item.note)
                     startActivity(intent, options.toBundle())
                 }
                 return true

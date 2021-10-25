@@ -30,13 +30,6 @@
 }
 -keepnames class androidx.navigation.fragment.NavHostFragment
 
-# Parceler library
--keep interface org.parceler.Parcel
--keep @org.parceler.Parcel class * { *; }
--keep class **$$Parcelable { *; }
--keep class org.parceler.Parceler$$Parcels
--keep @org.parceler.Parcel class * { *; }
--keep class *$$Parcelable { *; }
 
 #realm
 -keepnames public class * extends io.realm.RealmObject

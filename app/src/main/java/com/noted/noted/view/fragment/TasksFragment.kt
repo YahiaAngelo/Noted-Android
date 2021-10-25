@@ -44,7 +44,6 @@ import com.noted.noted.view.customView.SimpleSwipeDragCallback
 import com.noted.noted.viewmodel.TasksFragmentViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.parceler.Parcels.*
 import java.util.*
 
 
@@ -121,7 +120,7 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
                     item.taskCard,
                     "task_shared_element_container"
                 )
-                intent.putExtra("task", wrap(item.task))
+                intent.putExtra("task", item.task)
                 startActivity(intent, options.toBundle())
 
                 return true
@@ -201,11 +200,11 @@ class TasksFragment : BaseFragment(), ItemTouchCallback, SimpleSwipeCallback.Ite
             if (titleEditText.text!!.isNotEmpty()) {
 
                 val task = Task(
-                    UUID.randomUUID().mostSignificantBits,
-                    titleEditText.text.toString(),
-                    descEditText.text.toString(),
-                    false,
-                    System.currentTimeMillis()
+                    id = UUID.randomUUID().mostSignificantBits,
+                    title = titleEditText.text.toString(),
+                    desc = descEditText.text.toString(),
+                    checked = false,
+                    date = System.currentTimeMillis()
                 )
                 if (selectedCalendar != null) {
                     val reminder = Reminder(
