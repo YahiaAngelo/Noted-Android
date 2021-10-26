@@ -69,6 +69,7 @@
 
         <activity
             android:name=".view.activity.SplashActivity"
+            android:theme="@style/Theme.App.Starting"
             android:noHistory="true"
             android:exported="true">
             <intent-filter>

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.preference.PreferenceManager
 import com.noted.noted.MainActivity
 import com.noted.noted.R
@@ -18,11 +19,7 @@ class SplashActivity : AppCompatActivity() {
             "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
-        Handler().postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
-        },300)
-
-
+        installSplashScreen()
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }
